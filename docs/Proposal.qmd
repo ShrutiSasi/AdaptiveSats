@@ -105,10 +105,20 @@ The test set will remain untouched during model development and will only be use
 In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
 
 # Evaluation & Success Criteria
-- **Primary:** average USD/BTC acquisition price vs naive DCA over test period — lower is better; expressed as BTC per $1 for clarity
-- **Smoothness:** std. dev. of daily allocation weights (low = stable schedule, lower market impact)
-- **Success threshold:** meaningful reduction in acquisition cost AND schedule volatility vs DCA over the 2024 - 2026 test window
-- **Stakeholders:** Trilemma Foundation + open-source community (reproducibility)
+
+### Metrics
+
+- **Primary Metric (Sats per Dollar - SPD):**  
+  We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
+
+- **Cost Basis Comparison:**  
+  We compare the average USD/BTC acquisition price against the naive DCA baseline over the test period. Lower cost basis indicates improved accumulation efficiency.
+
+- **Smoothness (Allocation Stability):**  
+  We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.
+
+---
+
 
 # Timeline
 
