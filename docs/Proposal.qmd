@@ -119,6 +119,21 @@ In future iterations, we may explore additional models and strategies such as LS
 
 ---
 
+### Success Criteria
+
+A strategy will be considered successful if it achieves:
+
+- Higher SPD compared to the naive DCA baseline  
+- Lower average acquisition cost  
+- Reduced allocation volatility (more stable investment behavior)  
+- Consistent performance over the 2024–2026 test window  
+
+---
+
+### Stakeholders
+
+- **Trilemma Foundation:** Interested in improving long-term Bitcoin accumulation efficiency  
+- **Open-source community:** Focused on transparency, reproducibility, and practical usability of the strategy  
 
 # Timeline
 
