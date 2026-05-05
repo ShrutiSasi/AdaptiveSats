@@ -56,11 +56,16 @@ Figure Placeholder : MVRV / NUPL / SOPR distributions across market cycles
 - **Limitations:** requires lazy loading; some metrics start after 2009; extreme multicollinearity across 41k metrics; historical data only.
 
 # Data Science Approach
-- **Feature reduction:**
-    - Dendrogram clustering + VIF thresholding for multicollinearity
-- **Baseline:** naive equal-weight DCA → benchmark to beat  
-- **Train/test split:** chronological 80/20 — train 
-upto Dec 2023; test Jan 2024 - Mar 2026; test set untouched until final evaluation
+
+### Feature Reduction
+
+The dataset contains over 41,000 features, many of which are highly similar. To make the dataset more manageable and suitable for modeling, we follow a structured feature reduction approach.
+
+First, we group features based on their names using stemming, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
+
+This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
+
+---
 
 # Evaluation & Success Criteria
 - **Primary:** average USD/BTC acquisition price vs naive DCA over test period — lower is better; expressed as BTC per $1 for clarity
