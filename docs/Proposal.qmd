@@ -89,6 +89,21 @@ The objective is to:
 
 ---
 
+### Train/Test Split
+
+To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chronological train/test split.
+
+- **Training set:** Data up to December 2023
+- **Test set:** January 2024 to March 2026
+
+The test set will remain untouched during model development and will only be used for final evaluation.
+
+---
+
+### Future Work
+
+In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
+
 # Evaluation & Success Criteria
 - **Primary:** average USD/BTC acquisition price vs naive DCA over test period — lower is better; expressed as BTC per $1 for clarity
 - **Smoothness:** std. dev. of daily allocation weights (low = stable schedule, lower market impact)
