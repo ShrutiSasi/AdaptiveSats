@@ -45,13 +45,13 @@ Dollar-Cost Averaging (DCA) is a common strategy for accumulating Bitcoin, where
 
 Figure Placeholder : Non null metric category over time
 
-Figure Placeholder : Bitcoin price history with halving epochs annotated
+!["Bitcoin prices with halvings annotated"](images/halving.png){#halving fig-alt="Alt text" width="50%"}
 
 Figure Placeholder : Metric coverage heatmap by category
 
 Figure Placeholder : Correlation dendrogram of candidate signal features
 
-Figure Placeholder : MVRV / NUPL / SOPR distributions across market cycles
+!["mvrv, sopr and nupl plots"](images/mvrv_sopr_nupl.png){#mvrv fig-alt="Alt text" width="50%"}
 
 - **Limitations:** requires lazy loading; some metrics start after 2009; extreme multicollinearity across 41k metrics; historical data only.
 
