@@ -59,13 +59,11 @@ Figure Placeholder : MVRV / NUPL / SOPR distributions across market cycles
 
 ### Feature Reduction
 
-The dataset contains over 41,000 features, many of which are highly similar. To make the dataset more manageable and suitable for modeling, we follow a structured feature reduction approach.
+The dataset contains over 41,000 features, and we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.
 
 First, we group features based on their names using stemming, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
 This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
-
----
 
 ### Baseline Strategies
 
@@ -74,8 +72,6 @@ To evaluate our approach, we aim to implement a **naive Dollar-Cost Averaging (D
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
 In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
-
----
 
 ### Model Development
 
@@ -87,8 +83,6 @@ The objective is to:
 - Dynamically adjust investment allocation
 - Improve accumulation efficiency compared to the defined baseline strategies
 
----
-
 ### Train/Test Split
 
 To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chronological train/test split.
@@ -97,8 +91,6 @@ To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chr
 - **Test set:** January 2024 to March 2026
 
 The test set will remain untouched during model development and will only be used for final evaluation.
-
----
 
 ### Future Work
 
@@ -117,8 +109,6 @@ In future iterations, we may explore additional models and strategies such as LS
 - **Smoothness (Allocation Stability):**  
   We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.
 
----
-
 ### Success Criteria
 
 A strategy will be considered successful if it achieves:
@@ -127,8 +117,6 @@ A strategy will be considered successful if it achieves:
 - Lower average acquisition cost  
 - Reduced allocation volatility (more stable investment behavior)  
 - Consistent performance over the 2024–2026 test window  
-
----
 
 ### Stakeholders
 
