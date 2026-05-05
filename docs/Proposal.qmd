@@ -39,16 +39,12 @@ The simplest accumulation strategy is DCA - invest a fixed amount at regular int
 |Date range|2009-01-03 to 2026-03-13|
 
 The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. The figures below show how metric coverage has grown over time, Bitcoin's price history across halving epochs, and how key signals are correlated.
+  
+  ![Cumulative metric coverage over time](figures/fig_cumulative_metric_coverage.png)
 
-  <metric plot>
+  ![Bitcoin price history with halving epochs annotated](figures/fig_price_history.png)
 
-  ![Cumulative metric coverageover time](../images/fig_non_null_coverage.png)
-
-  ![Bitcoin price history with halving epochs annotated](../images/fig_price_history.png)
-
-  <dendogram plots>
-
-  ![MVRV / NUPL / SOPR distributions across market cycles](../images/fig_cycle_violin_plots.png)
+  ![MVRV / NUPL / SOPR distributions across market cycles](figures/fig_cycle_violin_plots.png)
 
 - **Limitations:** The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.
 
