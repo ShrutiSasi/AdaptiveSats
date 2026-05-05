@@ -13,16 +13,13 @@ bibliography: references.bib
 ---
 
 # Introduction
-The purpose of this proposal is to outline a strategy for enhancing institutional Bitcoin (@nakamoto2008) accumulation. As the demand for Bitcoin continues to grow, it is crucial for institutions to adopt effective methods for acquiring and managing their Bitcoin holdings. This proposal will discuss various approaches and best practices that institutions can implement to optimize their Bitcoin accumulation process.
+Large banks and hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?
 
-### Problem Statement
-Modern markets are dominated by large banks and hedge funds who use sophisticated algorithmic trading strategies as well as market access, and sometimes even non-public information, making it extremely difficult for regular institutions or individuals to compete. Some financial Institutions, particularly smaller sized firms, and retail investors, face a critical wealth accumulation dilemma. Most of them lack the sophisticated resources required to outpace the large banks or gain an edge in the market.
+_Why Bitcoin?_
 
-- Bitcoin accumulation represents a social good imperative. It provides a level playing field where information is easily available and is not being controlled by a board of directors, allowing anyone to build strategies for accumulation without offering any undue advantages.
-- Bitcoin’s public architecture offers transparency and relatively easy access ensuring that critical financial data is available to everyone in the market from the smallest nonprofit to the largest bank simultaneously.
-- By leveraging blockchain technology, accumulation can be audited in real-time, eliminating trust barriers. 
+We focus on Bitcoin because it's well-suited for this kind of research. All transaction data is public and available to everyone simultaneously - no information asymmetry. Strategies can be audited in real-time on-chain, and the market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.
 
-Dollar-Cost Averaging (DCA) is a common strategy for accumulating Bitcoin, where a fixed amount of money is invested at regular intervals regardless of the asset's price. While DCA is simple and effective for long-term accumulation, it does not take into account market conditions or on-chain signals that could indicate more favorable buying opportunities(@leggio2001).
+The simplest accumulation strategy is DCA - invest a fixed amount at regular intervals regardless of price. It works, but it ignores market conditions entirely. Our hypothesis is that on-chain signals can identify when Bitcoin is undervalued, allowing smarter allocation decisions (@leggio2001).
 
 ### Objectives
 - Identify on-chain/market signals predicting favorable accumulation windows
@@ -41,41 +38,91 @@ Dollar-Cost Averaging (DCA) is a common strategy for accumulating Bitcoin, where
 |Distinct metric keys|41,407|
 |Date range|2009-01-03 to 2026-03-13|
 
-- **Key metric categories to use:** market & valuation (price_usd, mvrv, realized_cap), profitability/SOPR (adjusted_sopr, nupl, pain_index), holder cohorts (sth_*, lth_*), supply/scarcity, network activity, technical indicators (rsi_14d, macd_*)
+The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. The figures below show how metric coverage has grown over time, Bitcoin's price history across halving epochs, and how key signals are correlated.
 
-Figure Placeholder : Non null metric category over time
+  <metric plot>
 
-Figure Placeholder : Bitcoin price history with halving epochs annotated
+  ![Cumulative metric coverageover time](../images/fig_non_null_coverage.png)
 
-Figure Placeholder : Metric coverage heatmap by category
+  ![Bitcoin price history with halving epochs annotated](../images/fig_price_history.png)
 
-Figure Placeholder : Correlation dendrogram of candidate signal features
+  <dendogram plots>
 
-Figure Placeholder : MVRV / NUPL / SOPR distributions across market cycles
+  ![MVRV / NUPL / SOPR distributions across market cycles](../images/fig_cycle_violin_plots.png)
 
-- **Limitations:** requires lazy loading; some metrics start after 2009; extreme multicollinearity across 41k metrics; historical data only.
+- **Limitations:** The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.
 
 # Data Science Approach
-- **Feature reduction:**
-    - Dendrogram clustering + VIF thresholding for multicollinearity
-- **Baseline:** naive equal-weight DCA → benchmark to beat  
-- **Train/test split:** chronological 80/20 — train 
-upto Dec 2023; test Jan 2024 - Mar 2026; test set untouched until final evaluation
+### Feature Reduction
+
+With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.
+
+First, we group features based on their names using stemming, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
+
+This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
+
+### Baseline Strategies
+
+To evaluate our approach, we aim to implement a **naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
+
+To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
+
+In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
+
+### Model Development
+
+Our proposed strategy will leverage the reduced feature set to design a data-driven accumulation approach.
+
+The objective is to:
+
+- Identify periods of undervaluation
+- Dynamically adjust investment allocation
+- Improve accumulation efficiency compared to the defined baseline strategies
+
+### Train/Test Split
+
+To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chronological train/test split.
+
+- **Training set:** Data up to December 2023
+- **Test set:** January 2024 to March 2026
+
+The test set will remain untouched during model development and will only be used for final evaluation.
+
+### Future Work
+
+In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
 
 # Evaluation & Success Criteria
-- **Primary:** average USD/BTC acquisition price vs naive DCA over test period — lower is better; expressed as BTC per $1 for clarity
-- **Smoothness:** std. dev. of daily allocation weights (low = stable schedule, lower market impact)
-- **Success threshold:** meaningful reduction in acquisition cost AND schedule volatility vs DCA over the 2024 - 2026 test window
-- **Stakeholders:** Trilemma Foundation + open-source community (reproducibility)
+### Metrics
+
+- **Primary Metric (Sats per Dollar - SPD):**  
+  We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
+
+- **Smoothness (Allocation Stability):**  
+  We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.
+
+### Success Criteria
+
+A strategy will be considered successful if it achieves:
+
+- Higher SPD compared to the naive DCA baseline  
+- Lower average acquisition cost  
+- Reduced allocation volatility (more stable investment behavior)  
+- Consistent performance over the 2024–2026 test window  
+
+### Stakeholders
+
+- **Trilemma Foundation:** Interested in improving long-term Bitcoin accumulation efficiency  
+- **Open-source community:** Focused on transparency, reproducibility, and practical usability of the strategy  
 
 # Timeline
 
 | Milestone | Target Date |
 |-----------|-------------|
-| Train/test split + EDA scripts ||
-| Feature reduction + baseline DCA ||
-| ML model + walk-forward CV ||
-| Backtesting + final evaluation ||
-| Final report + library packaging ||
+| Train/test split + EDA scripts |May 15, 2026|
+| Feature reduction + baseline DCA |May 22, 2026|
+| ML model + walk-forward CV | May 29, 2026|
+| Backtesting + final evaluation | June 12, 2026|
+| Final report + model | June 23, 2026|
 
 ## References
