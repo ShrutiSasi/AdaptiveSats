@@ -67,6 +67,28 @@ This process is computationally intensive when run locally with limited resource
 
 ---
 
+### Baseline Strategies
+
+To evaluate our approach, we aim to implement a **naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
+
+To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
+
+In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
+
+---
+
+### Model Development
+
+Our proposed strategy will leverage the reduced feature set to design a data-driven accumulation approach.
+
+The objective is to:
+
+- Identify periods of undervaluation
+- Dynamically adjust investment allocation
+- Improve accumulation efficiency compared to the defined baseline strategies
+
+---
+
 # Evaluation & Success Criteria
 - **Primary:** average USD/BTC acquisition price vs naive DCA over test period — lower is better; expressed as BTC per $1 for clarity
 - **Smoothness:** std. dev. of daily allocation weights (low = stable schedule, lower market impact)
