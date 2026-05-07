@@ -2,6 +2,7 @@
 title: "AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies"
 authors: ["Arafat B. Bello","Nguyen Nguyen","Raghav Gupta","Shruti Sasi"]
 date: today
+link-citations: true
 format:
   pdf:
     documentclass: article
@@ -9,6 +10,8 @@ format:
     fontsize: 11pt
     number-sections: true
     colorlinks: true
+    citecolor: blue 
+    fig-pos: "H"
 bibliography: references.bib
 ---
 
@@ -24,11 +27,11 @@ The simplest accumulation strategy is DCA - invest a fixed amount at regular int
 ### Objectives
 - Identify on-chain/market signals predicting favorable accumulation windows
 - Build and validate an adaptive daily allocation model
-- Deliver as open-source Python library
 
 # Data & EDA
 - **Source:** BRK `brk_metrics.parquet` (@brk via @stacksats) 
-- **Schema:** long format - day_utc, metric, value; zero nulls; all values finite
+- **Schema:** long format with day_utc, metric, value columns                     
+              zero nulls; all values finite
 
 |Property|Value|
 |--------|-----|
@@ -37,6 +40,8 @@ The simplest accumulation strategy is DCA - invest a fixed amount at regular int
 |Daily observations|6,274 days|
 |Distinct metric keys|41,407|
 |Date range|2009-01-03 to 2026-03-13|
+
+: Dataset overview {#tbl-dataset-overview tbl-colwidths="[50,30]"}
 
 The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. The figures below show how metric coverage has grown over time, Bitcoin's price history across halving epochs, and how key signals are correlated.
 
@@ -48,14 +53,30 @@ After applying this approach, 2,810 features were removed from the training data
 
   ![Zero-variance features](figures/0_variance_table.png)
 
-### Table
+### Identifying Feature Families
   
-  ![Feature count by family](figures/feature_count_by_family.png)
+  ![Feature count by family](figures/feature_count_by_family.png){#fig-feature-families fig-pos="H"}
 
-  ![Bitcoin price history with halving epochs annotated](figures/fig_price_history.png)
+### Halving Events and Price History
 
-  ![MVRV / NUPL / SOPR distributions across market cycles](figures/fig_cycle_violin_plots.png)
+@tbl-halving-events lists each halving date and the resulting block reward reduction. Because Bitcoin has a hard cap of 21 million coins, the halving reinforces its programmed scarcity. @fig-price-history shows how Bitcoin's price (market cap / circulating supply) has evolved across those epochs, illustrating events are generally followed by significant upward price trends. (@Subawaetal2025)
 
+|Event|Date	|Block reward|
+|---|---|---|
+|1st halving|28 November 2012|25 BTC|
+|2nd halving|9 July 2016|12.5 BTC|
+|3rd halving|11 May 2020|6.25 BTC|
+|4th halving|0 April 2024|3.125 BTC|
+
+: Bitcoin halving events and block rewards {#tbl-halving-events tbl-colwidths="[30,30,30]"}
+
+  ![Bitcoin price (market cap / circulating supply) with halving epochs annotated](figures/fig_price_history.png){#fig-price-history fig-pos="H"}
+
+
+MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled favorable accumulation opportunities when they indicate undervaluation (e.g., MVRV < 1, NUPL < 0, SOPR < 1); see @sec-appendix-metrics for full metric definitions. @fig-violin-plots shows how these metrics have varied across different market cycles, with lower values often coinciding with cycle bottoms and prime accumulation zones.
+
+  ![MVRV / NUPL / SOPR distributions across market cycles](figures/fig_cycle_violin_plots.png){#fig-violin-plots fig-pos="H"}
+ 
 - **Limitations:** The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.
 
 # Data Science Approach
@@ -63,13 +84,13 @@ After applying this approach, 2,810 features were removed from the training data
 
 With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.
 
-First, we group features based on their names using rule based parsing, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
+First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark & DCA related features, as depicted in @fig-feature-families. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
 This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
 
-### Baseline Strategies (fixed this since their model is dynamic)
+### Baseline Strategies 
 
-To evaluate our approach, we aim to implement a **Dynamic Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
+To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
 
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
@@ -106,14 +127,14 @@ The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting pr
 
 **Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
 
-1. Weight Sum Validation: Confirms that each window’s daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the uniform DCA baseline.
+1. Weight Sum Validation: Confirms that each window’s daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the naive DCA baseline.
 2. Forward-Leakage Test: Future data is masked and the model weights are recomputed to ensure the results remain consistent.
-3. Win-rate Requirement: The model must outperform plain/uniform DCA in more than 50% of the evaluation windows.
+3. Win-rate Requirement: The model must outperform naive DCA in more than 50% of the evaluation windows.
 
 **Performance Results** summarized the key SPD and percentile results:
 
 1. Percentile Statistics: Measures the minimum, maximum, mean, median, and exponentially weighted percentile (where recent windows receive greater weight) of the winning rate against naive DCA.
-2. Strategy Validation: Evaluates whether the model outperforms DCA based on the win-rate threshold (greater than 50%), using 2558 rolling one-year windows from 2018 to the present.
+2. Strategy Validation: Evaluates whether the model outperforms naive DCA based on the win-rate threshold (greater than 50%), using 2558 rolling one-year windows from 2018 to the present.
 
 The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
 
@@ -127,7 +148,7 @@ The model is then scored by combining the win rate and exponentially weighted pe
 
 ### Success Criteria
 
-A strategy is successful if it achieves higher SPD than the dynamic DCA baseline in more than 50% of tested rolling windows, is statistically significant (p < 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias. 
+A strategy is successful if it achieves higher SPD than the naive DCA baseline in more than 50% of tested rolling windows, is statistically significant (p < 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias. 
 
 ### Stakeholders
 
@@ -143,5 +164,21 @@ A strategy is successful if it achieves higher SPD than the dynamic DCA baseline
 | ML model + walk-forward CV | May 29, 2026|
 | Backtesting + final evaluation | June 12, 2026|
 | Final report + model | June 23, 2026|
+
+: Project timeline with key milestones {#tbl-timeline tbl-colwidths="[50,30]"}
+
+# Appendix: On-Chain Metrics for Long Accumulation Identification {#sec-appendix-metrics .appendix}
+
+The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows. 
+
+| Metric | Expands to | Definition | Accumulation Signal |
+|:---|:---|:---|:---|
+| **mvrv** | Market Value to Realized Value | Ratio of market capitalisation to realised capitalisation (the aggregate cost basis of all coins). | Values $<1$ (market price below aggregate cost basis) historically mark cycle bottoms and prime accumulation zones. |
+| **nupl** | Net Unrealized Profit/Loss | $\text{NUPL} = \frac{\text{Unrealized Profit} - \text{Unrealized Loss}}{\text{Market Cap}}$; measures the net paper gain/loss of all holders as a fraction of market cap. | Values $< 0$ indicate the majority of holders are in loss. |
+| **sopr** | Spent Output Profit Ratio | Ratio of the USD value of coins at the time they are spent (sold) to their USD value when they were created (cost basis). $\text{SOPR} = \frac{P_{\text{sell}}}{P_{\text{buy}}}$ | $\text{SOPR} < 1$ means coins are being sold at a loss on aggregate, indicating capitulation.|
+| **adjusted_sopr** | Adjusted SOPR | SOPR calculated after excluding very short-term (< 1 hour) spends to remove noise from exchange transfers and re-organisations. | Same interpretation as SOPR but more reliable. |
+| **realized_price** | Realized Price | Average USD price at which every coin was last moved on-chain; represents the aggregate cost basis per coin. $\text{RP} = \frac{\text{Realized Cap}}{\text{Supply}}$ | When market price is below Realized Price, most holders are at an unrealized loss, which has historically signaled favorable accumulation opportunities. |
+
+: Key on-chain metrics and their role in long accumulation identification {#tbl-metrics tbl-colwidths="[15,15,35,35]"}
 
 ## References
