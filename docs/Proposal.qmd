@@ -48,9 +48,9 @@ After applying this approach, 2,810 features were removed from the training data
 
   ![Zero-variance features](figures/0_variance_table.png)
 
-### Graph
+### Table
   
-  ![Cumulative metric coverage over time](figures/fig_cumulative_metric_coverage.png)
+  ![Feature count by family](figures/feature_count_by_family.png)
 
   ![Bitcoin price history with halving epochs annotated](figures/fig_price_history.png)
 
@@ -63,7 +63,7 @@ After applying this approach, 2,810 features were removed from the training data
 
 With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.
 
-First, we group features based on their names using stemming, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
+First, we group features based on their names using rule based parsing, which helps create feature families such as price-related features. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
 This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
 
