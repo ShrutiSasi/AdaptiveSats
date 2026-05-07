@@ -67,9 +67,9 @@ First, we group features based on their names using stemming, which helps create
 
 This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
 
-### Baseline Strategies
+### Baseline Strategies (fixed this since their model is dynamic)
 
-To evaluate our approach, we aim to implement a **naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
+To evaluate our approach, we aim to implement a **Dynamic Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
 
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
@@ -102,7 +102,7 @@ In future iterations, we may explore additional models and strategies such as LS
 
 ### Backtesting
 
-The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting process included two frameworks: Validation Checks and Performance Results.
+The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting process included two frameworks: Validation Checks and Performance Results @stacksats:
 
 **Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
 
@@ -127,12 +127,7 @@ The model is then scored by combining the win rate and exponentially weighted pe
 
 ### Success Criteria
 
-A strategy will be considered successful if it achieves:
-
-- Higher SPD compared to the naive DCA baseline  
-- Lower average acquisition cost  
-- Reduced allocation volatility (more stable investment behavior)  
-- Consistent performance over the 2024–2026 test window  
+A strategy is successful if it achieves higher SPD than the dynamic DCA baseline in more than 50% of tested rolling windows, is statistically significant (p < 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias. 
 
 ### Stakeholders
 
