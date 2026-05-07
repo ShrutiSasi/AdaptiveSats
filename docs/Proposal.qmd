@@ -42,7 +42,7 @@ The 41,407 metrics span several categories including price, market valuation, ho
 
 ### Zero Variance Features Selection
 
-One of the first strategies we used in the feature selection step was removing columns with zero variance. According to Max Kuhn and Kjell Johnson (2019), features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.
+One of the first strategies we used in the feature selection step was removing columns with zero variance. According to @kuhn2019feature, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.
 
 After applying this approach, 2,810 features were removed from the training dataset.
 
@@ -99,6 +99,24 @@ The test set will remain untouched during model development and will only be use
 In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
 
 # Evaluation & Success Criteria
+
+### Backtesting
+
+The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting process included two frameworks: Validation Checks and Performance Results.
+
+**Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
+
+1. Weight Sum Validation: Confirms that each window’s daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the uniform DCA baseline.
+2. Forward-Leakage Test: Future data is masked and the model weights are recomputed to ensure the results remain consistent.
+3. Win-rate Requirement: The model must outperform plain/uniform DCA in more than 50% of the evaluation windows.
+
+**Performance Results** summarized the key SPD and percentile results:
+
+1. Percentile Statistics: Measures the minimum, maximum, mean, median, and exponentially weighted percentile (where recent windows receive greater weight) of the winning rate against naive DCA.
+2. Strategy Validation: Evaluates whether the model outperforms DCA based on the win-rate threshold (greater than 50%), using 2558 rolling one-year windows from 2018 to the present.
+
+The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
+
 ### Metrics
 
 - **Primary Metric (Sats per Dollar - SPD):**  
