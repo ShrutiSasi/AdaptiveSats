@@ -48,7 +48,7 @@ After applying this approach, 2,810 features were removed from the training data
 
   ![Zero-variance features](figures/0_variance_table.png)
 
-### Graph
+### Table
   
   ![Feature count by family](figures/feature_count_by_family.png)
 
