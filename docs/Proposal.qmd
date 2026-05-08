@@ -79,6 +79,13 @@ MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled fa
  
 - **Limitations:** The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.
 
+### Clustering and VIF
+
+After identifying the feature families in our data, we performed hierarchical clustering on each family because we believe there would be large similarities among the members. For each cluster identified, we plan to calculate the VIF, to give us an understanding of the level of multicollinearity present in the data.
+
+![Correlation Dendrogram of Price Features ](figures/price_dendrogram_new.png){#fig-dendrogram fig-pos="H"}
+
+
 # Data Science Approach
 ### Feature Reduction
 
