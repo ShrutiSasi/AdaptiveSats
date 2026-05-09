@@ -15,14 +15,15 @@ format:
 bibliography: references.bib
 ---
 
-# Introduction
+# Executive Summary
+
 Large banks and hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?
 
-_Why Bitcoin?_
+# Introduction
 
 We focus on Bitcoin because it's well-suited for this kind of research. All transaction data is public and available to everyone simultaneously - no information asymmetry. Strategies can be audited in real-time on-chain, and the market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.
 
-The simplest accumulation strategy is DCA - invest a fixed amount at regular intervals regardless of price. It works, but it ignores market conditions entirely. Our hypothesis is that on-chain signals can identify when Bitcoin is undervalued, allowing smarter allocation decisions (@leggio2001).
+The simplest accumulation strategy is DCA - invest a fixed amount at regular intervals regardless of price. It works, but it ignores market conditions entirely. Our hypothesis is that on-chain signals can identify when Bitcoin is undervalued, allowing smarter allocation decisions.
 
 ### Objectives
 - Identify on-chain/market signals predicting favorable accumulation windows
@@ -43,7 +44,7 @@ The simplest accumulation strategy is DCA - invest a fixed amount at regular int
 
 : Dataset overview {#tbl-dataset-overview tbl-colwidths="[50,30]"}
 
-The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. The figures below show how metric coverage has grown over time, Bitcoin's price history across halving epochs, and how key signals are correlated.
+The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. 
 
 ### Zero Variance Features Selection
 
@@ -93,11 +94,11 @@ With over 41,000 features, we aim to identify which features capture similar inf
 
 First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark & DCA related features, as depicted in @fig-feature-families. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
-This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.
+This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.
 
 ### Baseline Strategies 
 
-To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.
+To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals. Our goal is to outperform it by improving accumulation efficiency.
 
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
@@ -124,7 +125,7 @@ The test set will remain untouched during model development and will only be use
 
 ### Future Work
 
-In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
+In future iterations, we may explore additional model such as LSTM (Long Short-Term Memory) based model. This approach will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
 
 # Evaluation & Success Criteria
 
