@@ -29,6 +29,8 @@ Python Library for quantitative long only Bitcoin accumulation - keeping the dis
         quarto install tinytex
     ```
 
+### Rendering reports (Optional)
+
 5. Run the jupyter notebooks to generate plots and tables (**optional** - since the plots have already been generated)
 <br>**Note:** This step takes time as it downloads ~1GB data from google drive and splits to train & test data as the first step.
     ```bash
@@ -38,6 +40,8 @@ Python Library for quantitative long only Bitcoin accumulation - keeping the dis
         jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
         jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
     ```
+
+#### Generate proposal pdf
 
 6. Ensure `AdaptiveSats` folder is active in terminal. Render the proposal:
     ```bash
