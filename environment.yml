@@ -22,3 +22,8 @@ dependencies:
   - scipy
   - hmmlearn
   - pgmpy
+  - pip
+  - pyarrow
+  - nbformat>=4.2.0
+  - pip:
+      - -r requirements.txt
