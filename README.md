@@ -49,6 +49,7 @@ jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
 6.  Ensure `AdaptiveSats` folder is active in terminal. Render the proposal:
 
 ``` bash
+cd .. #If still in notebooks folder
 quarto render docs/Proposal.qmd
 ```
 
