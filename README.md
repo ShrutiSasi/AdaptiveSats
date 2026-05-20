@@ -14,10 +14,10 @@ Python Library for quantitative long only Bitcoin accumulation - keeping the dis
 
 2.  Clone the repository:
 
-    ``` bash
-    git clone https://github.com/ShrutiSasi/AdaptiveSats.git
-    cd AdaptiveSats
-    ```
+``` bash
+git clone https://github.com/ShrutiSasi/AdaptiveSats.git
+cd AdaptiveSats
+```
 
 3.  Create and activate the environment:
 
@@ -44,7 +44,7 @@ jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
 jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
 ```
 
-#### Generate proposal pdf
+### Generate proposal pdf
 
 6.  Ensure `AdaptiveSats` folder is active in terminal. Render the proposal:
 
