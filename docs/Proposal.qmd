@@ -113,7 +113,7 @@ With over 41,000 features, we aim to identify which features capture similar inf
 
 First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark & DCA related features, as depicted in @fig-feature-families. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
-This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.
+This process is computationally intensive when run locally with limited resources. We may explore efficient feature reduction methods in future iterations.
 
 ### Baseline Strategies 
 
