@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,15 +47,14 @@ div.csl-indent {
 <script src="Proposal_files/libs/clipboard/clipboard.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Proposal_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/popper.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Proposal_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Proposal_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Proposal_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Proposal_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Proposal_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -71,7 +70,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -93,7 +92,7 @@ window.Quarto = {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="..\Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -210,12 +209,6 @@ Table&nbsp;1: Dataset overview
 <h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
 <p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
 <p>After applying this approach, 2,810 features were removed from the training dataset.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figures/0_variance_table.png" class="img-fluid figure-img"></p>
-<figcaption>Zero-variance features</figcaption>
-</figure>
-</div>
 </section>
 <section id="identifying-feature-families" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-feature-families">Identifying Feature Families</h3>
@@ -589,14 +582,13 @@ Subawa, Nyoman Sri, Caren Angellina Mimaki, I Made Oka Mahendra, and Made Srinit
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
