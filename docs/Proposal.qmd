@@ -17,7 +17,7 @@ bibliography: references.bib
 
 # Executive Summary
 
-This project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with naive Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy. Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the number of Bitcoins accumulated for each dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply dimensionality reduction, and backtest adaptive allocation strategies against naive DCA.
+In partnership with the Trilemma Foundation, this project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with naive Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy. This supports Trilemma’s goal of building an open-source framework for evaluating Bitcoin accumulation strategies. Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply dimensionality reduction, and backtest adaptive allocation strategies against naive DCA.
 
 # Introduction
 
@@ -25,7 +25,7 @@ Long-term Bitcoin accumulation is important for institutions and foundations bui
 
 This problem is important because Bitcoin's public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
 
-We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to naive DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against naive DCA. The final product will include a cleaned data pipeline, a strategy, backtesting logic, and evaluation results comparing adaptive accumulation to naive DCA for the Trilemma Foundation and the open-source community.
+We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to naive DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against naive DCA. The final product will include a cleaned data pipeline strategy, backtesting logic, and evaluation results comparing adaptive accumulation to naive DCA for the Trilemma Foundation and the open-source community.
 
 ### Objectives
 - Identify on-chain/market signals predicting favorable accumulation windows
