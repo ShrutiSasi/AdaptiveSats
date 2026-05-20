@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,14 +47,15 @@ div.csl-indent {
 <script src="Proposal_files/libs/clipboard/clipboard.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Proposal_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/popper.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Proposal_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Proposal_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Proposal_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Proposal_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Proposal_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -70,7 +71,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -92,7 +93,7 @@ window.Quarto = {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="..\Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -269,7 +270,7 @@ Table&nbsp;2: Bitcoin halving events and block rewards
 </tr>
 <tr class="even">
 <td>4th halving</td>
-<td>0 April 2024</td>
+<td>20 April 2024</td>
 <td>3.125 BTC</td>
 </tr>
 </tbody>
@@ -323,7 +324,7 @@ Figure&nbsp;4: Correlation Dendrogram of Price Features
 <h3 class="anchored" data-anchor-id="feature-reduction">Feature Reduction</h3>
 <p>With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.</p>
 <p>First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark &amp; DCA related features, as depicted in <a href="#fig-feature-families" class="quarto-xref">Figure&nbsp;1</a>. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information.</p>
-<p>This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.</p>
+<p>This process is computationally intensive when run locally with limited resources. We may explore efficient feature reduction methods in future iterations.</p>
 </section>
 <section id="baseline-strategies" class="level3">
 <h3 class="anchored" data-anchor-id="baseline-strategies">Baseline Strategies</h3>
@@ -443,7 +444,8 @@ Table&nbsp;3: Project timeline with key milestones
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="sec-appendix-metrics" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix: On-Chain Metrics for Long Accumulation Identification</h2><div class="quarto-appendix-contents">
+
+<div id="quarto-appendix" class="default"><section id="sec-appendix-metrics" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix 1: On-Chain Metrics for Long Accumulation Identification</h2><div class="quarto-appendix-contents">
 
 <p>The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows.</p>
 <div id="tbl-metrics" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[15,15,35,35]">
@@ -503,6 +505,17 @@ Table&nbsp;4: Key on-chain metrics and their role in long accumulation identific
 </div>
 </figure>
 </div>
+</div></section><section id="sec-appendix-glossary" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix 2 : Glossary of Terms</h2><div class="quarto-appendix-contents">
+
+<ul>
+<li><strong>Bitcoin (BTC):</strong> A decentralized digital currency that operates on a peer-to-peer network without a central authority. It was created in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto (<span class="citation" data-cites="nakamoto2008">Nakamoto (<a href="#ref-nakamoto2008" role="doc-biblioref">2008</a>)</span>).</li>
+<li><strong>On-chain data:</strong> Information recorded on the blockchain, such as transactions, addresses, and balances, which is publicly accessible and can be analyzed to derive insights about market behavior and participant activity.</li>
+<li><strong>Dollar-Cost Averaging (DCA):</strong> An investment strategy where a fixed amount of money is invested at regular intervals, regardless of the asset’s price, to reduce the impact of volatility over time.</li>
+<li><strong>Naive DCA:</strong> A simple implementation of DCA where the same amount is invested at each interval without any adjustments based on market conditions or signals.</li>
+<li><strong>Sats per Dollar (SPD):</strong> A metric that measures the amount of Bitcoin (in satoshis) accumulated per unit of USD invested, used to evaluate the efficiency of an accumulation strategy.</li>
+<li><strong>Halving:</strong> A programmed event in the Bitcoin protocol that occurs approximately every four years, reducing the block reward for miners by half, which historically has had significant impacts on Bitcoin’s price and market dynamics.</li>
+<li><strong>Backtesting:</strong> The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. Includes validation checks to ensure no violations and look-ahead bias and that the strategy is evaluated fairly against a baseline.</li>
+</ul>
 <section id="references" class="level2 unnumbered">
 
 
@@ -576,13 +589,14 @@ Subawa, Nyoman Sri, Caren Angellina Mimaki, I Made Oka Mahendra, and Made Srinit
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
