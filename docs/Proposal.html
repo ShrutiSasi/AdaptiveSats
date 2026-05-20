@@ -92,7 +92,7 @@ window.Quarto = {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -156,11 +156,6 @@ window.Quarto = {
 </section>
 <section id="data-eda" class="level1">
 <h1>Data &amp; EDA</h1>
-<ul>
-<li><strong>Source:</strong> BRK <code>brk_metrics.parquet</code> (<span class="citation" data-cites="brk">Bitcoin Research Kit Contributors (<a href="#ref-brk" role="doc-biblioref">2025</a>)</span> via <span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>)</li>
-<li><strong>Schema:</strong> long format with day_utc, metric, value columns<br>
-zero nulls; all values finite</li>
-</ul>
 <div id="tbl-dataset-overview" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50,30]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dataset-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -205,17 +200,6 @@ Table&nbsp;1: Dataset overview
 </figure>
 </div>
 <p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators.</p>
-<section id="zero-variance-features-selection" class="level3">
-<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
-<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
-<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figures/0_variance_table.png" class="img-fluid figure-img"></p>
-<figcaption>Zero-variance features</figcaption>
-</figure>
-</div>
-</section>
 <section id="identifying-feature-families" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-feature-families">Identifying Feature Families</h3>
 <div id="fig-feature-families" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
@@ -228,6 +212,11 @@ Figure&nbsp;1: Feature count by family
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="zero-variance-features-selection" class="level3">
+<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
+<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
+<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
 </section>
 <section id="halving-events-and-price-history" class="level3">
 <h3 class="anchored" data-anchor-id="halving-events-and-price-history">Halving Events and Price History</h3>
@@ -269,7 +258,7 @@ Table&nbsp;2: Bitcoin halving events and block rewards
 </tr>
 <tr class="even">
 <td>4th halving</td>
-<td>0 April 2024</td>
+<td>20 April 2024</td>
 <td>3.125 BTC</td>
 </tr>
 </tbody>
@@ -323,7 +312,7 @@ Figure&nbsp;4: Correlation Dendrogram of Price Features
 <h3 class="anchored" data-anchor-id="feature-reduction">Feature Reduction</h3>
 <p>With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.</p>
 <p>First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark &amp; DCA related features, as depicted in <a href="#fig-feature-families" class="quarto-xref">Figure&nbsp;1</a>. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information.</p>
-<p>This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.</p>
+<p>This process is computationally intensive when run locally with limited resources. We may explore efficient feature reduction methods in future iterations.</p>
 </section>
 <section id="baseline-strategies" class="level3">
 <h3 class="anchored" data-anchor-id="baseline-strategies">Baseline Strategies</h3>
@@ -443,7 +432,8 @@ Table&nbsp;3: Project timeline with key milestones
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="sec-appendix-metrics" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix: On-Chain Metrics for Long Accumulation Identification</h2><div class="quarto-appendix-contents">
+
+<div id="quarto-appendix" class="default"><section id="sec-appendix-metrics" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix 1: On-Chain Metrics for Long Accumulation Identification</h2><div class="quarto-appendix-contents">
 
 <p>The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows.</p>
 <div id="tbl-metrics" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[15,15,35,35]">
@@ -503,14 +493,22 @@ Table&nbsp;4: Key on-chain metrics and their role in long accumulation identific
 </div>
 </figure>
 </div>
+</div></section><section id="sec-appendix-glossary" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix 2 : Glossary of Terms</h2><div class="quarto-appendix-contents">
+
+<ul>
+<li><strong>Bitcoin (BTC):</strong> A decentralized digital currency that operates on a peer-to-peer network without a central authority. It was created in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto (<span class="citation" data-cites="nakamoto2008">Nakamoto (<a href="#ref-nakamoto2008" role="doc-biblioref">2008</a>)</span>).</li>
+<li><strong>On-chain data:</strong> Information recorded on the blockchain, such as transactions, addresses, and balances, which is publicly accessible and can be analyzed to derive insights about market behavior and participant activity.</li>
+<li><strong>Dollar-Cost Averaging (DCA):</strong> An investment strategy where a fixed amount of money is invested at regular intervals, regardless of the asset’s price, to reduce the impact of volatility over time.</li>
+<li><strong>Naive DCA:</strong> A simple implementation of DCA where the same amount is invested at each interval without any adjustments based on market conditions or signals.</li>
+<li><strong>Sats per Dollar (SPD):</strong> A metric that measures the amount of Bitcoin (in satoshis) accumulated per unit of USD invested, used to evaluate the efficiency of an accumulation strategy.</li>
+<li><strong>Halving:</strong> A programmed event in the Bitcoin protocol that occurs approximately every four years, reducing the block reward for miners by half, which historically has had significant impacts on Bitcoin’s price and market dynamics.</li>
+<li><strong>Backtesting:</strong> The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. Includes validation checks to ensure no violations and look-ahead bias and that the strategy is evaluated fairly against a baseline.</li>
+</ul>
 <section id="references" class="level2 unnumbered">
 
 
 </section>
 </div></section><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-brk" class="csl-entry" role="listitem">
-Bitcoin Research Kit Contributors. 2025. <span>“Bitcoin Research Kit (<span>BRK</span>).”</span> <a href="https://github.com/bitcoinresearchkit/brk">https://github.com/bitcoinresearchkit/brk</a>.
-</div>
 <div id="ref-stacksats" class="csl-entry" role="listitem">
 HyperTrial. 2025. <span>“StackSats: Bitcoin Accumulation Strategy Research Framework.”</span> <a href="https://hypertrial.github.io/stacksats/">https://hypertrial.github.io/stacksats/</a>.
 </div>
