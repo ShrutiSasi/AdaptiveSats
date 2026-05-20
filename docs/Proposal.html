@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,15 +47,14 @@ div.csl-indent {
 <script src="Proposal_files/libs/clipboard/clipboard.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Proposal_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="Proposal_files/libs/quarto-html/popper.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Proposal_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Proposal_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Proposal_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Proposal_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Proposal_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Proposal_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -71,7 +70,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -93,7 +92,7 @@ window.Quarto = {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="..\Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -157,11 +156,6 @@ window.Quarto = {
 </section>
 <section id="data-eda" class="level1">
 <h1>Data &amp; EDA</h1>
-<ul>
-<li><strong>Source:</strong> BRK <code>brk_metrics.parquet</code> (<span class="citation" data-cites="brk">Bitcoin Research Kit Contributors (<a href="#ref-brk" role="doc-biblioref">2025</a>)</span> via <span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>)</li>
-<li><strong>Schema:</strong> long format with day_utc, metric, value columns<br>
-zero nulls; all values finite</li>
-</ul>
 <div id="tbl-dataset-overview" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50,30]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dataset-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -206,17 +200,6 @@ Table&nbsp;1: Dataset overview
 </figure>
 </div>
 <p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators.</p>
-<section id="zero-variance-features-selection" class="level3">
-<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
-<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
-<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figures/0_variance_table.png" class="img-fluid figure-img"></p>
-<figcaption>Zero-variance features</figcaption>
-</figure>
-</div>
-</section>
 <section id="identifying-feature-families" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-feature-families">Identifying Feature Families</h3>
 <div id="fig-feature-families" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
@@ -229,6 +212,11 @@ Figure&nbsp;1: Feature count by family
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="zero-variance-features-selection" class="level3">
+<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
+<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
+<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
 </section>
 <section id="halving-events-and-price-history" class="level3">
 <h3 class="anchored" data-anchor-id="halving-events-and-price-history">Halving Events and Price History</h3>
@@ -521,9 +509,6 @@ Table&nbsp;4: Key on-chain metrics and their role in long accumulation identific
 
 </section>
 </div></section><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-brk" class="csl-entry" role="listitem">
-Bitcoin Research Kit Contributors. 2025. <span>“Bitcoin Research Kit (<span>BRK</span>).”</span> <a href="https://github.com/bitcoinresearchkit/brk">https://github.com/bitcoinresearchkit/brk</a>.
-</div>
 <div id="ref-stacksats" class="csl-entry" role="listitem">
 HyperTrial. 2025. <span>“StackSats: Bitcoin Accumulation Strategy Research Framework.”</span> <a href="https://hypertrial.github.io/stacksats/">https://hypertrial.github.io/stacksats/</a>.
 </div>
@@ -589,14 +574,13 @@ Subawa, Nyoman Sri, Caren Angellina Mimaki, I Made Oka Mahendra, and Made Srinit
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
