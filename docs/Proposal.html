@@ -156,11 +156,6 @@ window.Quarto = {
 </section>
 <section id="data-eda" class="level1">
 <h1>Data &amp; EDA</h1>
-<ul>
-<li><strong>Source:</strong> BRK <code>brk_metrics.parquet</code> (<span class="citation" data-cites="brk">Bitcoin Research Kit Contributors (<a href="#ref-brk" role="doc-biblioref">2025</a>)</span> via <span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>)</li>
-<li><strong>Schema:</strong> long format with day_utc, metric, value columns<br>
-zero nulls; all values finite</li>
-</ul>
 <div id="tbl-dataset-overview" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50,30]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dataset-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -205,11 +200,6 @@ Table&nbsp;1: Dataset overview
 </figure>
 </div>
 <p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators.</p>
-<section id="zero-variance-features-selection" class="level3">
-<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
-<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
-<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
-</section>
 <section id="identifying-feature-families" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-feature-families">Identifying Feature Families</h3>
 <div id="fig-feature-families" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
@@ -222,6 +212,11 @@ Figure&nbsp;1: Feature count by family
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="zero-variance-features-selection" class="level3">
+<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
+<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
+<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
 </section>
 <section id="halving-events-and-price-history" class="level3">
 <h3 class="anchored" data-anchor-id="halving-events-and-price-history">Halving Events and Price History</h3>
@@ -514,9 +509,6 @@ Table&nbsp;4: Key on-chain metrics and their role in long accumulation identific
 
 </section>
 </div></section><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-brk" class="csl-entry" role="listitem">
-Bitcoin Research Kit Contributors. 2025. <span>“Bitcoin Research Kit (<span>BRK</span>).”</span> <a href="https://github.com/bitcoinresearchkit/brk">https://github.com/bitcoinresearchkit/brk</a>.
-</div>
 <div id="ref-stacksats" class="csl-entry" role="listitem">
 HyperTrial. 2025. <span>“StackSats: Bitcoin Accumulation Strategy Research Framework.”</span> <a href="https://hypertrial.github.io/stacksats/">https://hypertrial.github.io/stacksats/</a>.
 </div>

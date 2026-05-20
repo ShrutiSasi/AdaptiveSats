@@ -48,9 +48,6 @@ Ultimately, this project seeks to determine whether transparent, publicly access
 - Build and validate an adaptive daily allocation model
 
 # Data & EDA
-- **Source:** BRK `brk_metrics.parquet` (@brk via @stacksats) 
-- **Schema:** long format with day_utc, metric, value columns                     
-              zero nulls; all values finite
 
 |Property|Value|
 |--------|-----|
@@ -64,15 +61,15 @@ Ultimately, this project seeks to determine whether transparent, publicly access
 
 The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. 
 
+### Identifying Feature Families
+  
+  ![Feature count by family](figures/feature_count_by_family.png){#fig-feature-families fig-pos="H"}
+
 ### Zero Variance Features Selection
 
 One of the first strategies we used in the feature selection step was removing columns with zero variance. According to @kuhn2019feature, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.
 
 After applying this approach, 2,810 features were removed from the training dataset.
-
-### Identifying Feature Families
-  
-  ![Feature count by family](figures/feature_count_by_family.png){#fig-feature-families fig-pos="H"}
 
 ### Halving Events and Price History
 
