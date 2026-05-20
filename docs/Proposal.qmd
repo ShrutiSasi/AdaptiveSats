@@ -1,0 +1,210 @@
+---
+title: "AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies"
+authors: ["Arafat B. Bello","Nguyen Nguyen","Raghav Gupta","Shruti Sasi"]
+date: today
+link-citations: true
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    fontsize: 11pt
+    number-sections: true
+    colorlinks: true
+    citecolor: blue 
+    fig-pos: "H"
+bibliography: references.bib
+---
+
+# Executive Summary
+
+Large banks & hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources? 
+
+Bitcoin accumulation strategies are increasingly relevant to institutions seeking long-term exposure to digital assets. However, most accumulation approaches still rely on naive Dollar-Cost Averaging (DCA), where fixed amounts are invested at regular intervals regardless of market conditions. While DCA is simple and robust, it ignores the rich set of publicly available on-chain signals that may provide insight into market valuation, investor behaviour, and network activity. 
+
+This project investigates whether publicly available Bitcoin on-chain data can be used to improve accumulation efficiency relative to naive DCA. Using over 41,000 blockchain-derived metrics from the BRK dataset, we aim to design adaptive allocation strategies that dynamically adjust daily investment weights while respecting realistic portfolio constraints.
+
+Our approach combines large-scale exploratory data analysis, feature reduction/selection, clustering, and signal development to identify metrics associated with historically favourable accumulation periods. Candidate strategies include Value Averaging, moving-average-based allocation, and signal-driven adaptive weighting models informed by metrics such as MVRV, NUPL, SOPR, and realized price. Future extensions may incorporate machine learning approaches including Hidden Markov Models (HMMs) among others.
+
+Strategies are evaluated using the Stacksats backtesting framework, where performance is measured primarily through Sats per Dollar (SPD), a metric quantifying Bitcoin accumulated per unit of capital invested. Success is defined by consistently outperforming naive DCA across rolling evaluation windows while passing strict validation checks for leakage, allocation integrity, and robustness across multiple market cycles.
+
+The broader goal of this work is to develop transparent, reproducible, and data-driven Bitcoin accumulation strategies that can be implemented without privileged access or proprietary market infrastructure.
+
+# Introduction
+
+Traditional financial institutions often rely on sophisticated execution systems, proprietary data pipelines, and privileged market access to optimize investment decisions. In contrast, smaller institutions and retail participants typically operate with limited informational and computational advantages. Bitcoin presents a unique environment where this imbalance is partially reduced: all transaction activity is recorded publicly on-chain, allowing any participant to analyze network behaviour, market structure, and investor activity in real time. Strategies can be audited in real-time on-chain, and the Bitcoin market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.
+
+This transparency creates an opportunity to explore whether publicly available blockchain data can improve long-term Bitcoin accumulation strategies. In particular, we investigate whether on-chain signals can identify periods of relative undervaluation and thereby improve capital allocation decisions compared to traditional fixed-schedule investing approaches.
+
+The most common accumulation strategy is Dollar-Cost Averaging (DCA), where investors purchase a fixed dollar amount of Bitcoin at regular intervals regardless of prevailing market conditions. DCA is widely adopted because it is simple, reduces emotional decision-making, and mitigates timing risk. However, it treats all market environments equally and does not account for changing valuation conditions, investor sentiment, or network behaviour. Bitcoin’s blockchain provides a large collection of observable metrics that may offer insight into these dynamics. Metrics such as Market Value to Realized Value (MVRV), Net Unrealized Profit/Loss (NUPL), Spent Output Profit Ratio (SOPR), realized price, and various holder behaviour indicators have historically exhibited cyclical relationships with market tops and bottoms. These signals may help identify accumulation periods.
+
+In this project, we use the BRK on-chain dataset, containing over 41,000 metrics spanning market valuation, network activity, holder behaviour, technical indicators, and macro-level blockchain statistics. Because of the dataset’s scale and high feature redundancy, we implement a structured feature reduction/selection pipeline involving feature-family groupings, hierarchical clustering, and correlation-based pruning to identify informative signals while reducing dimensionality.
+
+Using this reduced feature space, we aim to design adaptive accumulation strategies that dynamically vary daily allocation weights under realistic investment constraints. Candidate approaches include Value Averaging, moving-average-based trend allocation, and signal-driven models informed by historical on-chain conditions. Performance will be evaluated against naive DCA using rolling-window backtesting and Sats per Dollar (SPD), a measure of Bitcoin accumulated per unit of USD invested.
+
+Ultimately, this project seeks to determine whether transparent, publicly accessible blockchain data can be systematically leveraged to improve institutional Bitcoin accumulation efficiency without requiring proprietary information or high-frequency trading infrastructure.
+
+### Objectives
+- Identify on-chain/market signals predicting favorable accumulation windows
+- Build and validate an adaptive daily allocation model
+
+# Data & EDA
+- **Source:** BRK `brk_metrics.parquet` (@brk via @stacksats) 
+- **Schema:** long format with day_utc, metric, value columns                     
+              zero nulls; all values finite
+
+|Property|Value|
+|--------|-----|
+|File size|~1.08 GiB|
+|Total rows|236,259,020|
+|Daily observations|6,274 days|
+|Distinct metric keys|41,407|
+|Date range|2009-01-03 to 2026-03-13|
+
+: Dataset overview {#tbl-dataset-overview tbl-colwidths="[50,30]"}
+
+The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. 
+
+### Zero Variance Features Selection
+
+One of the first strategies we used in the feature selection step was removing columns with zero variance. According to @kuhn2019feature, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.
+
+After applying this approach, 2,810 features were removed from the training dataset.
+
+  ![Zero-variance features](figures/0_variance_table.png)
+
+### Identifying Feature Families
+  
+  ![Feature count by family](figures/feature_count_by_family.png){#fig-feature-families fig-pos="H"}
+
+### Halving Events and Price History
+
+@tbl-halving-events lists each halving date and the resulting block reward reduction. Because Bitcoin has a hard cap of 21 million coins, the halving reinforces its programmed scarcity. @fig-price-history shows how Bitcoin's price (market cap / circulating supply) has evolved across those epochs, illustrating events are generally followed by significant upward price trends. (@Subawaetal2025)
+
+|Event|Date	|Block reward|
+|---|---|---|
+|1st halving|28 November 2012|25 BTC|
+|2nd halving|9 July 2016|12.5 BTC|
+|3rd halving|11 May 2020|6.25 BTC|
+|4th halving|0 April 2024|3.125 BTC|
+
+: Bitcoin halving events and block rewards {#tbl-halving-events tbl-colwidths="[30,30,30]"}
+
+  ![Bitcoin price (market cap / circulating supply) with halving epochs annotated](figures/fig_price_history.png){#fig-price-history fig-pos="H"}
+
+
+MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled favorable accumulation opportunities when they indicate undervaluation (e.g., MVRV < 1, NUPL < 0, SOPR < 1); see @sec-appendix-metrics for full metric definitions. @fig-violin-plots shows how these metrics have varied across different market cycles, with lower values often coinciding with cycle bottoms and prime accumulation zones.
+
+  ![MVRV / NUPL / SOPR distributions across market cycles](figures/fig_cycle_violin_plots.png){#fig-violin-plots fig-pos="H"}
+ 
+- **Limitations:** The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.
+
+### Clustering and VIF
+
+After identifying the feature families in our data, we performed hierarchical clustering on each family because we believe there would be large similarities among the members. For each cluster identified, we plan to calculate the VIF, to give us an understanding of the level of multicollinearity present in the data.
+
+![Correlation Dendrogram of Price Features ](figures/price_dendrogram_new.png){#fig-dendrogram fig-pos="H"}
+
+
+# Data Science Approach
+### Feature Reduction
+
+With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.
+
+First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark & DCA related features, as depicted in @fig-feature-families. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
+
+This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.
+
+### Baseline Strategies 
+
+To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals. Our goal is to outperform it by improving accumulation efficiency.
+
+To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
+
+In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
+
+### Model Development
+
+Our proposed strategy will leverage the reduced feature set to design a data-driven accumulation approach.
+
+The objective is to:
+
+- Identify periods of undervaluation
+- Dynamically adjust investment allocation
+- Improve accumulation efficiency compared to the defined baseline strategies
+
+### Train/Test Split
+
+To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chronological train/test split.
+
+- **Training set:** Data up to December 2023
+- **Test set:** January 2024 to March 2026
+
+The test set will remain untouched during model development and will only be used for final evaluation.
+
+### Future Work
+
+In future iterations, we may explore additional model such as LSTM (Long Short-Term Memory) based model. This approach will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.
+
+# Evaluation & Success Criteria
+
+### Backtesting
+
+The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting process included two frameworks: Validation Checks and Performance Results @stacksats:
+
+**Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
+
+1. Weight Sum Validation: Confirms that each window’s daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the naive DCA baseline.
+2. Forward-Leakage Test: Future data is masked and the model weights are recomputed to ensure the results remain consistent.
+3. Win-rate Requirement: The model must outperform naive DCA in more than 50% of the evaluation windows.
+
+**Performance Results** summarized the key SPD and percentile results:
+
+1. Percentile Statistics: Measures the minimum, maximum, mean, median, and exponentially weighted percentile (where recent windows receive greater weight) of the winning rate against naive DCA.
+2. Strategy Validation: Evaluates whether the model outperforms naive DCA based on the win-rate threshold (greater than 50%), using 2558 rolling one-year windows from 2018 to the present.
+
+The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
+
+### Metrics
+
+- **Primary Metric (Sats per Dollar - SPD):**  
+  We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
+
+- **Smoothness (Allocation Stability):**  
+  We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.
+
+### Success Criteria
+
+A strategy is successful if it achieves higher SPD than the naive DCA baseline in more than 50% of tested rolling windows, is statistically significant (p < 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias. 
+
+### Stakeholders
+
+- **Trilemma Foundation:** Interested in improving long-term Bitcoin accumulation efficiency  
+- **Open-source community:** Focused on transparency, reproducibility, and practical usability of the strategy  
+
+# Timeline
+
+| Milestone | Target Date |
+|-----------|-------------|
+| Train/test split + EDA scripts |May 15, 2026|
+| Feature reduction + baseline DCA |May 22, 2026|
+| ML model + walk-forward CV | May 29, 2026|
+| Backtesting + final evaluation | June 12, 2026|
+| Final report + model | June 23, 2026|
+
+: Project timeline with key milestones {#tbl-timeline tbl-colwidths="[50,30]"}
+
+# Appendix: On-Chain Metrics for Long Accumulation Identification {#sec-appendix-metrics .appendix}
+
+The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows. 
+
+| Metric | Expands to | Definition | Accumulation Signal |
+|:---|:---|:---|:---|
+| **mvrv** | Market Value to Realized Value | Ratio of market capitalisation to realised capitalisation (the aggregate cost basis of all coins). | Values $<1$ (market price below aggregate cost basis) historically mark cycle bottoms and prime accumulation zones. |
+| **nupl** | Net Unrealized Profit/Loss | $\text{NUPL} = \frac{\text{Unrealized Profit} - \text{Unrealized Loss}}{\text{Market Cap}}$; measures the net paper gain/loss of all holders as a fraction of market cap. | Values $< 0$ indicate the majority of holders are in loss. |
+| **sopr** | Spent Output Profit Ratio | Ratio of the USD value of coins at the time they are spent (sold) to their USD value when they were created (cost basis). $\text{SOPR} = \frac{P_{\text{sell}}}{P_{\text{buy}}}$ | $\text{SOPR} < 1$ means coins are being sold at a loss on aggregate, indicating capitulation.|
+| **adjusted_sopr** | Adjusted SOPR | SOPR calculated after excluding very short-term (< 1 hour) spends to remove noise from exchange transfers and re-organisations. | Same interpretation as SOPR but more reliable. |
+| **realized_price** | Realized Price | Average USD price at which every coin was last moved on-chain; represents the aggregate cost basis per coin. $\text{RP} = \frac{\text{Realized Cap}}{\text{Supply}}$ | When market price is below Realized Price, most holders are at an unrealized loss, which has historically signaled favorable accumulation opportunities. |
+
+: Key on-chain metrics and their role in long accumulation identification {#tbl-metrics tbl-colwidths="[15,15,35,35]"}
+
+## References

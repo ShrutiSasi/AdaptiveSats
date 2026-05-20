@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-05-19">
+
+<title>AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Proposal_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Proposal_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Proposal_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Proposal_files/libs/quarto-html/popper.min.js"></script>
+<script src="Proposal_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Proposal_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Proposal_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Proposal_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Proposal_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Proposal_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Proposal_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Arafat B. Bello </p>
+             <p>Nguyen Nguyen </p>
+             <p>Raghav Gupta </p>
+             <p>Shruti Sasi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 19, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level1">
+<h1>Executive Summary</h1>
+<p>Large banks &amp; hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (<span class="citation" data-cites="nakamoto2008">Nakamoto (<a href="#ref-nakamoto2008" role="doc-biblioref">2008</a>)</span>) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?</p>
+<p>Bitcoin accumulation strategies are increasingly relevant to institutions seeking long-term exposure to digital assets. However, most accumulation approaches still rely on naive Dollar-Cost Averaging (DCA), where fixed amounts are invested at regular intervals regardless of market conditions. While DCA is simple and robust, it ignores the rich set of publicly available on-chain signals that may provide insight into market valuation, investor behaviour, and network activity.</p>
+<p>This project investigates whether publicly available Bitcoin on-chain data can be used to improve accumulation efficiency relative to naive DCA. Using over 41,000 blockchain-derived metrics from the BRK dataset, we aim to design adaptive allocation strategies that dynamically adjust daily investment weights while respecting realistic portfolio constraints.</p>
+<p>Our approach combines large-scale exploratory data analysis, feature reduction/selection, clustering, and signal development to identify metrics associated with historically favourable accumulation periods. Candidate strategies include Value Averaging, moving-average-based allocation, and signal-driven adaptive weighting models informed by metrics such as MVRV, NUPL, SOPR, and realized price. Future extensions may incorporate machine learning approaches including Hidden Markov Models (HMMs) among others.</p>
+<p>Strategies are evaluated using the Stacksats backtesting framework, where performance is measured primarily through Sats per Dollar (SPD), a metric quantifying Bitcoin accumulated per unit of capital invested. Success is defined by consistently outperforming naive DCA across rolling evaluation windows while passing strict validation checks for leakage, allocation integrity, and robustness across multiple market cycles.</p>
+<p>The broader goal of this work is to develop transparent, reproducible, and data-driven Bitcoin accumulation strategies that can be implemented without privileged access or proprietary market infrastructure.</p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Traditional financial institutions often rely on sophisticated execution systems, proprietary data pipelines, and privileged market access to optimize investment decisions. In contrast, smaller institutions and retail participants typically operate with limited informational and computational advantages. Bitcoin presents a unique environment where this imbalance is partially reduced: all transaction activity is recorded publicly on-chain, allowing any participant to analyze network behaviour, market structure, and investor activity in real time. Strategies can be audited in real-time on-chain, and the Bitcoin market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.</p>
+<p>This transparency creates an opportunity to explore whether publicly available blockchain data can improve long-term Bitcoin accumulation strategies. In particular, we investigate whether on-chain signals can identify periods of relative undervaluation and thereby improve capital allocation decisions compared to traditional fixed-schedule investing approaches.</p>
+<p>The most common accumulation strategy is Dollar-Cost Averaging (DCA), where investors purchase a fixed dollar amount of Bitcoin at regular intervals regardless of prevailing market conditions. DCA is widely adopted because it is simple, reduces emotional decision-making, and mitigates timing risk. However, it treats all market environments equally and does not account for changing valuation conditions, investor sentiment, or network behaviour. Bitcoin’s blockchain provides a large collection of observable metrics that may offer insight into these dynamics. Metrics such as Market Value to Realized Value (MVRV), Net Unrealized Profit/Loss (NUPL), Spent Output Profit Ratio (SOPR), realized price, and various holder behaviour indicators have historically exhibited cyclical relationships with market tops and bottoms. These signals may help identify accumulation periods.</p>
+<p>In this project, we use the BRK on-chain dataset, containing over 41,000 metrics spanning market valuation, network activity, holder behaviour, technical indicators, and macro-level blockchain statistics. Because of the dataset’s scale and high feature redundancy, we implement a structured feature reduction/selection pipeline involving feature-family groupings, hierarchical clustering, and correlation-based pruning to identify informative signals while reducing dimensionality.</p>
+<p>Using this reduced feature space, we aim to design adaptive accumulation strategies that dynamically vary daily allocation weights under realistic investment constraints. Candidate approaches include Value Averaging, moving-average-based trend allocation, and signal-driven models informed by historical on-chain conditions. Performance will be evaluated against naive DCA using rolling-window backtesting and Sats per Dollar (SPD), a measure of Bitcoin accumulated per unit of USD invested.</p>
+<p>Ultimately, this project seeks to determine whether transparent, publicly accessible blockchain data can be systematically leveraged to improve institutional Bitcoin accumulation efficiency without requiring proprietary information or high-frequency trading infrastructure.</p>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<ul>
+<li>Identify on-chain/market signals predicting favorable accumulation windows</li>
+<li>Build and validate an adaptive daily allocation model</li>
+</ul>
+</section>
+</section>
+<section id="data-eda" class="level1">
+<h1>Data &amp; EDA</h1>
+<ul>
+<li><strong>Source:</strong> BRK <code>brk_metrics.parquet</code> (<span class="citation" data-cites="brk">Bitcoin Research Kit Contributors (<a href="#ref-brk" role="doc-biblioref">2025</a>)</span> via <span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>)</li>
+<li><strong>Schema:</strong> long format with day_utc, metric, value columns<br>
+zero nulls; all values finite</li>
+</ul>
+<div id="tbl-dataset-overview" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50,30]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dataset-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Dataset overview
+</figcaption>
+<div aria-describedby="tbl-dataset-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>File size</td>
+<td>~1.08 GiB</td>
+</tr>
+<tr class="even">
+<td>Total rows</td>
+<td>236,259,020</td>
+</tr>
+<tr class="odd">
+<td>Daily observations</td>
+<td>6,274 days</td>
+</tr>
+<tr class="even">
+<td>Distinct metric keys</td>
+<td>41,407</td>
+</tr>
+<tr class="odd">
+<td>Date range</td>
+<td>2009-01-03 to 2026-03-13</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators.</p>
+<section id="zero-variance-features-selection" class="level3">
+<h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
+<p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
+<p>After applying this approach, 2,810 features were removed from the training dataset.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/0_variance_table.png" class="img-fluid figure-img"></p>
+<figcaption>Zero-variance features</figcaption>
+</figure>
+</div>
+</section>
+<section id="identifying-feature-families" class="level3">
+<h3 class="anchored" data-anchor-id="identifying-feature-families">Identifying Feature Families</h3>
+<div id="fig-feature-families" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-feature-families-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/feature_count_by_family.png" class="img-fluid figure-img" data-fig-pos="H">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feature-families-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Feature count by family
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="halving-events-and-price-history" class="level3">
+<h3 class="anchored" data-anchor-id="halving-events-and-price-history">Halving Events and Price History</h3>
+<p><a href="#tbl-halving-events" class="quarto-xref">Table&nbsp;2</a> lists each halving date and the resulting block reward reduction. Because Bitcoin has a hard cap of 21 million coins, the halving reinforces its programmed scarcity. <a href="#fig-price-history" class="quarto-xref">Figure&nbsp;2</a> shows how Bitcoin’s price (market cap / circulating supply) has evolved across those epochs, illustrating events are generally followed by significant upward price trends. (<span class="citation" data-cites="Subawaetal2025">Subawa et al. (<a href="#ref-Subawaetal2025" role="doc-biblioref">2025</a>)</span>)</p>
+<div id="tbl-halving-events" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[30,30,30]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-halving-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Bitcoin halving events and block rewards
+</figcaption>
+<div aria-describedby="tbl-halving-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Date</th>
+<th>Block reward</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1st halving</td>
+<td>28 November 2012</td>
+<td>25 BTC</td>
+</tr>
+<tr class="even">
+<td>2nd halving</td>
+<td>9 July 2016</td>
+<td>12.5 BTC</td>
+</tr>
+<tr class="odd">
+<td>3rd halving</td>
+<td>11 May 2020</td>
+<td>6.25 BTC</td>
+</tr>
+<tr class="even">
+<td>4th halving</td>
+<td>0 April 2024</td>
+<td>3.125 BTC</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="fig-price-history" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-price-history-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/fig_price_history.png" class="img-fluid figure-img" data-fig-pos="H">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-price-history-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Bitcoin price (market cap / circulating supply) with halving epochs annotated
+</figcaption>
+</figure>
+</div>
+<p>MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled favorable accumulation opportunities when they indicate undervaluation (e.g., MVRV &lt; 1, NUPL &lt; 0, SOPR &lt; 1); see <a href="#sec-appendix-metrics" class="quarto-xref">Section&nbsp;7</a> for full metric definitions. <a href="#fig-violin-plots" class="quarto-xref">Figure&nbsp;3</a> shows how these metrics have varied across different market cycles, with lower values often coinciding with cycle bottoms and prime accumulation zones.</p>
+<div id="fig-violin-plots" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-violin-plots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/fig_cycle_violin_plots.png" class="img-fluid figure-img" data-fig-pos="H">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-violin-plots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: MVRV / NUPL / SOPR distributions across market cycles
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Limitations:</strong> The dataset requires lazy loading due to its size. Many metrics only begin after 2009, and there is heavy multicollinearity across the 41k features.</li>
+</ul>
+</section>
+<section id="clustering-and-vif" class="level3">
+<h3 class="anchored" data-anchor-id="clustering-and-vif">Clustering and VIF</h3>
+<p>After identifying the feature families in our data, we performed hierarchical clustering on each family because we believe there would be large similarities among the members. For each cluster identified, we plan to calculate the VIF, to give us an understanding of the level of multicollinearity present in the data.</p>
+<div id="fig-dendrogram" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dendrogram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/price_dendrogram_new.png" class="img-fluid figure-img" data-fig-pos="H">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dendrogram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Correlation Dendrogram of Price Features
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="data-science-approach" class="level1">
+<h1>Data Science Approach</h1>
+<section id="feature-reduction" class="level3">
+<h3 class="anchored" data-anchor-id="feature-reduction">Feature Reduction</h3>
+<p>With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.</p>
+<p>First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark &amp; DCA related features, as depicted in <a href="#fig-feature-families" class="quarto-xref">Figure&nbsp;1</a>. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information.</p>
+<p>This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.</p>
+</section>
+<section id="baseline-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="baseline-strategies">Baseline Strategies</h3>
+<p>To evaluate our approach, we aim to implement a <strong>Naive Dollar-Cost Averaging (DCA)</strong> strategy as the baseline, where a fixed amount is invested at regular intervals. Our goal is to outperform it by improving accumulation efficiency.</p>
+<p>To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement <strong>Value Averaging</strong> as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing <strong>Sats per Dollar (SPD)</strong>.</p>
+<p>In addition, we may also evaluate a <strong>200-day SMA-based strategy</strong>, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.</p>
+</section>
+<section id="model-development" class="level3">
+<h3 class="anchored" data-anchor-id="model-development">Model Development</h3>
+<p>Our proposed strategy will leverage the reduced feature set to design a data-driven accumulation approach.</p>
+<p>The objective is to:</p>
+<ul>
+<li>Identify periods of undervaluation</li>
+<li>Dynamically adjust investment allocation</li>
+<li>Improve accumulation efficiency compared to the defined baseline strategies</li>
+</ul>
+</section>
+<section id="traintest-split" class="level3">
+<h3 class="anchored" data-anchor-id="traintest-split">Train/Test Split</h3>
+<p>To avoid look-ahead bias and reflect a realistic backtesting setup, we use a chronological train/test split.</p>
+<ul>
+<li><strong>Training set:</strong> Data up to December 2023</li>
+<li><strong>Test set:</strong> January 2024 to March 2026</li>
+</ul>
+<p>The test set will remain untouched during model development and will only be used for final evaluation.</p>
+</section>
+<section id="future-work" class="level3">
+<h3 class="anchored" data-anchor-id="future-work">Future Work</h3>
+<p>In future iterations, we may explore additional model such as LSTM (Long Short-Term Memory) based model. This approach will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.</p>
+</section>
+</section>
+<section id="evaluation-success-criteria" class="level1">
+<h1>Evaluation &amp; Success Criteria</h1>
+<section id="backtesting" class="level3">
+<h3 class="anchored" data-anchor-id="backtesting">Backtesting</h3>
+<p>The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting process included two frameworks: Validation Checks and Performance Results <span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>:</p>
+<p><strong>Validation Checks</strong> included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:</p>
+<ol type="1">
+<li>Weight Sum Validation: Confirms that each window’s daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the naive DCA baseline.</li>
+<li>Forward-Leakage Test: Future data is masked and the model weights are recomputed to ensure the results remain consistent.</li>
+<li>Win-rate Requirement: The model must outperform naive DCA in more than 50% of the evaluation windows.</li>
+</ol>
+<p><strong>Performance Results</strong> summarized the key SPD and percentile results:</p>
+<ol type="1">
+<li>Percentile Statistics: Measures the minimum, maximum, mean, median, and exponentially weighted percentile (where recent windows receive greater weight) of the winning rate against naive DCA.</li>
+<li>Strategy Validation: Evaluates whether the model outperforms naive DCA based on the win-rate threshold (greater than 50%), using 2558 rolling one-year windows from 2018 to the present.</li>
+</ol>
+<p>The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.</p>
+</section>
+<section id="metrics" class="level3">
+<h3 class="anchored" data-anchor-id="metrics">Metrics</h3>
+<ul>
+<li><p><strong>Primary Metric (Sats per Dollar - SPD):</strong><br>
+We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.</p></li>
+<li><p><strong>Smoothness (Allocation Stability):</strong><br>
+We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.</p></li>
+</ul>
+</section>
+<section id="success-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="success-criteria">Success Criteria</h3>
+<p>A strategy is successful if it achieves higher SPD than the naive DCA baseline in more than 50% of tested rolling windows, is statistically significant (p &lt; 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias.</p>
+</section>
+<section id="stakeholders" class="level3">
+<h3 class="anchored" data-anchor-id="stakeholders">Stakeholders</h3>
+<ul>
+<li><strong>Trilemma Foundation:</strong> Interested in improving long-term Bitcoin accumulation efficiency<br>
+</li>
+<li><strong>Open-source community:</strong> Focused on transparency, reproducibility, and practical usability of the strategy</li>
+</ul>
+</section>
+</section>
+<section id="timeline" class="level1">
+<h1>Timeline</h1>
+<div id="tbl-timeline" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50,30]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Project timeline with key milestones
+</figcaption>
+<div aria-describedby="tbl-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Milestone</th>
+<th>Target Date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Train/test split + EDA scripts</td>
+<td>May 15, 2026</td>
+</tr>
+<tr class="even">
+<td>Feature reduction + baseline DCA</td>
+<td>May 22, 2026</td>
+</tr>
+<tr class="odd">
+<td>ML model + walk-forward CV</td>
+<td>May 29, 2026</td>
+</tr>
+<tr class="even">
+<td>Backtesting + final evaluation</td>
+<td>June 12, 2026</td>
+</tr>
+<tr class="odd">
+<td>Final report + model</td>
+<td>June 23, 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="sec-appendix-metrics" class="level1 appendix"><h2 class="anchored quarto-appendix-heading">Appendix: On-Chain Metrics for Long Accumulation Identification</h2><div class="quarto-appendix-contents">
+
+<p>The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows.</p>
+<div id="tbl-metrics" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[15,15,35,35]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Key on-chain metrics and their role in long accumulation identification
+</figcaption>
+<div aria-describedby="tbl-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Expands to</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: left;">Accumulation Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>mvrv</strong></td>
+<td style="text-align: left;">Market Value to Realized Value</td>
+<td style="text-align: left;">Ratio of market capitalisation to realised capitalisation (the aggregate cost basis of all coins).</td>
+<td style="text-align: left;">Values <span class="math inline">\(&lt;1\)</span> (market price below aggregate cost basis) historically mark cycle bottoms and prime accumulation zones.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>nupl</strong></td>
+<td style="text-align: left;">Net Unrealized Profit/Loss</td>
+<td style="text-align: left;"><span class="math inline">\(\text{NUPL} = \frac{\text{Unrealized Profit} - \text{Unrealized Loss}}{\text{Market Cap}}\)</span>; measures the net paper gain/loss of all holders as a fraction of market cap.</td>
+<td style="text-align: left;">Values <span class="math inline">\(&lt; 0\)</span> indicate the majority of holders are in loss.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>sopr</strong></td>
+<td style="text-align: left;">Spent Output Profit Ratio</td>
+<td style="text-align: left;">Ratio of the USD value of coins at the time they are spent (sold) to their USD value when they were created (cost basis). <span class="math inline">\(\text{SOPR} = \frac{P_{\text{sell}}}{P_{\text{buy}}}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(\text{SOPR} &lt; 1\)</span> means coins are being sold at a loss on aggregate, indicating capitulation.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>adjusted_sopr</strong></td>
+<td style="text-align: left;">Adjusted SOPR</td>
+<td style="text-align: left;">SOPR calculated after excluding very short-term (&lt; 1 hour) spends to remove noise from exchange transfers and re-organisations.</td>
+<td style="text-align: left;">Same interpretation as SOPR but more reliable.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>realized_price</strong></td>
+<td style="text-align: left;">Realized Price</td>
+<td style="text-align: left;">Average USD price at which every coin was last moved on-chain; represents the aggregate cost basis per coin. <span class="math inline">\(\text{RP} = \frac{\text{Realized Cap}}{\text{Supply}}\)</span></td>
+<td style="text-align: left;">When market price is below Realized Price, most holders are at an unrealized loss, which has historically signaled favorable accumulation opportunities.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<section id="references" class="level2 unnumbered">
+
+
+</section>
+</div></section><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-brk" class="csl-entry" role="listitem">
+Bitcoin Research Kit Contributors. 2025. <span>“Bitcoin Research Kit (<span>BRK</span>).”</span> <a href="https://github.com/bitcoinresearchkit/brk">https://github.com/bitcoinresearchkit/brk</a>.
+</div>
+<div id="ref-stacksats" class="csl-entry" role="listitem">
+HyperTrial. 2025. <span>“StackSats: Bitcoin Accumulation Strategy Research Framework.”</span> <a href="https://hypertrial.github.io/stacksats/">https://hypertrial.github.io/stacksats/</a>.
+</div>
+<div id="ref-kuhn2019feature" class="csl-entry" role="listitem">
+Kuhn, Max, and Kjell Johnson. 2019. <em>Feature Engineering and Selection: A Practical Approach for Predictive Models</em>. CRC Press. <a href="https://link.springer.com/book/10.1007/978-1-4614-6849-3">https://link.springer.com/book/10.1007/978-1-4614-6849-3</a>.
+</div>
+<div id="ref-nakamoto2008" class="csl-entry" role="listitem">
+Nakamoto, Satoshi. 2008. <span>“Bitcoin: A Peer-to-Peer Electronic Cash System.”</span> <a href="https://bitcoin.org/bitcoin.pdf">https://bitcoin.org/bitcoin.pdf</a>.
+</div>
+<div id="ref-Subawaetal2025" class="csl-entry" role="listitem">
+Subawa, Nyoman Sri, Caren Angellina Mimaki, I Made Oka Mahendra, and Made Srinitha Millinia Utami. 2025. <span>“Bitcoin Halving: How Effective Is It in Driving Cryptocurrency Market Dynamics?”</span> <em>Journal of Risk and Financial Management</em> 19 (1): 2. <a href="https://doi.org/10.3390/jrfm19010002">https://doi.org/10.3390/jrfm19010002</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
