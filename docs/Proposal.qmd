@@ -86,7 +86,7 @@ After applying this approach, 2,810 features were removed from the training data
 |1st halving|28 November 2012|25 BTC|
 |2nd halving|9 July 2016|12.5 BTC|
 |3rd halving|11 May 2020|6.25 BTC|
-|4th halving|0 April 2024|3.125 BTC|
+|4th halving|20 April 2024|3.125 BTC|
 
 : Bitcoin halving events and block rewards {#tbl-halving-events tbl-colwidths="[30,30,30]"}
 
