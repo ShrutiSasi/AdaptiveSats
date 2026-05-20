@@ -1,13 +1,24 @@
-name: adaptivesats
+name: capstone
 channels:
   - conda-forge
-
 dependencies:
   - python=3.11
-  - pip
+  - duckdb
+  - pandas
+  - plotly
+  - polars
+  - matplotlib
   - ipykernel
-  - pyarrow
-  - nbformat>=4.2.0
-  - pip:
-      - -r requirements.txt
- 
+  - nbformat
+  - notebook
+  - seaborn
+  - yfinance
+  - dask
+  - pandas-datareader
+  - nltk
+  - gensim
+  - scikit-learn
+  - gdown
+  - scipy
+  - hmmlearn
+  - pgmpy
