@@ -17,31 +17,16 @@ bibliography: references.bib
 
 # Executive Summary
 
-Large banks & hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?
-
-Bitcoin accumulation strategies are increasingly relevant to institutions seeking long-term exposure to digital assets. However, most accumulation approaches still rely on naive Dollar-Cost Averaging (DCA), where fixed amounts are invested at regular intervals regardless of market conditions. While DCA is simple and robust, it ignores the rich set of publicly available on-chain signals that may provide insight into market valuation, investor behaviour, and network activity.
-
-This project investigates whether publicly available Bitcoin on-chain data can be used to improve accumulation efficiency relative to naive DCA. Using over 41,000 blockchain-derived metrics from the BRK dataset, we aim to design adaptive allocation strategies that dynamically adjust daily investment weights while respecting realistic portfolio constraints.
-
-Our approach combines large-scale exploratory data analysis, feature reduction/selection, clustering, and signal development to identify metrics associated with historically favourable accumulation periods. Candidate strategies include Value Averaging, moving-average-based allocation, and signal-driven adaptive weighting models informed by metrics such as MVRV, NUPL, SOPR, and realized price. Future extensions may incorporate machine learning approaches including Hidden Markov Models (HMMs) among others.
-
-Strategies are evaluated using the Stacksats backtesting framework, where performance is measured primarily through Sats per Dollar (SPD), a metric quantifying Bitcoin accumulated per unit of capital invested. Success is defined by consistently outperforming naive DCA across rolling evaluation windows while passing strict validation checks for leakage, allocation integrity, and robustness across multiple market cycles.
-
-The broader goal of this work is to develop transparent, reproducible, and data-driven Bitcoin accumulation strategies that can be implemented without privileged access or proprietary market infrastructure.
+In partnership with the Trilemma Foundation, this project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with naive Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy. This supports Trilemma’s goal of building an open-source framework for evaluating Bitcoin accumulation strategies. 
+Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature reduction, and backtest adaptive allocation strategies against naive DCA.
 
 # Introduction
 
-Traditional financial institutions often rely on sophisticated execution systems, proprietary data pipelines, and privileged market access to optimize investment decisions. In contrast, smaller institutions and retail participants typically operate with limited informational and computational advantages. Bitcoin presents a unique environment where this imbalance is partially reduced: all transaction activity is recorded publicly on-chain, allowing any participant to analyze network behaviour, market structure, and investor activity in real time. Strategies can be audited in real-time on-chain, and the Bitcoin market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.
+Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. One common approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use naive DCA as the baseline, but it has limitations because it does not adjust to changing market conditions. For institutions with fixed budgets, this may reduce efficiency by missing favorable buying periods.
 
-This transparency creates an opportunity to explore whether publicly available blockchain data can improve long-term Bitcoin accumulation strategies. In particular, we investigate whether on-chain signals can identify periods of relative undervaluation and thereby improve capital allocation decisions compared to traditional fixed-schedule investing approaches.
+This problem is important because Bitcoin's public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
 
-The most common accumulation strategy is Dollar-Cost Averaging (DCA), where investors purchase a fixed dollar amount of Bitcoin at regular intervals regardless of prevailing market conditions. DCA is widely adopted because it is simple, reduces emotional decision-making, and mitigates timing risk. However, it treats all market environments equally and does not account for changing valuation conditions, investor sentiment, or network behaviour. Bitcoin’s blockchain provides a large collection of observable metrics that may offer insight into these dynamics. Metrics such as Market Value to Realized Value (MVRV), Net Unrealized Profit/Loss (NUPL), Spent Output Profit Ratio (SOPR), realized price, and various holder behaviour indicators have historically exhibited cyclical relationships with market tops and bottoms. These signals may help identify accumulation periods.
-
-In this project, we use the BRK on-chain dataset, containing over 41,000 metrics spanning market valuation, network activity, holder behaviour, technical indicators, and macro-level blockchain statistics. Because of the dataset’s scale and high feature redundancy, we implement a structured feature reduction/selection pipeline involving feature-family groupings, hierarchical clustering, and correlation-based pruning to identify informative signals while reducing dimensionality.
-
-Using this reduced feature space, we aim to design adaptive accumulation strategies that dynamically vary daily allocation weights under realistic investment constraints. Candidate approaches include Value Averaging, moving-average-based trend allocation, and signal-driven models informed by historical on-chain conditions. Performance will be evaluated against naive DCA using rolling-window backtesting and Sats per Dollar (SPD), a measure of Bitcoin accumulated per unit of USD invested.
-
-Ultimately, this project seeks to determine whether transparent, publicly accessible blockchain data can be systematically leveraged to improve institutional Bitcoin accumulation efficiency without requiring proprietary information or high-frequency trading infrastructure.
+We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to naive DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against naive DCA. The final product will include a cleaned data pipeline strategy, backtesting logic, and evaluation results comparing adaptive accumulation to naive DCA for the Trilemma Foundation and the open-source community.
 
 ### Objectives
 
@@ -115,7 +100,7 @@ To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (D
 
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
-In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
+In addition, we may also evaluate a **200-day SMA (Simple Moving Average) based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
 
 ### Model Development
 
@@ -159,17 +144,18 @@ The key metric used in backtesting was Sats-per-dollar (SPD). The backtesting pr
 
 The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
 
-### Metrics
+### Metric
 
 -   **Primary Metric (Sats per Dollar - SPD):**\
     We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
 
--   **Smoothness (Allocation Stability):**\
-    We measure the standard deviation of daily allocation weights. Lower variability indicates a more stable investment schedule with potentially lower market impact.
-
 ### Success Criteria
 
 A strategy is successful if it achieves higher SPD than the naive DCA baseline in more than 50% of tested rolling windows, is statistically significant (p \< 0.05), holds across at least one bull and one bear cycle, passes all strict validation checks mentioned above, and has no look-ahead bias.
+
+### Assumptions and limitations 
+
+This project assumes public Bitcoin data contains useful accumulation signals, but backtesting may not reflect future market behavior, feature reduction may remove useful signals, and real-world constraints may be simplified. Results should therefore be viewed as a controlled evaluation, not guaranteed performance
 
 ### Stakeholders
 
