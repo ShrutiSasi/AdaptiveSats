@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-07">
+<meta name="dcterms.date" content="2026-05-19">
 
 <title>AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies</title>
 <style>
@@ -117,7 +117,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 7, 2026</p>
+      <p class="date">May 19, 2026</p>
     </div>
   </div>
   
@@ -129,12 +129,23 @@ window.Quarto = {
 </header>
 
 
+<section id="executive-summary" class="level1">
+<h1>Executive Summary</h1>
+<p>Large banks &amp; hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (<span class="citation" data-cites="nakamoto2008">Nakamoto (<a href="#ref-nakamoto2008" role="doc-biblioref">2008</a>)</span>) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?</p>
+<p>Bitcoin accumulation strategies are increasingly relevant to institutions seeking long-term exposure to digital assets. However, most accumulation approaches still rely on naive Dollar-Cost Averaging (DCA), where fixed amounts are invested at regular intervals regardless of market conditions. While DCA is simple and robust, it ignores the rich set of publicly available on-chain signals that may provide insight into market valuation, investor behaviour, and network activity.</p>
+<p>This project investigates whether publicly available Bitcoin on-chain data can be used to improve accumulation efficiency relative to naive DCA. Using over 41,000 blockchain-derived metrics from the BRK dataset, we aim to design adaptive allocation strategies that dynamically adjust daily investment weights while respecting realistic portfolio constraints.</p>
+<p>Our approach combines large-scale exploratory data analysis, feature reduction/selection, clustering, and signal development to identify metrics associated with historically favourable accumulation periods. Candidate strategies include Value Averaging, moving-average-based allocation, and signal-driven adaptive weighting models informed by metrics such as MVRV, NUPL, SOPR, and realized price. Future extensions may incorporate machine learning approaches including Hidden Markov Models (HMMs) among others.</p>
+<p>Strategies are evaluated using the Stacksats backtesting framework, where performance is measured primarily through Sats per Dollar (SPD), a metric quantifying Bitcoin accumulated per unit of capital invested. Success is defined by consistently outperforming naive DCA across rolling evaluation windows while passing strict validation checks for leakage, allocation integrity, and robustness across multiple market cycles.</p>
+<p>The broader goal of this work is to develop transparent, reproducible, and data-driven Bitcoin accumulation strategies that can be implemented without privileged access or proprietary market infrastructure.</p>
+</section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Large banks and hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (<span class="citation" data-cites="nakamoto2008">Nakamoto (<a href="#ref-nakamoto2008" role="doc-biblioref">2008</a>)</span>) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?</p>
-<p><em>Why Bitcoin?</em></p>
-<p>We focus on Bitcoin because it’s well-suited for this kind of research. All transaction data is public and available to everyone simultaneously - no information asymmetry. Strategies can be audited in real-time on-chain, and the market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.</p>
-<p>The simplest accumulation strategy is DCA - invest a fixed amount at regular intervals regardless of price. It works, but it ignores market conditions entirely. Our hypothesis is that on-chain signals can identify when Bitcoin is undervalued, allowing smarter allocation decisions (<span class="citation" data-cites="leggio2001">Leggio and Lien (<a href="#ref-leggio2001" role="doc-biblioref">2001</a>)</span>).</p>
+<p>Traditional financial institutions often rely on sophisticated execution systems, proprietary data pipelines, and privileged market access to optimize investment decisions. In contrast, smaller institutions and retail participants typically operate with limited informational and computational advantages. Bitcoin presents a unique environment where this imbalance is partially reduced: all transaction activity is recorded publicly on-chain, allowing any participant to analyze network behaviour, market structure, and investor activity in real time. Strategies can be audited in real-time on-chain, and the Bitcoin market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.</p>
+<p>This transparency creates an opportunity to explore whether publicly available blockchain data can improve long-term Bitcoin accumulation strategies. In particular, we investigate whether on-chain signals can identify periods of relative undervaluation and thereby improve capital allocation decisions compared to traditional fixed-schedule investing approaches.</p>
+<p>The most common accumulation strategy is Dollar-Cost Averaging (DCA), where investors purchase a fixed dollar amount of Bitcoin at regular intervals regardless of prevailing market conditions. DCA is widely adopted because it is simple, reduces emotional decision-making, and mitigates timing risk. However, it treats all market environments equally and does not account for changing valuation conditions, investor sentiment, or network behaviour. Bitcoin’s blockchain provides a large collection of observable metrics that may offer insight into these dynamics. Metrics such as Market Value to Realized Value (MVRV), Net Unrealized Profit/Loss (NUPL), Spent Output Profit Ratio (SOPR), realized price, and various holder behaviour indicators have historically exhibited cyclical relationships with market tops and bottoms. These signals may help identify accumulation periods.</p>
+<p>In this project, we use the BRK on-chain dataset, containing over 41,000 metrics spanning market valuation, network activity, holder behaviour, technical indicators, and macro-level blockchain statistics. Because of the dataset’s scale and high feature redundancy, we implement a structured feature reduction/selection pipeline involving feature-family groupings, hierarchical clustering, and correlation-based pruning to identify informative signals while reducing dimensionality.</p>
+<p>Using this reduced feature space, we aim to design adaptive accumulation strategies that dynamically vary daily allocation weights under realistic investment constraints. Candidate approaches include Value Averaging, moving-average-based trend allocation, and signal-driven models informed by historical on-chain conditions. Performance will be evaluated against naive DCA using rolling-window backtesting and Sats per Dollar (SPD), a measure of Bitcoin accumulated per unit of USD invested.</p>
+<p>Ultimately, this project seeks to determine whether transparent, publicly accessible blockchain data can be systematically leveraged to improve institutional Bitcoin accumulation efficiency without requiring proprietary information or high-frequency trading infrastructure.</p>
 <section id="objectives" class="level3">
 <h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
 <ul>
@@ -193,7 +204,7 @@ Table&nbsp;1: Dataset overview
 </div>
 </figure>
 </div>
-<p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators. The figures below show how metric coverage has grown over time, Bitcoin’s price history across halving epochs, and how key signals are correlated.</p>
+<p>The 41,407 metrics span several categories including price, market valuation, holder behaviour, network activity, and technical indicators.</p>
 <section id="zero-variance-features-selection" class="level3">
 <h3 class="anchored" data-anchor-id="zero-variance-features-selection">Zero Variance Features Selection</h3>
 <p>One of the first strategies we used in the feature selection step was removing columns with zero variance. According to <span class="citation" data-cites="kuhn2019feature">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>, features with a single unique value (zero variance) provide no information gain. Therefore, removing them helps avoid numerical instability.</p>
@@ -276,7 +287,7 @@ Figure&nbsp;2: Bitcoin price (market cap / circulating supply) with halving epoc
 </figcaption>
 </figure>
 </div>
-<p>MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled favorable accumulation opportunities when they indicate undervaluation (e.g., MVRV &lt; 1, NUPL &lt; 0, SOPR &lt; 1); see <a href="#sec-appendix-metrics" class="quarto-xref">Section&nbsp;6</a> for full metric definitions. <a href="#fig-violin-plots" class="quarto-xref">Figure&nbsp;3</a> shows how these metrics have varied across different market cycles, with lower values often coinciding with cycle bottoms and prime accumulation zones.</p>
+<p>MVRV, NUPL, and SOPR are key on-chain metrics that have historically signaled favorable accumulation opportunities when they indicate undervaluation (e.g., MVRV &lt; 1, NUPL &lt; 0, SOPR &lt; 1); see <a href="#sec-appendix-metrics" class="quarto-xref">Section&nbsp;7</a> for full metric definitions. <a href="#fig-violin-plots" class="quarto-xref">Figure&nbsp;3</a> shows how these metrics have varied across different market cycles, with lower values often coinciding with cycle bottoms and prime accumulation zones.</p>
 <div id="fig-violin-plots" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-violin-plots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -312,11 +323,11 @@ Figure&nbsp;4: Correlation Dendrogram of Price Features
 <h3 class="anchored" data-anchor-id="feature-reduction">Feature Reduction</h3>
 <p>With over 41,000 features, we aim to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we follow a structured feature reduction approach.</p>
 <p>First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark &amp; DCA related features, as depicted in <a href="#fig-feature-families" class="quarto-xref">Figure&nbsp;1</a>. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information.</p>
-<p>This process is computationally intensive when run locally with limited resources, so we may explore more efficient feature reduction methods in future iterations.</p>
+<p>This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.</p>
 </section>
 <section id="baseline-strategies" class="level3">
 <h3 class="anchored" data-anchor-id="baseline-strategies">Baseline Strategies</h3>
-<p>To evaluate our approach, we aim to implement a <strong>Naive Dollar-Cost Averaging (DCA)</strong> strategy as the baseline, where a fixed amount is invested at regular intervals regardless of market conditions. This provides a simple benchmark, and our goal is to outperform it by improving accumulation efficiency.</p>
+<p>To evaluate our approach, we aim to implement a <strong>Naive Dollar-Cost Averaging (DCA)</strong> strategy as the baseline, where a fixed amount is invested at regular intervals. Our goal is to outperform it by improving accumulation efficiency.</p>
 <p>To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement <strong>Value Averaging</strong> as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing <strong>Sats per Dollar (SPD)</strong>.</p>
 <p>In addition, we may also evaluate a <strong>200-day SMA-based strategy</strong>, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.</p>
 </section>
@@ -341,7 +352,7 @@ Figure&nbsp;4: Correlation Dendrogram of Price Features
 </section>
 <section id="future-work" class="level3">
 <h3 class="anchored" data-anchor-id="future-work">Future Work</h3>
-<p>In future iterations, we may explore additional models and strategies such as LSTM-based models and Hidden Markov Models (HMM). These approaches will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.</p>
+<p>In future iterations, we may explore additional model such as LSTM (Long Short-Term Memory) based model. This approach will be evaluated against the baseline strategies to assess potential improvements in accumulation efficiency.</p>
 </section>
 </section>
 <section id="evaluation-success-criteria" class="level1">
@@ -505,9 +516,6 @@ HyperTrial. 2025. <span>“StackSats: Bitcoin Accumulation Strategy Research Fra
 </div>
 <div id="ref-kuhn2019feature" class="csl-entry" role="listitem">
 Kuhn, Max, and Kjell Johnson. 2019. <em>Feature Engineering and Selection: A Practical Approach for Predictive Models</em>. CRC Press. <a href="https://link.springer.com/book/10.1007/978-1-4614-6849-3">https://link.springer.com/book/10.1007/978-1-4614-6849-3</a>.
-</div>
-<div id="ref-leggio2001" class="csl-entry" role="listitem">
-Leggio, Karyl B., and Donald Lien. 2001. <span>“Does Loss Aversion Explain Dollar-Cost Averaging?”</span> <em>Financial Services Review</em> 10 (1–4): 117–27.
 </div>
 <div id="ref-nakamoto2008" class="csl-entry" role="listitem">
 Nakamoto, Satoshi. 2008. <span>“Bitcoin: A Peer-to-Peer Electronic Cash System.”</span> <a href="https://bitcoin.org/bitcoin.pdf">https://bitcoin.org/bitcoin.pdf</a>.

@@ -4,6 +4,7 @@ authors: ["Arafat B. Bello","Nguyen Nguyen","Raghav Gupta","Shruti Sasi"]
 date: today
 link-citations: true
 format:
+  html: default
   pdf:
     documentclass: article
     geometry: margin=1in
@@ -17,22 +18,31 @@ bibliography: references.bib
 
 # Executive Summary
 
-This project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with naive Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy.
-Naive DCA invests the same dollar amount at regular intervals regardless of price or market conditions. While it is simple, it may be inefficient because it allocates the same amount during periods when Bitcoin is potentially overvalued, undervalued, or under market stress.
-The approach develops an adaptive DCA strategy that adjusts allocations using public signals. The goal is not to predict short-term prices, but to improve accumulation efficiency by acquiring more Bitcoin for the same fixed budget. We measure this using Sats per Dollar, which measures how much Bitcoin is accumulated for each dollar invested.
-For this, we use the BRK Bitcoin metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026. Because the dataset includes more than 41,000 metric keys, we perform exploratory data analysis and look to apply feature reduction and dimensionality reduction techniques to manage the high-dimensional feature space. We then develop and backtest adaptive allocation strategies against a naive DCA baseline.
-The expected outcome is a reproducible accumulation strategy framework for the Trilemma Foundation and the open-source community. The final product will include a cleaned data pipeline, strategy and backtesting logic, evaluation results, and visual outputs comparing adaptive accumulation against naive DCA.
+Large banks & hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources? 
 
+Bitcoin accumulation strategies are increasingly relevant to institutions seeking long-term exposure to digital assets. However, most accumulation approaches still rely on naive Dollar-Cost Averaging (DCA), where fixed amounts are invested at regular intervals regardless of market conditions. While DCA is simple and robust, it ignores the rich set of publicly available on-chain signals that may provide insight into market valuation, investor behaviour, and network activity. 
+
+This project investigates whether publicly available Bitcoin on-chain data can be used to improve accumulation efficiency relative to naive DCA. Using over 41,000 blockchain-derived metrics from the BRK dataset, we aim to design adaptive allocation strategies that dynamically adjust daily investment weights while respecting realistic portfolio constraints.
+
+Our approach combines large-scale exploratory data analysis, feature reduction/selection, clustering, and signal development to identify metrics associated with historically favourable accumulation periods. Candidate strategies include Value Averaging, moving-average-based allocation, and signal-driven adaptive weighting models informed by metrics such as MVRV, NUPL, SOPR, and realized price. Future extensions may incorporate machine learning approaches including Hidden Markov Models (HMMs) among others.
+
+Strategies are evaluated using the Stacksats backtesting framework, where performance is measured primarily through Sats per Dollar (SPD), a metric quantifying Bitcoin accumulated per unit of capital invested. Success is defined by consistently outperforming naive DCA across rolling evaluation windows while passing strict validation checks for leakage, allocation integrity, and robustness across multiple market cycles.
+
+The broader goal of this work is to develop transparent, reproducible, and data-driven Bitcoin accumulation strategies that can be implemented without privileged access or proprietary market infrastructure.
 
 # Introduction
 
-Long-term Bitcoin accumulation is a practical problem for institutions and foundations that want to accumulate Bitcoin over time. One approach is Dollar-Cost Averaging (DCA), where the same dollar amount is invested at regular intervals regardless of price. We use naive DCA as the baseline strategy, where the same amount is invested at each interval without adjusting for market conditions. DCA is simple and easy to implement, but it does not respond to changing market conditions.
-This creates a limitation. Naive DCA buys the same amount when Bitcoin is potentially overvalued, undervalued, or under market stress. For institutions with a fixed accumulation budget, this may reduce accumulation efficiency because the strategy does not allocate more capital during favorable buying periods.
-This problem is important because many smaller institutions do not have the same information advantages or market access as larger financial institutions. Bitcoin offers a transparent setting because its market and on-chain data are public and auditable. This creates an opportunity to build data-driven accumulation strategies using public information.
-We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that achieves higher Sats per Dollar than naive DCA. Here, Sats per Dollar measures how much Bitcoin is accumulated for each dollar invested. The goal is not to predict short-term prices, but to improve long-term accumulation efficiency using the same fixed budget.
-For this, we use the Bitcoin Research Kit (BRK) Bitcoin metrics dataset from the StackSats ecosystem, which contains daily Bitcoin market and on-chain metrics from 2009 to 2026. Since the dataset contains more than 41,000 metric keys, we first perform exploratory data analysis and look to apply feature reduction and dimensionality reduction techniques to manage the high-dimensional feature space. We then develop and evaluate adaptive allocation strategies against naive DCA through backtesting.
-The final product will be a reproducible accumulation strategy framework that includes a cleaned data pipeline, strategy and backtesting logic, evaluation results, and visual outputs comparing adaptive accumulation against naive DCA. This product is intended to help the Trilemma Foundation and the open-source community evaluate whether public Bitcoin data can support smarter long-term accumulation strategies.
+Traditional financial institutions often rely on sophisticated execution systems, proprietary data pipelines, and privileged market access to optimize investment decisions. In contrast, smaller institutions and retail participants typically operate with limited informational and computational advantages. Bitcoin presents a unique environment where this imbalance is partially reduced: all transaction activity is recorded publicly on-chain, allowing any participant to analyze network behaviour, market structure, and investor activity in real time. Strategies can be audited in real-time on-chain, and the Bitcoin market has operated long enough (since 2009) to provide meaningful historical data across multiple market cycles.
 
+This transparency creates an opportunity to explore whether publicly available blockchain data can improve long-term Bitcoin accumulation strategies. In particular, we investigate whether on-chain signals can identify periods of relative undervaluation and thereby improve capital allocation decisions compared to traditional fixed-schedule investing approaches.
+
+The most common accumulation strategy is Dollar-Cost Averaging (DCA), where investors purchase a fixed dollar amount of Bitcoin at regular intervals regardless of prevailing market conditions. DCA is widely adopted because it is simple, reduces emotional decision-making, and mitigates timing risk. However, it treats all market environments equally and does not account for changing valuation conditions, investor sentiment, or network behaviour. Bitcoin’s blockchain provides a large collection of observable metrics that may offer insight into these dynamics. Metrics such as Market Value to Realized Value (MVRV), Net Unrealized Profit/Loss (NUPL), Spent Output Profit Ratio (SOPR), realized price, and various holder behaviour indicators have historically exhibited cyclical relationships with market tops and bottoms. These signals may help identify accumulation periods.
+
+In this project, we use the BRK on-chain dataset, containing over 41,000 metrics spanning market valuation, network activity, holder behaviour, technical indicators, and macro-level blockchain statistics. Because of the dataset’s scale and high feature redundancy, we implement a structured feature reduction/selection pipeline involving feature-family groupings, hierarchical clustering, and correlation-based pruning to identify informative signals while reducing dimensionality.
+
+Using this reduced feature space, we aim to design adaptive accumulation strategies that dynamically vary daily allocation weights under realistic investment constraints. Candidate approaches include Value Averaging, moving-average-based trend allocation, and signal-driven models informed by historical on-chain conditions. Performance will be evaluated against naive DCA using rolling-window backtesting and Sats per Dollar (SPD), a measure of Bitcoin accumulated per unit of USD invested.
+
+Ultimately, this project seeks to determine whether transparent, publicly accessible blockchain data can be systematically leveraged to improve institutional Bitcoin accumulation efficiency without requiring proprietary information or high-frequency trading infrastructure.
 
 ### Objectives
 - Identify on-chain/market signals predicting favorable accumulation windows
@@ -76,7 +86,7 @@ After applying this approach, 2,810 features were removed from the training data
 |1st halving|28 November 2012|25 BTC|
 |2nd halving|9 July 2016|12.5 BTC|
 |3rd halving|11 May 2020|6.25 BTC|
-|4th halving|0 April 2024|3.125 BTC|
+|4th halving|20 April 2024|3.125 BTC|
 
 : Bitcoin halving events and block rewards {#tbl-halving-events tbl-colwidths="[30,30,30]"}
 
@@ -103,7 +113,7 @@ With over 41,000 features, we aim to identify which features capture similar inf
 
 First, we group features based on their names using rule based parsing, which helps create feature families such as Price, Benchmark & DCA related features, as depicted in @fig-feature-families. Next, within each family, we apply hierarchical clustering to group features that behave similarly over time, using dendrograms for visualization. Then, from each cluster, we retain a small set of important features and remove those that are highly similar, reducing the dataset size while preserving key information. 
 
-This process is computationally intensive when run locally with limited resources, we may explore efficient feature reduction methods in future iterations.
+This process is computationally intensive when run locally with limited resources. We may explore efficient feature reduction methods in future iterations.
 
 ### Baseline Strategies 
 
