@@ -17,7 +17,12 @@ bibliography: references.bib
 
 # Executive Summary
 
-Large banks & hedge funds use sophisticated algorithms, privileged market access, and sometimes non-public information to trade. Smaller institutions and retail investors cannot compete on those terms. This project asks: can publicly available Bitcoin (@nakamoto2008) on-chain data be used to build a smarter accumulation strategy - one that beats simple Dollar-Cost Averaging (DCA) without requiring any special access or resources?
+This project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with naive Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy.
+Naive DCA invests the same dollar amount at regular intervals regardless of price or market conditions. While it is simple, it may be inefficient because it allocates the same amount during periods when Bitcoin is potentially overvalued, undervalued, or under market stress.
+The approach develops an adaptive DCA strategy that adjusts allocations using public signals. The goal is not to predict short-term prices, but to improve accumulation efficiency by acquiring more Bitcoin for the same fixed budget. We measure this using Sats per Dollar, which measures how much Bitcoin is accumulated for each dollar invested.
+For this, we use the BRK Bitcoin metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026. Because the dataset includes more than 41,000 metric keys, we perform exploratory data analysis and look to apply feature reduction and dimensionality reduction techniques to manage the high-dimensional feature space. We then develop and backtest adaptive allocation strategies against a naive DCA baseline.
+The expected outcome is a reproducible accumulation strategy framework for the Trilemma Foundation and the open-source community. The final product will include a cleaned data pipeline, strategy and backtesting logic, evaluation results, and visual outputs comparing adaptive accumulation against naive DCA.
+
 
 # Introduction
 
