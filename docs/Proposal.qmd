@@ -23,7 +23,7 @@ This project evaluates whether public Bitcoin (@nakamoto2008) market and on-chai
 
 Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. One common approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use naive DCA as the baseline, but it has limitations because it does not adjust to changing market conditions. For institutions with fixed budgets, this may reduce efficiency by missing favorable buying periods.
 
-This problem is important because smaller institutions often lack the market access and information advantages of larger financial institutions. Bitcoin provides a transparent setting because its market and on-chain data are public and auditable, enabling data-driven accumulation strategies.
+This problem is important because Bitcoin’s public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
 
 We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves Sats per Dollar (SPD) compared with naive DCA, while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against naive DCA. The final product will include a cleaned data pipeline, strategy and backtesting logic, and evaluation results comparing adaptive accumulation against naive DCA for the Trilemma Foundation and the open-source community.
 
@@ -99,7 +99,7 @@ To evaluate our approach, we aim to implement a **Naive Dollar-Cost Averaging (D
 
 To improve upon this baseline, we are exploring more effective accumulation strategies. In particular, we plan to implement **Value Averaging** as our primary strategy, which adjusts investment based on a target portfolio growth path, allocating more capital during price declines and less during price increases. This aligns well with our objective of maximizing **Sats per Dollar (SPD)**.
 
-In addition, we may also evaluate a **200-day SMA-based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
+In addition, we may also evaluate a **200-day SMA (Simple Moving Average) based strategy**, which adjusts investment based on long-term market trends, providing a simple signal-based benchmark.
 
 ### Model Development
 
