@@ -220,4 +220,4 @@ __marimo__/
 # Local folders
 data/raw/
 data/processed
-
+experiments/
