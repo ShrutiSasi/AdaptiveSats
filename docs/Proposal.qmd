@@ -4,6 +4,7 @@ authors: ["Arafat B. Bello","Nguyen Nguyen","Raghav Gupta","Shruti Sasi"]
 date: today
 link-citations: true
 format:
+  html: default
   pdf:
     documentclass: article
     geometry: margin=1in
