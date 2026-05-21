@@ -1,0 +1,27 @@
+name: adaptivesats
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - duckdb==1.5.2
+  - ipykernel
+  - notebook
+  - nltk==3.9.4
+  - gensim==4.4.0
+  - hmmlearn==0.3.3
+  - pgmpy==1.1.2
+  - pip==26.0.1
+  - pyarrow==21.0.0
+  - nbformat==5.10.4
+  - numpy==2.4.3
+  - scipy==1.17.1
+  - polars==1.40.1
+  - matplotlib==3.10.9
+  - seaborn==0.13.2
+  - plotly==6.6.0
+  - pandas==3.0.2
+  - scikit-learn==1.8.0
+  - statsmodels==0.14.6
+  - gdown==6.0.0
+  - nbconvert==7.17.1
+  - jupyterlab==4.5.6
