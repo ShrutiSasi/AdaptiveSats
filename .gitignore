@@ -221,3 +221,6 @@ __marimo__/
 data/raw/
 data/processed/
 experiments/
+
+notebooks/output/
+notebooks/outputs/
