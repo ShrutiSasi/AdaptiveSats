@@ -29,31 +29,31 @@ AdaptiveSats/
 │   ├── Proposal.pdf                                  # Rendered PDF proposal
 │   └── references.bib                                # Bibliography
 ├── notebooks/                                        # Jupyter notebooks for analysis
-│   ├── proposed_strategies/
-│   │   └── composite_signal_index_strategy.ipynb    # Composite signal index strategy prototype
-│   │   └── hmm-garch.ipynb                          # HMM GARCH strategy prototype
-|   │   └── bayes_hmm.ipynb                          # HMM Bayesian strategy prototype
-|   │   └── regime_strategy_analysis.ipynb           # Allocation strategy based on market regime
-│   ├── stacksats_strategies/
+│   ├── proposed_strategies/                          # Newly built strategies
+│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
+│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
+|   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
+|   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
+│   ├── stacksats_strategies/                         # Built-in stacksats strategies
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb
 │   │   ├── experimental_strategies.ipynb
 │   │   └── simple_zscore_analysis.ipynb
-│   ├── btc_stl_analysis.ipynb                       # BTC price STL decomposition - Analysis
-│   ├── dendogram.ipynb                              # 4. Metric correlation dendrogram
-│   ├── download.ipynb                               # 1. Downloads raw data from Google Drive
-│   ├── eda.ipynb                                    # Exploratory data analysis
-│   ├── family_classification.ipynb                  # 2. Metric family classification
-│   ├── loading_brk_metrics_data.ipynb               # Data loading and parsing to individual years - not used
-│   └── preliminary_eda_charts.ipynb                 # 3. Preliminary EDA visualisations
-├── src/                                             # Source package
+│   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
+│   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
+│   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
+│   ├── eda.ipynb                                     # Exploratory data analysis
+│   ├── family_classification.ipynb                   # 2. Metric family classification
+│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - not used
+│   └── preliminary_eda_charts.ipynb                  # 3. Preliminary EDA visualisations
+├── src/                                              # Source package
 │   ├── __init__.py
 │   └── analysis.py                                  
-│   └── config.py                                    # Global variables
-│   └── data_utils.py                                # Data load utilities
-│   └── plots.py                                     # Shared plotting utilities
+│   └── config.py                                     # Global variables
+│   └── data_utils.py                                 # Data load utilities
+│   └── plots.py                                      # Shared plotting utilities
 │   └── strategy_utils.py                            
-├── environment.yml                                  # Conda environment specification
+├── environment.yml                                   # Conda environment specification
 ├── LICENSE
 └── README.md
 ```

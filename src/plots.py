@@ -413,12 +413,25 @@ def plot_strategy_full_period(
     y0    = pd.Timestamp(date_range[0]).year
     y1    = pd.Timestamp(date_range[1]).year
 
+    if pct > 0:
+        perf_text = (
+            f"<span style='color:green;'>"
+            f"▲ {pct:+.2f}% vs DCA"
+            f"</span>"
+        )
+    else:
+        perf_text = (
+            f"<span style='color:red;'>"
+            f"▼ {pct:+.2f}% vs DCA"
+            f"</span>"
+        )
+    
     title = (
         f"<b>{strategy_name} vs Baseline DCA  {y0}–{y1}</b><br>"
         f"Top {pct_n}% Buy Days Per Calendar Year  |  "
         f"{strategy_name} SPD: {spd_d:,.0f}  |  "
         f"DCA SPD: {spd_b:,.0f}  |  "
-        f"{pct:+.2f}% vs DCA"
+        f"{perf_text}"
     )
 
     fig = _build_strategy_fig(
@@ -474,12 +487,23 @@ def plot_strategy_by_cycle(
         total_dyn_btc  = slice_df["btc_accum_dynamic"].sum()
         total_base_btc = slice_df["btc_accum_baseline"].sum()
         pct_diff       = (total_dyn_btc - total_base_btc) / total_base_btc * 100 if total_base_btc else 0.0
-        perf_label     = "better" if pct_diff > 0 else "worse"
+        if pct_diff > 0:
+            perf_text = (
+                f"<span style='color:green;'>"
+                f"▲ {pct_diff:+.2f}% vs DCA"
+                f"</span>"
+            )
+        else:
+            perf_text = (
+                f"<span style='color:red;'>"
+                f"▼ {pct_diff:+.2f}% vs DCA"
+                f"</span>"
+            )
         threshold      = slice_df[cols.weight].quantile(top_buy_quantile)
         subplot_titles.append(
             f"<b>{cycle['label']} | {strategy_name} Strategy vs Baseline DCA</b><br>"
             f"Dynamic BTC: {total_dyn_btc:.6f} | DCA BTC: {total_base_btc:.6f} | "
-            f"{strategy_name} performed {abs(pct_diff):.2f}% {perf_label} than DCA | "
+            f"{perf_text} | "
             f"Top buy threshold: {threshold:.8f} <br>"
         )
 
@@ -594,9 +618,21 @@ def plot_strategy_by_year(
         spd_d = _compute_spd(year_df, cols.weight)
         spd_b = _compute_spd(year_df, "baseline_weight")
         pct   = (spd_d - spd_b) / spd_b * 100 if spd_b else 0.0
+        if pct > 0:
+            perf_text = (
+                f"<span style='color:green;'>"
+                f"▲ {pct:+.2f}% vs DCA"
+                f"</span>"
+            )
+        else:
+            perf_text = (
+                f"<span style='color:red;'>"
+                f"▼ {pct:+.2f}% vs DCA"
+                f"</span>"
+            )
         subplot_titles.append(
             f"{year}  |  "
-            f"{strategy_name} SPD: {spd_d:,.0f}  |  DCA SPD: {spd_b:,.0f}  |  {pct:+.2f}%"
+            f"{strategy_name} SPD: {spd_d:,.0f}  |  DCA SPD: {spd_b:,.0f}  |  {perf_text}"
         )
     if n_years % 2 != 0:
         subplot_titles.append("")  # empty slot for the last cell
@@ -649,7 +685,7 @@ def plot_strategy_by_year(
         width=width,
         height=n_rows * height_per_row + 80,
         hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
+        legend=dict(orientation="h", yanchor="bottom", y=1.04, xanchor="left", x=0),
         margin=dict(l=70, r=70, t=100, b=60),
         template="plotly_white",
     )
