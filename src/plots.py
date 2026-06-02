@@ -631,8 +631,8 @@ def plot_strategy_by_year(
                 f"</span>"
             )
         subplot_titles.append(
-            f"{year}  |  "
-            f"{strategy_name} SPD: {spd_d:,.0f}  |  DCA SPD: {spd_b:,.0f}  |  {perf_text}"
+            f"<sup>{year}  |  "
+            f"{strategy_name} SPD: {spd_d:,.0f}  |  DCA SPD: {spd_b:,.0f}  |  {perf_text}</sup>"
         )
     if n_years % 2 != 0:
         subplot_titles.append("")  # empty slot for the last cell
@@ -678,6 +678,9 @@ def plot_strategy_by_year(
         fig.update_yaxes(type="log", tickprefix="$", showgrid=True,
                          row=row, col=col, secondary_y=False)
         fig.update_yaxes(showgrid=False, row=row, col=col, secondary_y=True)
+        fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True, secondary_y=False)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True, secondary_y=True)
 
     fig.update_layout(
         title=dict(text=f"<b>{strategy_name} vs Baseline DCA — by Year</b>",
@@ -685,7 +688,7 @@ def plot_strategy_by_year(
         width=width,
         height=n_rows * height_per_row + 80,
         hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", y=1.04, xanchor="left", x=0),
+        legend=dict(orientation="h", yanchor="bottom", y=1.01, xanchor="left", x=0),
         margin=dict(l=70, r=70, t=100, b=60),
         template="plotly_white",
     )
