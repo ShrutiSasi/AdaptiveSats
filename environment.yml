@@ -28,3 +28,4 @@ dependencies:
   - pip:
     - tensorflow==2.21.0
     - stacksats==1.3.0
+    - xgboost
