@@ -222,5 +222,5 @@ data/raw/
 data/processed/
 experiments/
 
-notebooks/output/
+notebooks/stacksats_strategies/output/
 notebooks/outputs/
