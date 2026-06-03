@@ -1,3 +1,5 @@
+"""Metric categorization and statistical utilities for AdaptiveSats."""
+
 import numpy as np
 import pandas as pd
 import polars as pl
@@ -362,9 +364,3 @@ def compute_vif_clusters(
         print(f"\n  High VIF cols (>{vif_threshold}): {high_vif[i]}")
 
     return high_vif
-
-
-def rolling_zscore(series: pd.Series, window: int = 365) -> pd.Series:
-    """Causal rolling z-score. Extracted from composite_signal_index_strategy.ipynb."""
-    roll = series.rolling(window=window, min_periods=2)
-    return (series - roll.mean()) / (roll.std() + 1e-8)

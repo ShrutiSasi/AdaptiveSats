@@ -33,7 +33,7 @@ halving_periods = [
     },
     {
         "label": "2020-2024 Halving Cycle",
-        "start": "2020-05-11", "end": "2023-12-31",
+        "start": "2020-05-11", "end": "2023-12-31", # train set ends 2023-12-31
         "color": "rgba(238, 232, 170, 0.25)",
     },
 ]
@@ -206,111 +206,6 @@ def plot_cycle_violin(
     if save_path is not None:
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.show()
-
-
-def plot_interactive_cycle_yearly(result: dict, halving_periods: list[dict]) -> None:
-    """Interactive Plotly chart: dynamic strategy vs DCA with halving shading.
-
-    Reads keys from the dict returned by strategy_utils.process_cycle_year_by_year().
-    """
-    plot_df        = result["plot_df"].copy()
-    top_buy_points = result["top_buy_points"].copy()
-    cycle_start    = pd.to_datetime(result["start"])
-    cycle_end      = pd.to_datetime(result["end"])
-
-    fig = go.Figure()
-
-    # Halving-period background shading clipped to this cycle
-    for period in halving_periods:
-        shaded_start = max(pd.to_datetime(period["start"]), cycle_start)
-        shaded_end   = min(pd.to_datetime(period["end"]),   cycle_end)
-        if shaded_start <= shaded_end:
-            fig.add_vrect(
-                x0=shaded_start, x1=shaded_end,
-                fillcolor=period["color"], opacity=1.0,
-                layer="below", line_width=0,
-                annotation_text=period["label"],
-                annotation_position="top left",
-                annotation_font_size=11,
-            )
-
-    # BTC price line
-    fig.add_trace(go.Scatter(
-        x=plot_df["date"], y=plot_df["price_usd"],
-        mode="lines", name="BTC Price (USD)",
-        line=dict(color="black", width=2), yaxis="y1",
-        customdata=plot_df[[
-            "dynamic_weight", "baseline_weight",
-            "sats_per_dollar_dynamic", "sats_per_dollar_baseline",
-            "sats_accum_dynamic", "sats_accum_baseline",
-        ]],
-        hovertemplate=(
-            "<b>Date</b>: %{x|%Y-%m-%d}<br>"
-            "<b>BTC Price</b>: $%{y:,.2f}<br>"
-            "<b>Dynamic Weight</b>: %{customdata[0]:.8f}<br>"
-            "<b>Uniform Weight</b>: %{customdata[1]:.8f}<br>"
-            "<b>Dynamic sats/$</b>: %{customdata[2]:,.2f}<br>"
-            "<b>Uniform sats/$</b>: %{customdata[3]:,.2f}<br>"
-            "<b>Dynamic sats accum.</b>: %{customdata[4]:,.2f}<br>"
-            "<b>Uniform sats accum.</b>: %{customdata[5]:,.2f}"
-            "<extra></extra>"
-        ),
-    ))
-
-    # Dynamic allocation area
-    fig.add_trace(go.Scatter(
-        x=plot_df["date"], y=plot_df["dynamic_weight"],
-        mode="lines", name="Dynamic Weight",
-        line=dict(color="green", width=1.5),
-        fill="tozeroy", fillcolor="green", yaxis="y2",
-        hovertemplate=(
-            "<b>Date</b>: %{x|%Y-%m-%d}<br>"
-            "<b>Dynamic Weight</b>: %{y:.8f}"
-            "<extra></extra>"
-        ),
-    ))
-
-    # Baseline DCA line
-    fig.add_trace(go.Scatter(
-        x=plot_df["date"], y=plot_df["baseline_weight"],
-        mode="lines", name="Baseline (DCA) Weight",
-        line=dict(color="blue", width=2, dash="dash"), yaxis="y2",
-        hovertemplate=(
-            "<b>Date</b>: %{x|%Y-%m-%d}<br>"
-            "<b>Baseline Weight</b>: %{y:.8f}"
-            "<extra></extra>"
-        ),
-    ))
-
-    # Top-N% buy markers
-    fig.add_trace(go.Scatter(
-        x=top_buy_points["date"], y=top_buy_points["price_usd"],
-        mode="markers", name="Top Buy Days",
-        marker=dict(color="red", line=dict(color="black", width=1)),
-        yaxis="y1",
-        hovertemplate=(
-            "<b>Top Buy Date</b>: %{x|%Y-%m-%d}<br>"
-            "<b>BTC Price</b>: $%{y:,.2f}"
-            "<extra></extra>"
-        ),
-    ))
-
-    fig.update_layout(
-        title=(
-            f"{result['label']}<br>"
-            f"Dynamic SPD: {result['sats_per_dollar_dynamic']:.2f} | "
-            f"Uniform SPD: {result['sats_per_dollar_baseline']:.2f} | "
-            f"Excess: {result['pct_diff_vs_baseline']:.2f}% "
-            f"({result['performance_label']})"
-        ),
-        width=1250, height=650, hovermode="x unified",
-        xaxis=dict(title="Date", range=[cycle_start, cycle_end]),
-        yaxis=dict(title="BTC Price (USD, log scale)", type="log", side="left"),
-        yaxis2=dict(title="Allocation Weight", overlaying="y", side="right", showgrid=False),
-        legend=dict(orientation="h", yanchor="bottom", y=1.01, xanchor="left", x=0),
-        margin=dict(l=70, r=70, t=120, b=60),
-    )
-    fig.show()
 
 
 def assign_cycle_label(date, cycles: list = None) -> str:

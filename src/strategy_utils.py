@@ -57,7 +57,7 @@ def process_cycle_year_by_year(
     runner,
     dynamic_strategy=None,
     total_budget_usd: float = 1000.0,
-    top_buy_quantile: float = 0.90,
+    top_buy_quantile: float = 0.90, # Top 10% of highest-weight days used as buy highlight points
 ) -> dict:
     """Run dynamic strategy vs uniform DCA baseline over a cycle, year by year.
 

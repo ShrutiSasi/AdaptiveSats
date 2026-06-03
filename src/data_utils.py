@@ -47,15 +47,15 @@ def load_metrics(train_path: Path, metric_list: list[str]) -> pd.DataFrame:
 def check_stacksats_data(path: Path, raw_path: Path) -> bool:
     """Check if the Stacksats data file exists and is readable."""
     try:
-        if not path.exists():
-            print(f"Prepared dataset not found at: {path}")
-            print("Preparing StackSats analytics dataset...")
-
-            if not raw_path.exists():
+        if not raw_path.exists():
                 raise FileNotFoundError(
                     f"Raw BRK metrics file not found at: {raw_path}. "
                     "Please update raw_brk_path to the correct location of brk_metrics.parquet."
                 )
+        
+        if not path.exists():
+            print(f"Prepared dataset not found at: {path}")
+            print("Preparing StackSats analytics dataset...")            
 
             subprocess.run(
                 [
@@ -67,11 +67,8 @@ def check_stacksats_data(path: Path, raw_path: Path) -> bool:
                 ],
                 check=True,
             )
-
-            # if not path.exists():
-            #     raise FileNotFoundError(
-            #         f"Failed to create prepared dataset at {path}."
-            #     )
-    except Exception as e:
+        return True
+            
+    except subprocess.CalledProcessError as e:
         print(f"Error loading Stacksats data from {path}: {e}")
         return False
