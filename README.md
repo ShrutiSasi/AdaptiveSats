@@ -30,14 +30,18 @@ AdaptiveSats/
 │   └── references.bib                                # Bibliography
 ├── notebooks/                                        # Jupyter notebooks for analysis
 │   ├── proposed_strategies/                          # Newly built strategies
-│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
-│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
+|   │   └── bayes_hmm_look_forward.ipynb              # HMM Bayesian Look Forward strategy prototype
 |   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
+|   │   └── brk_include_strat.ipynb                   
+│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
+|   │   └── external_feat.ipynb 
+│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
 |   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
 │   ├── stacksats_strategies/                         # Built-in stacksats strategies
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb
 │   │   ├── experimental_strategies.ipynb
+│   │   └── mvrv.ipynb
 │   │   └── simple_zscore_analysis.ipynb
 │   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
 │   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
