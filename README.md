@@ -1,7 +1,27 @@
 # AdaptiveSats
 
-Python Library for quantitative long only Bitcoin accumulation - keeping the discipline of Dollar-Cost Averaging but also takes into account the market volatility, on-chain, macro and sentiment data to improve purchase timing.
+> **Can adaptive allocation beat naive Dollar-Cost Averaging for long-term Bitcoin accumulation?**
 
+A data-driven Bitcoin accumulation research framework developed in partnership with the **Trilemma Foundation** (UBC DSCI591 Capstone, 2025–2026). AdaptiveSats keeps the discipline of DCA while leveraging on-chain, market, and sentiment data to improve purchase timing - maximizing **Sats per Dollar (SPD)** accumulated over time.
+
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green) ![conda](https://img.shields.io/badge/env-conda-brightgreen)
+
+---
+
+## Key Concepts
+
+| Term | Description |
+|------|-------------|
+| **DCA (Dollar-Cost Averaging)** | Investing a fixed amount at regular intervals regardless of price — the naive baseline |
+| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100M sats) accumulated per USD invested — the primary performance metric; higher is better |
+| **stacksats** | Open-source Python framework used for implementing and backtesting Bitcoin accumulation strategies |
+| **Halving Cycle** | Every ~4 years, Bitcoin's block reward is halved (2012, 2016, 2020, 2024) — historically a key market cycle driver |
+| **MVRV** | Market Value to Realized Value — ratio of market cap to aggregate cost basis; MVRV < 1 signals undervaluation |
+| **NUPL** | Net Unrealized Profit/Loss — when NUPL < 0, most holders are at a loss (capitulation signal) |
+| **SOPR** | Spent Output Profit Ratio — when SOPR < 1, coins are being sold at a loss (panic selling signal) |
+| **BRK Metrics** | Bitcoin Research Kit — a dataset of 41,000+ on-chain, technical, and market metrics |
+
+---
 
 ## Project Structure
 
@@ -62,13 +82,13 @@ AdaptiveSats/
 └── README.md
 ```
 
-## Setup
+## Getting Started
 
 ### Prerequisites
 
 -   [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) (version 26.1.0 or higher)
 
-### Instructions
+### Setup
 
 1.  Open terminal and run the following commands.
 
@@ -92,9 +112,15 @@ cd AdaptiveSats
 quarto install tinytex
 ```
 
+5. Launch JupyterLab to explore notebooks interactively:
+
+``` bash
+jupyter lab
+```
+
 #### Rendering reports (Optional)
 
-5.  Run the jupyter notebooks to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
+6.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
 
 ``` bash
 cd notebooks
@@ -106,7 +132,7 @@ jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
 
 #### Generate proposal pdf
 
-6.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
+7.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
 
 ``` bash
 cd .. #If still in notebooks folder
@@ -114,3 +140,67 @@ quarto render docs/Proposal.qmd
 ```
 
 The proposal pdf gets created at `AdaptiveSats\docs`
+
+
+## Notebook Guide
+
+Start with core pipeline notebooks, then explore strategy notebooks
+
+### Core Pipeline
+|#|**Notebook**|**Purpose**|
+|---|---|---|
+|1.|`download.ipynb`|Downloads ~1GB raw BRK metrics from Google Drive, creates `train.parquet` and `test.parquet`|
+|2.|`family_classification.ipynb`|Categorizes 41,407 metrics into 16 feature families (e.g., Market Valuation, Profitability & SOPR)|
+|3.|`preliminary_eda_charts.ipynb`|EDA visualizations: feature counts, family distributions, Bitcoin historical price trend and halving cycles|
+|4.|`dendogram.ipynb`|Hierarchical clustering and correlation dendrograms to identify multicollinearity per family|
+|-|`eda.ipynb`|Comprehensive exploratory data analysis|
+|-|`btc_stl_analysis.ipynb`|STL decomposition of BTC price and on-chain metrics (trend / seasonality / residuals)|
+
+### Strategy Notebooks
+**Stacksats Built-in Strategies**  (stacksats_strategies) 
+|**Notebook**|**Strategy**|
+|---|---|
+|`simple_zscore_analysis.ipynb`|Z-score normalized signal with threshold-based allocation|
+|`mvrv.ipynb`|Allocation scaled to MVRV Ratio|
+|`momentum_vs_dca_all_years_top10.ipynb`|Momentum signal vs uniform DCA across all years|
+|`momentum_vs_dca_4_cycles_top10_yby_halving.ipynb`|Momentum vs DCA evaluated year-by-year within halving cycles|
+|`experimental_strategies.ipynb`|experimental strategies - Example MVRV and MVRV Plus|
+
+**Proposed Strategies** (proposed_strategies)
+|**Notebook**|**Strategy**|
+|---|---|
+|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
+|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
+|`bayes_hmm_look_forward.ipynb`|Extended HMM with forward-looking state prediction|
+|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|
+|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|
+|`brk_include_strat.ipynb`|Strategy incorporating a wider set of BRK on-chain metrics|
+|`external_feat.ipynb`|Integration of external macro/sentiment features|
+
+## Data
+Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
+
+|**File**|**Description**|**Size**|
+|---|---|---|
+|`brk_metrics.parquet`|236M rows × 6,274 days of on-chain metrics|~1 GB|
+|`train.parquet`|Preprocessed features, 2010–2023|—|
+|`test.parquet`|Preprocessed features, 2024–2025|—|
+|`bitcoin_metrics_full_classification_final.csv`|Labelled metrics with family assignments|—|
+
+## Evaluation Methodology
+Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
+
+- **Baseline:** Naive uniform DCA (equal daily allocation)
+- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows
+- **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
+
+## Authors
+|**Name**|**GitHub**|
+|---|---|
+|Arafat B. Bello|[@bbarafat](https://github.com/bbarafat)|
+|Nguyen Nguyen|[@nguyen6uyen](https://github.com/nguyen6uyen)|
+|Raghav Gupta|[@raghav9048](https://github.com/raghav9048)|
+|Shruti Sasi|[@ShrutiSasi](https//github.com/ShrutiSasi)|
+
+## License
+This project is licensed under the terms of the `LICENSE` file.
