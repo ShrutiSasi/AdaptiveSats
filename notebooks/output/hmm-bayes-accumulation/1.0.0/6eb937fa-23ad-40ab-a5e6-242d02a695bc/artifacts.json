@@ -1,0 +1,12 @@
+{
+  "strategy_id": "hmm-bayes-accumulation",
+  "version": "1.0.0",
+  "config_hash": "e0c3214e2680",
+  "run_id": "6eb937fa-23ad-40ab-a5e6-242d02a695bc",
+  "output_dir": "output/hmm-bayes-accumulation/1.0.0/6eb937fa-23ad-40ab-a5e6-242d02a695bc",
+  "files": {
+    "weights_csv": "weights.csv",
+    "timeseries_schema_md": "timeseries_schema.md"
+  },
+  "schema_version": "1.0.0"
+}

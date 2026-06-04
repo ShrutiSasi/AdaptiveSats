@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_selector": "uniform",
+  "comparison_window": {
+    "start_date": "2018-01-01",
+    "end_date": "2023-12-31",
+    "strict": false,
+    "min_win_rate": 50.0
+  },
+  "rows": [
+    {
+      "selector": "uniform",
+      "strategy_id": "uniform",
+      "strategy_version": "1.0.0",
+      "intent_mode": "propose",
+      "tier": "stable",
+      "promotion_stage": "promoted",
+      "validation_passed": false,
+      "judgment_label": "validation-failed",
+      "win_rate": 0.0,
+      "score": 18.645817508495416,
+      "exp_decay_percentile": 37.29163501699083,
+      "multiple_vs_uniform": 0.999999999999999,
+      "score_delta_vs_baseline": 0.0,
+      "exp_decay_delta_vs_baseline": 0.0,
+      "is_baseline": true
+    },
+    {
+      "selector": "hmm-garch-v1",
+      "strategy_id": "hmm-garch-v1",
+      "strategy_version": "1.0.0",
+      "intent_mode": "propose",
+      "tier": null,
+      "promotion_stage": null,
+      "validation_passed": false,
+      "judgment_label": "validation-failed",
+      "win_rate": 24.41160372194855,
+      "score": 30.518754454845443,
+      "exp_decay_percentile": 36.62590518774234,
+      "multiple_vs_uniform": 0.9821480117740827,
+      "score_delta_vs_baseline": 11.872936946350027,
+      "exp_decay_delta_vs_baseline": -0.665729829248491,
+      "is_baseline": false
+    }
+  ],
+  "run_id": "1d2db706-97a7-44c2-a56f-978f767d8ea2",
+  "config_hash": "68ecd7a3a3b2",
+  "artifact_path": "output/uniform/comparison/1d2db706-97a7-44c2-a56f-978f767d8ea2/comparison_result.json"
+}

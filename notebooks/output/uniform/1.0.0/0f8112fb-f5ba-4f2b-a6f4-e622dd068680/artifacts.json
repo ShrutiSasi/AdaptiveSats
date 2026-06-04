@@ -1,0 +1,12 @@
+{
+  "strategy_id": "uniform",
+  "version": "1.0.0",
+  "config_hash": "4db40ae0ca37",
+  "run_id": "0f8112fb-f5ba-4f2b-a6f4-e622dd068680",
+  "output_dir": "output/uniform/1.0.0/0f8112fb-f5ba-4f2b-a6f4-e622dd068680",
+  "files": {
+    "weights_csv": "weights.csv",
+    "timeseries_schema_md": "timeseries_schema.md"
+  },
+  "schema_version": "1.0.0"
+}

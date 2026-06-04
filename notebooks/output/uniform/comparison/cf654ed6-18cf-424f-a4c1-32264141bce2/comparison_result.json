@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_selector": "uniform",
+  "comparison_window": {
+    "start_date": "2018-01-01",
+    "end_date": "2024-01-01",
+    "strict": false,
+    "min_win_rate": 50.0
+  },
+  "rows": [
+    {
+      "selector": "hmm-bayes-accumulation",
+      "strategy_id": "hmm-bayes-accumulation",
+      "strategy_version": "1.0.0",
+      "intent_mode": "propose",
+      "tier": null,
+      "promotion_stage": null,
+      "validation_passed": true,
+      "judgment_label": "validation-passed",
+      "win_rate": 70.77175697865353,
+      "score": 54.07349145106356,
+      "exp_decay_percentile": 37.375225923473586,
+      "multiple_vs_uniform": 1.0022415457634033,
+      "score_delta_vs_baseline": 35.42767394256815,
+      "exp_decay_delta_vs_baseline": 0.08359090648275469,
+      "is_baseline": false
+    },
+    {
+      "selector": "uniform",
+      "strategy_id": "uniform",
+      "strategy_version": "1.0.0",
+      "intent_mode": "propose",
+      "tier": "stable",
+      "promotion_stage": "promoted",
+      "validation_passed": false,
+      "judgment_label": "validation-failed",
+      "win_rate": 0.0,
+      "score": 18.645817508495416,
+      "exp_decay_percentile": 37.29163501699083,
+      "multiple_vs_uniform": 0.999999999999999,
+      "score_delta_vs_baseline": 0.0,
+      "exp_decay_delta_vs_baseline": 0.0,
+      "is_baseline": true
+    }
+  ],
+  "run_id": "cf654ed6-18cf-424f-a4c1-32264141bce2",
+  "config_hash": "9da8d20d05e2",
+  "artifact_path": "output/uniform/comparison/cf654ed6-18cf-424f-a4c1-32264141bce2/comparison_result.json"
+}

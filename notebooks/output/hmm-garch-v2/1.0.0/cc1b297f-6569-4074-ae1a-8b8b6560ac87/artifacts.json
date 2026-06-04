@@ -1,0 +1,12 @@
+{
+  "strategy_id": "hmm-garch-v2",
+  "version": "1.0.0",
+  "config_hash": "1a5de713fdac",
+  "run_id": "cc1b297f-6569-4074-ae1a-8b8b6560ac87",
+  "output_dir": "output/hmm-garch-v2/1.0.0/cc1b297f-6569-4074-ae1a-8b8b6560ac87",
+  "files": {
+    "weights_csv": "weights.csv",
+    "timeseries_schema_md": "timeseries_schema.md"
+  },
+  "schema_version": "1.0.0"
+}

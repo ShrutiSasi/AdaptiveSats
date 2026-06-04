@@ -1,0 +1,12 @@
+{
+  "strategy_id": "hmm-bayes-v2",
+  "version": "1.0.0",
+  "config_hash": "1a5de713fdac",
+  "run_id": "9b860312-55f0-4799-a87c-9f518e94790d",
+  "output_dir": "output/hmm-bayes-v2/1.0.0/9b860312-55f0-4799-a87c-9f518e94790d",
+  "files": {
+    "weights_csv": "weights.csv",
+    "timeseries_schema_md": "timeseries_schema.md"
+  },
+  "schema_version": "1.0.0"
+}
