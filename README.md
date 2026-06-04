@@ -1,12 +1,29 @@
 # AdaptiveSats
 
+The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
 > **Can adaptive allocation beat naive Dollar-Cost Averaging for long-term Bitcoin accumulation?**
 
-A data-driven Bitcoin accumulation research framework developed in partnership with the **Trilemma Foundation** (UBC DSCI591 Capstone, 2025–2026). AdaptiveSats keeps the discipline of DCA while leveraging on-chain, market, and sentiment data to improve purchase timing - maximizing **Sats per Dollar (SPD)** accumulated over time.
+AdaptiveSats is a Python-based research platform built in partnership with the **Trilemma Foundation** (UBC DSCI591 Capstone, 2025–2026) to answer that question. Instead of focusing on Bitcoin's price in dollars, it focuses on maximizing the amount of Bitcoin accumulated over time.
+
+The framework analyzes Bitcoin network and market indicators, including on-chain activity, investor behavior, and market sentiment. It then identifies patterns that may signal whether Bitcoin appears relatively undervalued, overvalued, or fairly priced. Using these signals, AdaptiveSats creates dynamic investment strategies that automatically increase purchases during potentially attractive market conditions and reduce purchases when conditions appear less favorable. Every strategy is rigorously tested against a traditional Dollar Cost Averaging (DCA) approach. The framework keeps each strategy inside the core constraints:
+- fixed accumulation budget
+- fixed allocation horizon, defaulting to 365 days
+- no forward-looking data
+- immutable historical allocations
+
+&nbsp;
 
 ![Python 3.11](https://img.shields.io/badge/python-3.11-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green) ![conda](https://img.shields.io/badge/env-conda-brightgreen)
 
 ---
+
+## Evaluation Methodology
+Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
+
+- **Baseline:** Naive uniform DCA (equal daily allocation)
+- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows
+- **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
+
 
 ## Key Concepts
 
@@ -22,66 +39,6 @@ A data-driven Bitcoin accumulation research framework developed in partnership w
 | **BRK Metrics** | Bitcoin Research Kit — a dataset of 41,000+ on-chain, technical, and market metrics |
 
 ---
-
-## Project Structure
-
-```
-AdaptiveSats/
-├── data/                                             # Processed and reference data files
-│   ├── raw/
-│   │   └── brk_metrics.parquet                       # Raw on-chain metrics (download.ipynb)
-|   ├── processed/  
-|   │   └── train.parquet                             # training set - 2010-2023 (created by download.ipynb)
-|   │   └── test.parquet                              # test set - 2024-2025 (created by download.ipynb)
-│   ├── all_col_names.csv                             # Full list of feature column names
-│   ├── bitcoin_metrics_full_classification_final.csv # Labelled metrics dataset
-│   ├── columns_to_drop.csv                           # Columns excluded from modelling
-│   └── common_zero_var_cols.csv                      # Zero-variance columns identified in EDA
-├── docs/                                             # Project documentation and reports
-│   ├── figures/                                      # Generated plots and charts
-│   │   ├── feature_count_by_family.png
-│   │   ├── features_per_year.png
-│   │   ├── fig_cycle_violin_plots.png
-│   │   ├── fig_price_history.png
-│   │   └── price_dendrogram_new.png
-│   ├── Proposal.qmd                                  # Quarto source for the project proposal
-│   ├── Proposal.html                                 # Rendered HTML proposal
-│   ├── Proposal.pdf                                  # Rendered PDF proposal
-│   └── references.bib                                # Bibliography
-├── notebooks/                                        # Jupyter notebooks for analysis
-│   ├── proposed_strategies/                          # Newly built strategies
-|   │   └── bayes_hmm_look_forward.ipynb              # HMM Bayesian Look Forward strategy prototype
-|   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
-|   │   └── brk_include_strat.ipynb                   
-│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
-|   │   └── external_feat.ipynb 
-│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
-|   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
-│   ├── stacksats_strategies/                         # Built-in stacksats strategies
-│   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
-│   │   ├── momentum_vs_dca_all_years_top10.ipynb
-│   │   ├── experimental_strategies.ipynb
-│   │   └── mvrv.ipynb
-│   │   └── simple_zscore_analysis.ipynb
-│   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
-│   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
-│   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
-│   ├── eda.ipynb                                     # Exploratory data analysis
-│   ├── family_classification.ipynb                   # 2. Metric family classification
-│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - not used
-│   └── preliminary_eda_charts.ipynb                  # 3. Preliminary EDA visualisations
-├── src/                                              # Source package
-│   ├── __init__.py
-│   └── analysis.py                                  
-│   └── config.py                                     # Global variables
-│   └── data_utils.py                                 # Data load utilities
-│   └── plots.py                                      # Shared plotting utilities
-│   └── strategy_utils.py                            
-├── environment.yml                                   # Conda environment specification
-├── LICENSE
-└── README.md
-```
-
 ## Getting Started
 
 ### Prerequisites
@@ -187,12 +144,64 @@ Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain an
 |`test.parquet`|Preprocessed features, 2024–2025|—|
 |`bitcoin_metrics_full_classification_final.csv`|Labelled metrics with family assignments|—|
 
-## Evaluation Methodology
-Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
+## Project Structure
 
-- **Baseline:** Naive uniform DCA (equal daily allocation)
-- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows
-- **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
+```
+AdaptiveSats/
+├── data/                                             # Processed and reference data files
+│   ├── raw/
+│   │   └── brk_metrics.parquet                       # Raw on-chain metrics (download.ipynb)
+|   ├── processed/  
+|   │   └── train.parquet                             # training set - 2010-2023 (created by download.ipynb)
+|   │   └── test.parquet                              # test set - 2024-2025 (created by download.ipynb)
+│   ├── all_col_names.csv                             # Full list of feature column names
+│   ├── bitcoin_metrics_full_classification_final.csv # Labelled metrics dataset
+│   ├── columns_to_drop.csv                           # Columns excluded from modelling
+│   └── common_zero_var_cols.csv                      # Zero-variance columns identified in EDA
+├── docs/                                             # Project documentation and reports
+│   ├── figures/                                      # Generated plots and charts
+│   │   ├── feature_count_by_family.png
+│   │   ├── features_per_year.png
+│   │   ├── fig_cycle_violin_plots.png
+│   │   ├── fig_price_history.png
+│   │   └── price_dendrogram_new.png
+│   ├── Proposal.qmd                                  # Quarto source for the project proposal
+│   ├── Proposal.html                                 # Rendered HTML proposal
+│   ├── Proposal.pdf                                  # Rendered PDF proposal
+│   └── references.bib                                # Bibliography
+├── notebooks/                                        # Jupyter notebooks for analysis
+│   ├── proposed_strategies/                          # Newly built strategies
+|   │   └── bayes_hmm_look_forward.ipynb              # HMM Bayesian Look Forward strategy prototype
+|   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
+|   │   └── brk_include_strat.ipynb                   
+│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
+|   │   └── external_feat.ipynb 
+│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
+|   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
+│   ├── stacksats_strategies/                         # Built-in stacksats strategies
+│   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
+│   │   ├── momentum_vs_dca_all_years_top10.ipynb
+│   │   ├── experimental_strategies.ipynb
+│   │   └── mvrv.ipynb
+│   │   └── simple_zscore_analysis.ipynb
+│   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
+│   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
+│   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
+│   ├── eda.ipynb                                     # Exploratory data analysis
+│   ├── family_classification.ipynb                   # 2. Metric family classification
+│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - not used
+│   └── preliminary_eda_charts.ipynb                  # 3. Preliminary EDA visualisations
+├── src/                                              # Source package
+│   ├── __init__.py
+│   └── analysis.py                                  
+│   └── config.py                                     # Global variables
+│   └── data_utils.py                                 # Data load utilities
+│   └── plots.py                                      # Shared plotting utilities
+│   └── strategy_utils.py                            
+├── environment.yml                                   # Conda environment specification
+├── LICENSE
+└── README.md
+```
 
 ## Authors
 |**Name**|**GitHub**|
