@@ -10,3 +10,11 @@ listing:
 page-layout: full
 title-block-banner: true
 ---
+
+Welcome to the **AdaptiveSats** blog! 
+
+We are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets. 
+
+This project, built in partnership with the [Trilemma Foundation](https://www.trilemma.foundation/), aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive **Dollar-Cost Averaging (DCA)** approach, which serves as our primary baseline strategy.
+
+---

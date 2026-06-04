@@ -1,8 +1,9 @@
 ---
 title: "About"
-image: profile.jpg
+image: images/Bitcoin_logo.png
 about:
   template: jolla
+  image-shape: rectangle
   links:
     - icon: github
       text: Github
@@ -13,7 +14,7 @@ about:
 AdaptiveSats is a research project conducted in partnership with the Trilemma Foundation. Our goal is to evaluate whether public Bitcoin market and on-chain data can improve long-term Bitcoin accumulation strategies compared to naive Dollar-Cost Averaging (DCA).
 
 **Team:**
-- Arafat B. Bello
+Arafat B. Bello
 - Nguyen Nguyen
 - Raghav Gupta
 - Shruti Sasi

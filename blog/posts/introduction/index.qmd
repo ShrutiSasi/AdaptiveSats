@@ -1,14 +1,16 @@
 ---
 title: "Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation"
-author: "AdaptiveSats Team"
+author: "Trilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
 date: "2026-06-03"
 categories: [research, bitcoin, data-science]
 image: "image.jpg"
 ---
 
-Welcome to the **AdaptiveSats** blog! 
+Detail introduction of the AdaptiveSats project
 
-This project, built in partnership with the [Trilemma Foundation](https://trilemma.org), aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive **Dollar-Cost Averaging (DCA)** approach.
+This supports Trilemma’s goal of building an open-source framework for evaluating Bitcoin accumulation strategies. 
+Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature reduction, and backtest adaptive allocation strategies against naive DCA.
+
 
 ## The Challenge with Naive DCA
 
