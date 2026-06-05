@@ -29,14 +29,14 @@ Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling on
 
 | Term | Description |
 |------|-------------|
-| **DCA (Dollar-Cost Averaging)** | Investing a fixed amount at regular intervals regardless of price — the naive baseline |
-| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100M sats) accumulated per USD invested — the primary performance metric; higher is better |
+| **DCA (Dollar-Cost Averaging)** | Investing a fixed amount at regular intervals regardless of price - the naive baseline |
+| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100M sats) accumulated per USD invested - the primary performance metric; higher is better |
 | **stacksats** | Open-source Python framework used for implementing and backtesting Bitcoin accumulation strategies |
-| **Halving Cycle** | Every ~4 years, Bitcoin's block reward is halved (2012, 2016, 2020, 2024) — historically a key market cycle driver |
-| **MVRV** | Market Value to Realized Value — ratio of market cap to aggregate cost basis; MVRV < 1 signals undervaluation |
-| **NUPL** | Net Unrealized Profit/Loss — when NUPL < 0, most holders are at a loss (capitulation signal) |
-| **SOPR** | Spent Output Profit Ratio — when SOPR < 1, coins are being sold at a loss (panic selling signal) |
-| **BRK Metrics** | Bitcoin Research Kit — a dataset of 41,000+ on-chain, technical, and market metrics |
+| **Halving Cycle** | Every ~4 years, Bitcoin's block reward is halved (2012, 2016, 2020, 2024) - historically a key market cycle driver |
+| **MVRV** | Market Value to Realized Value - ratio of market cap to aggregate cost basis; MVRV < 1 signals undervaluation |
+| **NUPL** | Net Unrealized Profit/Loss - when NUPL < 0, most holders are at a loss (capitulation signal) |
+| **SOPR** | Spent Output Profit Ratio - when SOPR < 1, coins are being sold at a loss (panic selling signal) |
+| **BRK Metrics** | Bitcoin Research Kit - a dataset of 41,000+ on-chain, technical, and market metrics |
 
 ---
 ## Getting Started
@@ -140,9 +140,9 @@ Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain an
 |**File**|**Description**|**Size**|
 |---|---|---|
 |`brk_metrics.parquet`|236M rows × 6,274 days of on-chain metrics|~1 GB|
-|`train.parquet`|Preprocessed features, 2010–2023|—|
-|`test.parquet`|Preprocessed features, 2024–2025|—|
-|`bitcoin_metrics_full_classification_final.csv`|Labelled metrics with family assignments|—|
+|`train.parquet`|Preprocessed features, 2010–2023|-|
+|`test.parquet`|Preprocessed features, 2024–2025|-|
+|`bitcoin_metrics_full_classification_final.csv`|Labelled metrics with family assignments|-|
 
 ## Project Structure
 

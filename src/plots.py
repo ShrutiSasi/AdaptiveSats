@@ -7,40 +7,14 @@ import seaborn as sns
 import plotly.graph_objects as go
 from scipy.cluster.hierarchy import dendrogram as _scipy_dendrogram
 from plotly.subplots import make_subplots
+from .config import HALVING_PERIODS, CALENDAR_CYCLES
 
-calendar_cycles = [
-    {"label": "Cycle 1: 2010-2013", "start": "2010-08-16", "end": "2013-12-31"},
-    {"label": "Cycle 2: 2014-2017", "start": "2014-01-01", "end": "2017-12-31"},
-    {"label": "Cycle 3: 2018-2021", "start": "2018-01-01", "end": "2021-12-31"},
-    {"label": "Cycle 4: 2022-2023", "start": "2022-01-01", "end": "2023-12-31"},
-]
-
-halving_periods = [
-    {
-        "label": "Before Nov 2012 Halving",
-        "start": "2010-08-16", "end": "2012-11-27",
-        "color": "rgba(173, 216, 230, 0.25)",
-    },
-    {
-        "label": "2012-2016 Halving Cycle",
-        "start": "2012-11-28", "end": "2016-07-08",
-        "color": "rgba(144, 238, 144, 0.25)",
-    },
-    {
-        "label": "2016-2020 Halving Cycle",
-        "start": "2016-07-09", "end": "2020-05-10",
-        "color": "rgba(176, 196, 222, 0.25)",
-    },
-    {
-        "label": "2020-2024 Halving Cycle",
-        "start": "2020-05-11", "end": "2023-12-31", # train set ends 2023-12-31
-        "color": "rgba(238, 232, 170, 0.25)",
-    },
-]
 
 
 # Private module-level aliases so default parameters can fall back to the
 # module-level constants even when the parameter name shadows them.
+halving_periods = HALVING_PERIODS
+calendar_cycles = CALENDAR_CYCLES
 _DEFAULT_HALVING_PERIODS = halving_periods
 _DEFAULT_CALENDAR_CYCLES = calendar_cycles
 
@@ -72,6 +46,7 @@ def plot_dendrogram(
     threshold: float | None = None,
     no_labels: bool = False,
     save_path=None,
+    show: bool = True,
 ) -> None:
     """Render a correlation dendrogram.
 
@@ -102,13 +77,15 @@ def plot_dendrogram(
     plt.tight_layout()
     if save_path is not None:
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def plot_price_history_with_halvings(
     df: pd.DataFrame,
     halvings: list[tuple[str, str]],
     save_path=None,
+    show: bool = True,
 ) -> None:
     """Plot BTC price history on a log scale with halving epoch shading.
 
@@ -150,7 +127,8 @@ def plot_price_history_with_halvings(
     plt.tight_layout()
     if save_path is not None:
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def plot_cycle_violin(
@@ -159,6 +137,7 @@ def plot_cycle_violin(
     cycle_order: list[str],
     palette: list[str] | None = None,
     save_path=None,
+    show: bool = True,
 ) -> None:
     """Violin plot of metric distributions across market cycle epochs.
 
@@ -205,7 +184,8 @@ def plot_cycle_violin(
     plt.tight_layout()
     if save_path is not None:
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def assign_cycle_label(date, cycles: list = None) -> str:
@@ -230,6 +210,7 @@ def compute_yearly_top_buys(
     plot_df: pd.DataFrame,
     weight_col: str,
     quantile: float = 0.90,
+    min_dca_multiplier: float = 1.0
 ) -> pd.DataFrame:
     """Rows where strategy weight >= the per-calendar-year quantile threshold.
 
@@ -239,6 +220,7 @@ def compute_yearly_top_buys(
                  'year', and ``weight_col``.
     weight_col : column name of the strategy allocation weight.
     quantile   : e.g. 0.90 keeps the top 10 % of days per year.
+    min_dca_multiplier: a day is only marked if its weight is meaningfully above uniform DCA
 
     Returns
     -------
@@ -253,7 +235,8 @@ def compute_yearly_top_buys(
 
     groups = []
     for _, grp in plot_df.groupby("year", sort=False):
-        threshold = grp[weight_col].quantile(quantile)
+        dca_w = 1.0 / len(grp)
+        threshold = max(grp[weight_col].quantile(quantile), min_dca_multiplier * dca_w)
         top = grp[grp[weight_col] >= threshold].copy()
         top["top_buy_threshold_year"] = threshold
         groups.append(top)
@@ -274,8 +257,11 @@ def plot_strategy_full_period(
     halving_periods: list = None,
     cycles: list = None,
     top_buy_quantile: float = 0.90,
+    min_dca_multiplier: float = 1.0,
+    test_start_date: str | None = None, 
     width: int = 1450,
     height: int = 780,
+    show: bool = True,
 ) -> go.Figure:
     """One Plotly chart covering the full date range.
 
@@ -299,35 +285,78 @@ def plot_strategy_full_period(
         cycles = _DEFAULT_CALENDAR_CYCLES
 
     df = _ensure_year_cycle_cols(plot_df, cycles)
-    top_buys = compute_yearly_top_buys(df, cols.weight, top_buy_quantile)
+    top_buys = compute_yearly_top_buys(df, cols.weight, top_buy_quantile, min_dca_multiplier)
 
-    spd_d = _compute_spd(df, cols.weight)
-    spd_b = _compute_spd(df, "baseline_weight")
-    pct   = (spd_d - spd_b) / spd_b * 100 if spd_b else 0.0
+    # spd_d = _compute_spd(df, cols.weight)
+    # spd_b = _compute_spd(df, "baseline_weight")
+    # pct   = (spd_d - spd_b) / spd_b * 100 if spd_b else 0.0
     pct_n = int(round((1 - top_buy_quantile) * 100))
     y0    = pd.Timestamp(date_range[0]).year
     y1    = pd.Timestamp(date_range[1]).year
 
-    if pct > 0:
-        perf_text = (
-            f"<span style='color:green;'>"
-            f"▲ {pct:+.2f}% vs DCA"
-            f"</span>"
+    # if pct > 0:
+    #     perf_text = (
+    #         f"<span style='color:green;'>"
+    #         f"▲ {pct:+.2f}% vs DCA"
+    #         f"</span>"
+    #     )
+    # else:
+    #     perf_text = (
+    #         f"<span style='color:red;'>"
+    #         f"▼ {pct:+.2f}% vs DCA"
+    #         f"</span>"
+    #     )
+    
+    # title = (
+    #     f"<b>{strategy_name} vs Baseline DCA  {y0}–{y1}</b><br>"
+    #     f"Top {pct_n}% Buy Days Per Calendar Year  |  "
+    #     f"{strategy_name} SPD: {spd_d:,.0f}  |  "
+    #     f"DCA SPD: {spd_b:,.0f}  |  "
+    #     f"{perf_text}"
+    # )
+
+    def _pct_span(pct: float) -> str:
+            color = "green" if pct >= 0 else "red"
+            arrow = "▲" if pct >= 0 else "▼"
+            return f"<span style='color:{color};'>{arrow} {pct:+.2f}% vs DCA</span>"
+    
+    if test_start_date is not None:
+        ts       = pd.Timestamp(test_start_date)
+        train_df = df[df["date"] < ts]
+        test_df  = df[df["date"] >= ts]
+
+        spd_d_tr = _compute_spd(train_df, cols.weight)
+        spd_b_tr = _compute_spd(train_df, "baseline_weight")
+        pct_tr   = (spd_d_tr - spd_b_tr) / spd_b_tr * 100 if spd_b_tr else 0.0
+
+        spd_d_te = _compute_spd(test_df, cols.weight)
+        spd_b_te = _compute_spd(test_df, "baseline_weight")
+        pct_te   = (spd_d_te - spd_b_te) / spd_b_te * 100 if spd_b_te else 0.0
+      
+        title = (
+            f"<b>{strategy_name} vs Baseline DCA  {y0}–{y1}</b>"
+            f"  (Top {pct_n}% Buy Days / Year)<br>"
+            f"Train ({y0}–{(ts - pd.Timedelta(days=1)).year}): "
+            f"{strategy_name} SPD: {spd_d_tr:,.0f}  |  DCA SPD: {spd_b_tr:,.0f}  | {_pct_span(pct_tr)} <br>"
+            f"Test ({ts.year}–{y1}): "
+            f"{strategy_name} SPD: {spd_d_te:,.0f}  |  DCA SPD: {spd_b_te:,.0f}  |  {_pct_span(pct_te)}"
         )
     else:
+        spd_d = _compute_spd(df, cols.weight)
+        spd_b = _compute_spd(df, "baseline_weight")
+        pct   = (spd_d - spd_b) / spd_b * 100 if spd_b else 0.0
         perf_text = (
-            f"<span style='color:red;'>"
-            f"▼ {pct:+.2f}% vs DCA"
-            f"</span>"
+            f"<span style='color:green;'> {_pct_span(pct)}</span>"
+            if pct > 0 else
+            f"<span style='color:red;'> {_pct_span(pct)}</span>"
         )
-    
-    title = (
-        f"<b>{strategy_name} vs Baseline DCA  {y0}–{y1}</b><br>"
-        f"Top {pct_n}% Buy Days Per Calendar Year  |  "
-        f"{strategy_name} SPD: {spd_d:,.0f}  |  "
-        f"DCA SPD: {spd_b:,.0f}  |  "
-        f"{perf_text}"
-    )
+        title = (
+            f"<b>{strategy_name} vs Baseline DCA  {y0}–{y1}</b><br>"
+            f"Top {pct_n}% Buy Days Per Calendar Year  |  "
+            f"{strategy_name} SPD: {spd_d:,.0f}  |  "
+            f"DCA SPD: {spd_b:,.0f}  |  "
+            f"{perf_text}"
+        )
 
     fig = _build_strategy_fig(
         plot_df=df, top_buy_points=top_buys,
@@ -336,7 +365,20 @@ def plot_strategy_full_period(
         halving_periods=halving_periods, cycles=cycles,
         width=width, height=height,
     )
-    fig.show()
+
+    if test_start_date is not None:
+        x_ms = pd.Timestamp(test_start_date).value // 10**6  # nanoseconds → milliseconds
+        fig.add_vline(
+            x=x_ms,
+            line_width=2, line_dash="dash", line_color="royalblue",
+            annotation_text="Test starts",
+            annotation_position="top right",
+            annotation_font=dict(size=11, color="royalblue"),
+        )
+        fig.update_layout(margin=dict(t=180))
+
+    if show:
+        fig.show()
     return fig
 
 
@@ -347,8 +389,10 @@ def plot_strategy_by_cycle(
     halving_periods: list = None,
     cycles: list = None,
     top_buy_quantile: float = 0.90,
+    min_dca_multiplier: float = 1.0,
     width: int = 1350,
     height_per_row: int = 550,
+    show: bool = True,
 ) -> go.Figure:
     """Faceted figure: one subplot row per calendar cycle (single column).
 
@@ -379,9 +423,9 @@ def plot_strategy_by_cycle(
     # Pre-compute per-cycle stats for subplot titles
     subplot_titles = []
     for cycle, slice_df in cycle_slices:
-        total_dyn_btc  = slice_df["btc_accum_dynamic"].sum()
-        total_base_btc = slice_df["btc_accum_baseline"].sum()
-        pct_diff       = (total_dyn_btc - total_base_btc) / total_base_btc * 100 if total_base_btc else 0.0
+        spd_d    = _compute_spd(slice_df, cols.weight)
+        spd_b    = _compute_spd(slice_df, "baseline_weight")
+        pct_diff = (spd_d - spd_b) / spd_b * 100 if spd_b else 0.0
         if pct_diff > 0:
             perf_text = (
                 f"<span style='color:green;'>"
@@ -397,7 +441,7 @@ def plot_strategy_by_cycle(
         threshold      = slice_df[cols.weight].quantile(top_buy_quantile)
         subplot_titles.append(
             f"<b>{cycle['label']} | {strategy_name} Strategy vs Baseline DCA</b><br>"
-            f"Dynamic BTC: {total_dyn_btc:.6f} | DCA BTC: {total_base_btc:.6f} | "
+            f"{strategy_name} SPD: {spd_d:.0f} | DCA SPD: {spd_b:.0f} | "
             f"{perf_text} | "
             f"Top buy threshold: {threshold:.8f} <br>"
         )
@@ -413,7 +457,7 @@ def plot_strategy_by_cycle(
     for i, (cycle, slice_df) in enumerate(cycle_slices, start=1):
         c_start  = pd.Timestamp(cycle["start"])
         c_end    = pd.Timestamp(cycle["end"])
-        top_buys = compute_yearly_top_buys(slice_df, cols.weight, top_buy_quantile)
+        top_buys = compute_yearly_top_buys(slice_df, cols.weight, top_buy_quantile, min_dca_multiplier)
 
         x_ref = f"x{i}" if i > 1 else "x"
         y_idx = 2 * (i - 1) + 1
@@ -467,7 +511,8 @@ def plot_strategy_by_cycle(
         margin=dict(l=70, r=70, t=80, b=60),
         template="plotly_white",
     )
-    fig.show()
+    if show:
+        fig.show()
     return fig
 
 
@@ -478,8 +523,10 @@ def plot_strategy_by_year(
     years: list = None,
     halving_periods: list = None,
     top_buy_quantile: float = 0.90,
+    min_dca_multiplier: float = 1.0,
     width: int = 1450,
     height_per_row: int = 380,
+    show: bool = True,
 ) -> go.Figure:
     """Faceted figure: two-column grid, one subplot per calendar year.
 
@@ -548,7 +595,7 @@ def plot_strategy_by_year(
         col = idx % n_cols + 1
         y_start  = pd.Timestamp(f"{year}-01-01")
         y_end    = pd.Timestamp(f"{year}-12-31")
-        top_buys = compute_yearly_top_buys(year_df, cols.weight, top_buy_quantile)
+        top_buys = compute_yearly_top_buys(year_df, cols.weight, top_buy_quantile, min_dca_multiplier)
 
         # Halving shading clipped to this year (usually empty, visible near halvings)
         for period in halving_periods:
@@ -587,7 +634,8 @@ def plot_strategy_by_year(
         margin=dict(l=70, r=70, t=100, b=60),
         template="plotly_white",
     )
-    fig.show()
+    if show:
+        fig.show()
     return fig
 
 # -- private helpers ---------------------------------------------------------

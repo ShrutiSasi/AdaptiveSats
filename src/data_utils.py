@@ -67,7 +67,12 @@ def check_stacksats_data(path: Path, raw_path: Path) -> bool:
                 ],
                 check=True,
             )
-        return True
+
+        if not path.exists():
+            print(f"Preparation completed but dataset still not found at: {path}")
+            return False
+        else:
+            return True
             
     except subprocess.CalledProcessError as e:
         print(f"Error loading Stacksats data from {path}: {e}")
