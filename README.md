@@ -126,13 +126,15 @@ Start with core pipeline notebooks, then explore strategy notebooks
 **Proposed Strategies** (proposed_strategies)
 |**Notebook**|**Strategy**|
 |---|---|
-|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
 |`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
 |`bayes_hmm_look_forward.ipynb`|Extended HMM with forward-looking state prediction|
 |`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|
 |`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|
 |`brk_include_strat.ipynb`|Strategy incorporating a wider set of BRK on-chain metrics|
-|`external_feat.ipynb`|Integration of external macro/sentiment features|
+|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|
+|`value_floor_strat.ipynb`|Crash-detection strategy that sets allocation floors|
+|`weighted_external_tunable_strat.ipynb`|Linear factor-weighted strategy combining MVRV, short-term momentum, and macro indicators (e.g. Treasury yield changes) with tunable weights|
+|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
 
 ## Data
 Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
@@ -175,9 +177,11 @@ AdaptiveSats/
 |   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
 |   │   └── brk_include_strat.ipynb                   
 │   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
-|   │   └── external_feat.ipynb 
+|   │   └── external_tunable_strat.ipynb 
 │   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
 |   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
+|   │   └── value_floor_strat.ipynb 
+|   │   └── weighted_external_tunable_strat.ipynb     # Integrating external data
 │   ├── stacksats_strategies/                         # Built-in stacksats strategies
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb

@@ -20,6 +20,11 @@ STACKSATS_DATA_PATH = Path.home() / ".stacksats" / "data" / "bitcoin_analytics.p
 # Shared constants
 SPLIT_YEAR = 2024
 TOTAL_BUDGET_USD = 1000.0
+SATS_PER_BTC      = 100_000_000
+TRAIN_START_YEAR  = 2018 
+TEST_END_YEAR     = 2025 
+TOP_BUY_QUANTILE  = 0.90 
+MIN_DAYS_PER_YEAR = 365 
 
 CALENDAR_CYCLES = [
     {"label": "Cycle 1: 2010-2013", "start": "2010-08-16", "end": "2013-12-31"},
