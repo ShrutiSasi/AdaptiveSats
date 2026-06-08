@@ -1,7 +1,150 @@
 # AdaptiveSats
 
-Python Library for quantitative long only Bitcoin accumulation - keeping the discipline of Dollar-Cost Averaging but also takes into account the market volatility, on-chain, macro and sentiment data to improve purchase timing.
+The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
+> **Can adaptive allocation beat naive Dollar-Cost Averaging for long-term Bitcoin accumulation?**
 
+AdaptiveSats is a Python-based research platform built in partnership with the **Trilemma Foundation** (UBC DSCI591 Capstone, 2025–2026) to answer that question. Instead of focusing on Bitcoin's price in dollars, it focuses on maximizing the amount of Bitcoin accumulated over time.
+
+The framework analyzes Bitcoin network and market indicators, including on-chain activity, investor behavior, and market sentiment. It then identifies patterns that may signal whether Bitcoin appears relatively undervalued, overvalued, or fairly priced. Using these signals, AdaptiveSats creates dynamic investment strategies that automatically increase purchases during potentially attractive market conditions and reduce purchases when conditions appear less favorable. Every strategy is rigorously tested against a traditional Dollar Cost Averaging (DCA) approach. The framework keeps each strategy inside the core constraints:
+- fixed accumulation budget
+- fixed allocation horizon, defaulting to 365 days
+- no forward-looking data
+- immutable historical allocations
+
+&nbsp;
+
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green) ![conda](https://img.shields.io/badge/env-conda-brightgreen)
+
+---
+
+## Evaluation Methodology
+Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
+
+- **Baseline:** Naive uniform DCA (equal daily allocation)
+- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows
+- **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
+
+
+## Key Concepts
+
+| Term | Description |
+|------|-------------|
+| **DCA (Dollar-Cost Averaging)** | Investing a fixed amount at regular intervals regardless of price - the naive baseline |
+| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100M sats) accumulated per USD invested - the primary performance metric; higher is better |
+| **stacksats** | Open-source Python framework used for implementing and backtesting Bitcoin accumulation strategies |
+| **Halving Cycle** | Every ~4 years, Bitcoin's block reward is halved (2012, 2016, 2020, 2024) - historically a key market cycle driver |
+| **MVRV** | Market Value to Realized Value - ratio of market cap to aggregate cost basis; MVRV < 1 signals undervaluation |
+| **NUPL** | Net Unrealized Profit/Loss - when NUPL < 0, most holders are at a loss (capitulation signal) |
+| **SOPR** | Spent Output Profit Ratio - when SOPR < 1, coins are being sold at a loss (panic selling signal) |
+| **BRK Metrics** | Bitcoin Research Kit - a dataset of 41,000+ on-chain, technical, and market metrics |
+
+---
+## Getting Started
+
+### Prerequisites
+
+-   [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) (version 26.1.0 or higher)
+
+### Setup
+
+1.  Open terminal and run the following commands.
+
+2.  Clone the repository:
+
+``` bash
+git clone https://github.com/ShrutiSasi/AdaptiveSats.git
+cd AdaptiveSats
+```
+
+3.  Create and activate the environment:
+
+``` bash
+ conda env create -f environment.yml 
+ conda activate adaptivesats
+```
+
+4.  Install TinyTeX for PDF rendering:
+
+``` bash
+quarto install tinytex
+```
+
+5. Launch JupyterLab to explore notebooks interactively:
+
+``` bash
+jupyter lab
+```
+
+#### Rendering reports (Optional)
+
+6.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
+
+``` bash
+cd notebooks
+jupyter nbconvert --to notebook --execute --inplace download.ipynb
+jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
+jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
+jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
+```
+
+#### Generate proposal pdf
+
+7.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
+
+``` bash
+cd .. #If still in notebooks folder
+quarto render docs/Proposal.qmd
+```
+
+The proposal pdf gets created at `AdaptiveSats\docs`
+
+
+## Notebook Guide
+
+Start with core pipeline notebooks, then explore strategy notebooks
+
+### Core Pipeline
+|#|**Notebook**|**Purpose**|
+|---|---|---|
+|1.|`download.ipynb`|Downloads ~1GB raw BRK metrics from Google Drive, creates `train.parquet` and `test.parquet`|
+|2.|`family_classification.ipynb`|Categorizes 41,407 metrics into 16 feature families (e.g., Market Valuation, Profitability & SOPR)|
+|3.|`preliminary_eda_charts.ipynb`|EDA visualizations: feature counts, family distributions, Bitcoin historical price trend and halving cycles|
+|4.|`dendogram.ipynb`|Hierarchical clustering and correlation dendrograms to identify multicollinearity per family|
+|-|`eda.ipynb`|Comprehensive exploratory data analysis|
+|-|`btc_stl_analysis.ipynb`|STL decomposition of BTC price and on-chain metrics (trend / seasonality / residuals)|
+
+### Strategy Notebooks
+**Stacksats Built-in Strategies**  (stacksats_strategies) 
+|**Notebook**|**Strategy**|
+|---|---|
+|`simple_zscore_analysis.ipynb`|Z-score normalized signal with threshold-based allocation|
+|`mvrv.ipynb`|Allocation scaled to MVRV Ratio|
+|`momentum_vs_dca_all_years_top10.ipynb`|Momentum signal vs uniform DCA across all years|
+|`momentum_vs_dca_4_cycles_top10_yby_halving.ipynb`|Momentum vs DCA evaluated year-by-year within halving cycles|
+|`experimental_strategies.ipynb`|experimental strategies - Example MVRV and MVRV Plus|
+
+**Proposed Strategies** (proposed_strategies)
+|**Notebook**|**Strategy**|
+|---|---|
+|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
+|`bayes_hmm_look_forward.ipynb`|Extended HMM with forward-looking state prediction|
+|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|
+|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|
+|`brk_include_strat.ipynb`|Strategy incorporating a wider set of BRK on-chain metrics|
+|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|
+|`value_floor_strat.ipynb`|Crash-detection strategy that sets allocation floors|
+|`weighted_external_tunable_strat.ipynb`|Linear factor-weighted strategy combining MVRV, short-term momentum, and macro indicators (e.g. Treasury yield changes) with tunable weights|
+|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
+
+## Data
+Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
+
+|**File**|**Description**|**Size**|
+|---|---|---|
+|`brk_metrics.parquet`|236M rows × 6,274 days of on-chain metrics|~1 GB|
+|`train.parquet`|Preprocessed features, 2010–2023|-|
+|`test.parquet`|Preprocessed features, 2024–2025|-|
+|`bitcoin_metrics_full_classification_final.csv`|Labelled metrics with family assignments|-|
 
 ## Project Structure
 
@@ -29,84 +172,48 @@ AdaptiveSats/
 │   ├── Proposal.pdf                                  # Rendered PDF proposal
 │   └── references.bib                                # Bibliography
 ├── notebooks/                                        # Jupyter notebooks for analysis
-│   ├── proposed_strategies/
-│   │   └── composite_signal_index_strategy.ipynb    # Composite signal index strategy prototype
-│   │   └── hmm-garch.ipynb                          # HMM GARCH strategy prototype
-|   │   └── bayes_hmm.ipynb                          # HMM Bayesian strategy prototype
-|   │   └── regime_strategy_analysis.ipynb           # Allocation strategy based on market regime
-│   ├── stacksats_strategies/
+│   ├── proposed_strategies/                          # Newly built strategies
+|   │   └── bayes_hmm_look_forward.ipynb              # HMM Bayesian Look Forward strategy prototype
+|   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
+|   │   └── brk_include_strat.ipynb                   
+│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
+|   │   └── external_tunable_strat.ipynb 
+│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
+|   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
+|   │   └── value_floor_strat.ipynb 
+|   │   └── weighted_external_tunable_strat.ipynb     # Integrating external data
+│   ├── stacksats_strategies/                         # Built-in stacksats strategies
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb
 │   │   ├── experimental_strategies.ipynb
+│   │   └── mvrv.ipynb
 │   │   └── simple_zscore_analysis.ipynb
-│   ├── btc_stl_analysis.ipynb                       # BTC price STL decomposition - Analysis
-│   ├── dendogram.ipynb                              # 4. Metric correlation dendrogram
-│   ├── download.ipynb                               # 1. Downloads raw data from Google Drive
-│   ├── eda.ipynb                                    # Exploratory data analysis
-│   ├── family_classification.ipynb                  # 2. Metric family classification
-│   ├── loading_brk_metrics_data.ipynb               # Data loading and parsing to individual years - not used
-│   └── preliminary_eda_charts.ipynb                 # 3. Preliminary EDA visualisations
-├── src/                                             # Source package
+│   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
+│   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
+│   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
+│   ├── eda.ipynb                                     # Exploratory data analysis
+│   ├── family_classification.ipynb                   # 2. Metric family classification
+│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - not used
+│   └── preliminary_eda_charts.ipynb                  # 3. Preliminary EDA visualisations
+├── src/                                              # Source package
 │   ├── __init__.py
 │   └── analysis.py                                  
-│   └── config.py                                    # Global variables
-│   └── data_utils.py                                # Data load utilities
-│   └── plots.py                                     # Shared plotting utilities
+│   └── config.py                                     # Global variables
+│   └── data_utils.py                                 # Data load utilities
+│   └── plots.py                                      # Shared plotting utilities
 │   └── strategy_utils.py                            
-├── environment.yml                                  # Conda environment specification
+├── environment.yml                                   # Conda environment specification
 ├── LICENSE
 └── README.md
 ```
 
-## Setup
+## Authors
+|**Name**|**GitHub**|
+|---|---|
+|Arafat B. Bello|[@bbarafat](https://github.com/bbarafat)|
+|Nguyen Nguyen|[@nguyen6uyen](https://github.com/nguyen6uyen)|
+|Raghav Gupta|[@raghav9048](https://github.com/raghav9048)|
+|Shruti Sasi|[@ShrutiSasi](https//github.com/ShrutiSasi)|
 
-### Prerequisites
-
--   [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) (version 26.1.0 or higher)
-
-### Instructions
-
-1.  Open terminal and run the following commands.
-
-2.  Clone the repository:
-
-``` bash
-git clone https://github.com/ShrutiSasi/AdaptiveSats.git
-cd AdaptiveSats
-```
-
-3.  Create and activate the environment:
-
-``` bash
- conda env create -f environment.yml 
- conda activate adaptivesats
-```
-
-4.  Install TinyTeX for PDF rendering:
-
-``` bash
-quarto install tinytex
-```
-
-#### Rendering reports (Optional)
-
-5.  Run the jupyter notebooks to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
-
-``` bash
-cd notebooks
-jupyter nbconvert --to notebook --execute --inplace download.ipynb
-jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
-jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
-jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
-```
-
-#### Generate proposal pdf
-
-6.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
-
-``` bash
-cd .. #If still in notebooks folder
-quarto render docs/Proposal.qmd
-```
-
-The proposal pdf gets created at `AdaptiveSats\docs`
+## License
+This project is licensed under the terms of the `LICENSE` file.

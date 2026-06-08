@@ -1,5 +1,6 @@
 import pandas as pd
 import polars as pl
+from src import config as _config
 
 
 def export_one_year(
@@ -51,27 +52,164 @@ def export_one_year(
         return None
 
 
+def run_year_by_year(
+    strategies: dict,
+    btc_data: pl.DataFrame,
+    years,
+    runner,
+    total_budget_usd: float | None = None,
+) -> pl.DataFrame:
+    """Export N strategies year-by-year and compute the full weight→sats pipeline.
+
+    Parameters
+    ----------
+    strategies:
+        Ordered mapping of name → strategy instance.
+        The first entry's DataFrame supplies ``price_usd``.
+        e.g. {"dynamic": MyStrategy(), "mvrv": MVRVStrategy(), "baseline": UniformStrategy()}
+    btc_data:
+        BTC DataFrame for the relevant range (train or test).
+    years:
+        Iterable of integer years, e.g. ``range(2018, 2024)``.
+    runner:
+        StrategyRunner instance.
+    total_budget_usd:
+        Annual USD budget. Defaults to ``config.TOTAL_BUDGET_USD``.
+
+    Returns
+    -------
+    pl.DataFrame with shared columns ``date``, ``price_usd``, ``year``
+    and per-strategy columns for each name:
+        ``{name}_weight_raw``, ``{name}_weight``, ``{name}_usd``,
+        ``btc_accum_{name}``, ``sats_accum_{name}``, ``sats_per_dollar_{name}``
+    """
+    if total_budget_usd is None:
+        total_budget_usd = _config.TOTAL_BUDGET_USD
+
+    yearly_by_name: dict[str, list[pl.DataFrame]] = {name: [] for name in strategies}
+
+    for year in years:
+        for name, strategy in strategies.items():
+            result = export_one_year(strategy, btc_data, year, runner)
+            if result is not None:
+                yearly_by_name[name].append(result)
+
+    for name, yearly in yearly_by_name.items():
+        if not yearly:
+            raise ValueError(f"No valid exports for strategy '{name}'")
+
+    # First strategy provides price_usd; subsequent strategies join on date only
+    first_name = next(iter(strategies))
+    first_df = pl.concat(yearly_by_name[first_name]).rename({"weight": f"{first_name}_weight_raw"})
+    merged = first_df.select(["date", "price_usd", f"{first_name}_weight_raw"]).sort("date")
+
+    for name in list(strategies.keys())[1:]:
+        other_df = pl.concat(yearly_by_name[name]).rename({"weight": f"{name}_weight_raw"})
+        merged = merged.join(other_df.select(["date", f"{name}_weight_raw"]), on="date", how="inner")
+
+    merged = merged.with_columns(pl.col("date").dt.year().alias("year"))
+
+    # Year-normalize raw weights
+    merged = merged.with_columns([
+        (pl.col(f"{name}_weight_raw") / pl.col(f"{name}_weight_raw").sum().over("year"))
+        .alias(f"{name}_weight")
+        for name in strategies
+    ])
+    # weight → USD
+    merged = merged.with_columns([
+        (pl.col(f"{name}_weight") * total_budget_usd).alias(f"{name}_usd")
+        for name in strategies
+    ])
+    # USD → BTC
+    merged = merged.with_columns([
+        (pl.col(f"{name}_usd") / pl.col("price_usd")).alias(f"btc_accum_{name}")
+        for name in strategies
+    ])
+    # BTC → sats
+    merged = merged.with_columns([
+        (pl.col(f"btc_accum_{name}") * _config.SATS_PER_BTC).alias(f"sats_accum_{name}")
+        for name in strategies
+    ])
+    # sats → sats-per-dollar
+    merged = merged.with_columns([
+        (pl.col(f"sats_accum_{name}") / pl.col(f"{name}_usd")).alias(f"sats_per_dollar_{name}")
+        for name in strategies
+    ])
+
+    return merged
+
+
+def compute_performance_summary(
+    merged_df: pl.DataFrame,
+    strategy_name: str,
+    baseline_name: str,
+    total_budget_usd: float | None = None,
+) -> dict:
+    """Compute aggregate performance metrics from a ``run_year_by_year`` result.
+
+    Parameters
+    ----------
+    merged_df:
+        DataFrame returned by ``run_year_by_year``.
+    strategy_name:
+        The strategy name key used in ``run_year_by_year`` (e.g. ``"dynamic"``).
+    baseline_name:
+        The baseline name key (e.g. ``"baseline"``).
+    total_budget_usd:
+        Annual USD budget. Defaults to ``config.TOTAL_BUDGET_USD``.
+
+    Returns
+    -------
+    dict with keys:
+        ``total_{strategy_name}_btc``, ``total_{baseline_name}_btc``,
+        ``sats_per_dollar_{strategy_name}``, ``sats_per_dollar_{baseline_name}``,
+        ``pct_diff_vs_baseline``, ``performance_label``.
+    """
+    if total_budget_usd is None:
+        total_budget_usd = _config.TOTAL_BUDGET_USD
+
+    total_strat_btc    = merged_df[f"btc_accum_{strategy_name}"].sum()
+    total_baseline_btc = merged_df[f"btc_accum_{baseline_name}"].sum()
+    num_years          = merged_df["year"].n_unique()
+    total_invested     = total_budget_usd * num_years
+
+    spd_strategy = (total_strat_btc    / total_invested) * _config.SATS_PER_BTC
+    spd_baseline = (total_baseline_btc / total_invested) * _config.SATS_PER_BTC
+    pct_diff     = (total_strat_btc - total_baseline_btc) / total_baseline_btc * 100
+
+    return {
+        f"total_{strategy_name}_btc":       total_strat_btc,
+        f"total_{baseline_name}_btc":       total_baseline_btc,
+        f"sats_per_dollar_{strategy_name}": spd_strategy,
+        f"sats_per_dollar_{baseline_name}": spd_baseline,
+        "pct_diff_vs_baseline":             pct_diff,
+        "performance_label":                "better" if pct_diff > 0 else "worse",
+    }
+
+
 def process_cycle_year_by_year(
     cycle: dict,
     btc_data: pl.DataFrame,
     runner,
     dynamic_strategy=None,
-    total_budget_usd: float = 1000.0,
-    top_buy_quantile: float = 0.90,
+    total_budget_usd: float | None = None,
+    top_buy_quantile: float | None = None,
 ) -> dict:
     """Run dynamic strategy vs uniform DCA baseline over a cycle, year by year.
 
-    Pass `dynamic_strategy` to swap the strategy per notebook
-    (e.g. SimpleZScoreStrategy(), MomentumStrategy()).
-    Defaults to SimpleZScoreStrategy if not provided.
+    Pass ``dynamic_strategy`` to swap the strategy per notebook.
+    Defaults to UniformStrategy if not provided.
+    Return dict is unchanged from prior version (backward compatible).
     """
-    from stacksats.strategies.stable.signals.simple_zscore import SimpleZScoreStrategy
     from stacksats.strategies.stable.baselines.uniform import UniformStrategy
 
     if dynamic_strategy is None:
-        dynamic_strategy = SimpleZScoreStrategy()
+        dynamic_strategy = UniformStrategy()
+    if total_budget_usd is None:
+        total_budget_usd = _config.TOTAL_BUDGET_USD
+    if top_buy_quantile is None:
+        top_buy_quantile = _config.TOP_BUY_QUANTILE
 
-    uniform_strategy  = UniformStrategy()
     cycle_label = cycle["label"]
     cycle_start = cycle["start"]
     cycle_end   = cycle["end"]
@@ -95,80 +233,30 @@ def process_cycle_year_by_year(
         pl.len().alias("rows"),
     ))
 
-    dynamic_yearly, uniform_yearly = [], []
-
-    for year in range(start_year, end_year + 1):
-        dyn = export_one_year(dynamic_strategy, cycle_df, year, runner)
-        if dyn is not None:
-            dynamic_yearly.append(dyn)
-        uni = export_one_year(uniform_strategy, cycle_df, year, runner)
-        if uni is not None:
-            uniform_yearly.append(uni)
-
-    if not dynamic_yearly:
-        raise ValueError(f"No valid dynamic exports for {cycle_label}")
-    if not uniform_yearly:
-        raise ValueError(f"No valid uniform exports for {cycle_label}")
-
-    dynamic_all = pl.concat(dynamic_yearly).rename({"weight": "dynamic_weight_raw"})
-    uniform_all = pl.concat(uniform_yearly).rename({"weight": "baseline_weight_raw"})
-
-    merged = (
-        dynamic_all.select(["date", "price_usd", "dynamic_weight_raw"])
-        .join(uniform_all.select(["date", "baseline_weight_raw"]), on="date", how="inner")
-        .sort("date")
-    )
-
-    merged = merged.with_columns([
-        (pl.col("dynamic_weight_raw")  / merged["dynamic_weight_raw"].sum()).alias("dynamic_weight"),
-        (pl.col("baseline_weight_raw") / merged["baseline_weight_raw"].sum()).alias("baseline_weight"),
-    ])
-    merged = merged.with_columns([
-        (pl.col("dynamic_weight")  * total_budget_usd).alias("dynamic_usd"),
-        (pl.col("baseline_weight") * total_budget_usd).alias("baseline_usd"),
-    ])
-    merged = merged.with_columns([
-        (pl.col("dynamic_usd")  / pl.col("price_usd")).alias("btc_accum_dynamic"),
-        (pl.col("baseline_usd") / pl.col("price_usd")).alias("btc_accum_baseline"),
-    ])
-    merged = merged.with_columns([
-        (pl.col("btc_accum_dynamic")  * 100_000_000).alias("sats_accum_dynamic"),
-        (pl.col("btc_accum_baseline") * 100_000_000).alias("sats_accum_baseline"),
-    ])
-    merged = merged.with_columns([
-        (pl.col("sats_accum_dynamic")  / pl.col("dynamic_usd")).alias("sats_per_dollar_dynamic"),
-        (pl.col("sats_accum_baseline") / pl.col("baseline_usd")).alias("sats_per_dollar_baseline"),
-    ])
-
-    total_dynamic_btc  = merged["btc_accum_dynamic"].sum()
-    total_baseline_btc = merged["btc_accum_baseline"].sum()
-    spd_dynamic  = (total_dynamic_btc  / total_budget_usd) * 100_000_000
-    spd_baseline = (total_baseline_btc / total_budget_usd) * 100_000_000
-    pct_diff     = ((total_dynamic_btc - total_baseline_btc) / total_baseline_btc) * 100
-
-    top_buy_threshold = merged["dynamic_weight"].quantile(top_buy_quantile)
-    top_buy_points = (
-        merged
-        .filter(pl.col("dynamic_weight") >= top_buy_threshold)
-        .select(["date", "price_usd", "dynamic_weight"])
-        .sort("dynamic_weight", descending=True)
-        .to_pandas()
-    )
-    top_buy_points["date"] = pd.to_datetime(top_buy_points["date"])
+    strategies = {"dynamic": dynamic_strategy, "baseline": UniformStrategy()}
+    merged = run_year_by_year(strategies, cycle_df, range(start_year, end_year + 1), runner, total_budget_usd)
+    perf   = compute_performance_summary(merged, "dynamic", "baseline", total_budget_usd)
 
     plot_df = merged.to_pandas()
     plot_df["date"] = pd.to_datetime(plot_df["date"])
+    plot_df["year"] = plot_df["date"].dt.year
+
+    top_buy_points_list = []
+    threshold = None
+    for year, year_df in plot_df.groupby("year"):
+        threshold = year_df["dynamic_weight"].quantile(top_buy_quantile)
+        top_year_df = year_df[year_df["dynamic_weight"] >= threshold].copy()
+        top_year_df["top_buy_threshold_year"] = threshold
+        top_buy_points_list.append(top_year_df)
+
+    top_buy_points = pd.concat(top_buy_points_list, ignore_index=True)
+    top_buy_points = top_buy_points.sort_values(["year", "dynamic_weight"], ascending=[True, False])
 
     return {
         "label": cycle_label, "start": cycle_start, "end": cycle_end,
         "merged": merged, "plot_df": plot_df,
         "top_buy_points": top_buy_points,
-        "top_buy_threshold": top_buy_threshold,
+        "top_buy_threshold": threshold,
         "top_buy_quantile": top_buy_quantile,
-        "total_dynamic_btc": total_dynamic_btc,
-        "total_baseline_btc": total_baseline_btc,
-        "sats_per_dollar_dynamic": spd_dynamic,
-        "sats_per_dollar_baseline": spd_baseline,
-        "pct_diff_vs_baseline": pct_diff,
-        "performance_label": "better" if pct_diff > 0 else "worse",
+        **perf,
     }
