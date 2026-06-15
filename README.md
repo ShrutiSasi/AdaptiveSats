@@ -1,5 +1,7 @@
 # AdaptiveSats
 
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green) ![conda](https://img.shields.io/badge/env-conda-brightgreen)
+
 The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
 > **Can adaptive allocation beat naive Dollar-Cost Averaging for long-term Bitcoin accumulation?**
 
@@ -11,11 +13,7 @@ The framework analyzes Bitcoin network and market indicators, including on-chain
 - no forward-looking data
 - immutable historical allocations
 
-&nbsp;
 
-![Python 3.11](https://img.shields.io/badge/python-3.11-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green) ![conda](https://img.shields.io/badge/env-conda-brightgreen)
-
----
 
 ## Evaluation Methodology
 Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
@@ -38,7 +36,7 @@ Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling on
 | **SOPR** | Spent Output Profit Ratio - when SOPR < 1, coins are being sold at a loss (panic selling signal) |
 | **BRK Metrics** | Bitcoin Research Kit - a dataset of 41,000+ on-chain, technical, and market metrics |
 
----
+
 ## Getting Started
 
 ### Prerequisites
@@ -47,56 +45,61 @@ Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling on
 
 ### Setup
 
-1.  Open terminal and run the following commands.
+Open terminal and run the following commands.
 
-2.  Clone the repository:
+1.  Clone the repository:
 
-``` bash
-git clone https://github.com/ShrutiSasi/AdaptiveSats.git
-cd AdaptiveSats
-```
+    ``` bash
+    git clone https://github.com/ShrutiSasi/AdaptiveSats.git
+    cd AdaptiveSats
+    ```
 
-3.  Create and activate the environment:
+2.  Create and activate the environment:
 
-``` bash
- conda env create -f environment.yml 
- conda activate adaptivesats
-```
+    ``` bash
+    conda env create -f environment.yml 
+    conda activate adaptivesats
+    ```
 
-4.  Install TinyTeX for PDF rendering:
+3.  Install TinyTeX for PDF rendering:
 
-``` bash
-quarto install tinytex
-```
+    ``` bash
+    quarto install tinytex
+    ```
 
-5. Launch JupyterLab to explore notebooks interactively:
+4. Launch JupyterLab to explore notebooks interactively:
 
-``` bash
-jupyter lab
-```
+    ``` bash
+    jupyter lab
+    ```
 
 #### Rendering reports (Optional)
 
-6.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
+5.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
 
-``` bash
-cd notebooks
-jupyter nbconvert --to notebook --execute --inplace download.ipynb
-jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
-jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
-jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
-```
+    ``` bash
+    cd notebooks
+    jupyter nbconvert --to notebook --execute --inplace download.ipynb
+    jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
+    jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
+    jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
+    ```
+
+    **Alternatively**, open commands.txt. Check the change directory command and jupyter commands to run. Use "#" in front of a command to comment it and exclude from running. Run the below command with `AdaptiveSats` as the current/active directory in terminal (Git Bash).
+    ```bash
+    ./commands.txt
+    ```
 
 #### Generate proposal pdf
 
-7.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
+6.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
 
-``` bash
-cd .. #If still in notebooks folder
-quarto render docs/Proposal.qmd
-```
+    ``` bash
+    cd .. #If still in notebooks folder
+    quarto render docs/Proposal.qmd
+    ```
 
-The proposal pdf gets created at `AdaptiveSats\docs`
+    The proposal pdf gets created at `AdaptiveSats\docs`
 
 
 ## Notebook Guide
@@ -193,15 +196,15 @@ AdaptiveSats/
 │   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
 │   ├── eda.ipynb                                     # Exploratory data analysis
 │   ├── family_classification.ipynb                   # 2. Metric family classification
-│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - not used
+│   ├── loading_brk_metrics_data.ipynb                # Data loading and parsing to individual years - used during initial analysis
 │   └── preliminary_eda_charts.ipynb                  # 3. Preliminary EDA visualisations
 ├── src/                                              # Source package
 │   ├── __init__.py
-│   └── analysis.py                                  
+│   └── analysis.py                                   # Group metric families and find correlation
 │   └── config.py                                     # Global variables
 │   └── data_utils.py                                 # Data load utilities
 │   └── plots.py                                      # Shared plotting utilities
-│   └── strategy_utils.py                            
+│   └── strategy_utils.py                             # Shared strategy utilities
 ├── environment.yml                                   # Conda environment specification
 ├── LICENSE
 └── README.md
@@ -213,7 +216,7 @@ AdaptiveSats/
 |Arafat B. Bello|[@bbarafat](https://github.com/bbarafat)|
 |Nguyen Nguyen|[@nguyen6uyen](https://github.com/nguyen6uyen)|
 |Raghav Gupta|[@raghav9048](https://github.com/raghav9048)|
-|Shruti Sasi|[@ShrutiSasi](https//github.com/ShrutiSasi)|
+|Shruti Sasi|[@ShrutiSasi](https://github.com/ShrutiSasi)|
 
 ## License
-This project is licensed under the terms of the `LICENSE` file.
+This project is licensed under the MIT License. Check the `LICENSE` file.
