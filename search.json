@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "AdaptiveSats Blog",
+    "section": "",
+    "text": "Welcome to the AdaptiveSats blog!\nWe are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.\nThis project, built in partnership with the Trilemma Foundation, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive Dollar-Cost Averaging (DCA) approach, which serves as our primary baseline strategy.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing AdaptiveSats: Data-Driven Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\n\n\n\n\n\n\nJun 3, 2026\n\n\nTrilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "posts/introduction/index.html",
     "href": "posts/introduction/index.html",
     "title": "Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation",
@@ -33,12 +40,5 @@
     "title": "About",
     "section": "",
     "text": "AdaptiveSats is a research project conducted in partnership with the Trilemma Foundation. Our goal is to evaluate whether public Bitcoin market and on-chain data can improve long-term Bitcoin accumulation strategies compared to naive Dollar-Cost Averaging (DCA).\nTeam: Arafat B. Bello - Nguyen Nguyen - Raghav Gupta - Shruti Sasi"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "AdaptiveSats Blog",
-    "section": "",
-    "text": "Welcome to the AdaptiveSats blog!\nWe are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.\nThis project, built in partnership with the Trilemma Foundation, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive Dollar-Cost Averaging (DCA) approach, which serves as our primary baseline strategy.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing AdaptiveSats: Data-Driven Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\n\n\n\n\n\n\nJun 3, 2026\n\n\nTrilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\nNo matching items"
   }
 ]
