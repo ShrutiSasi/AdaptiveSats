@@ -3,7 +3,6 @@ title: "Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation"
 author: "Trilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
 date: "2026-06-03"
 categories: [research, bitcoin, data-science]
-image: "image.jpg"
 ---
 
 Detail introduction of the AdaptiveSats project
