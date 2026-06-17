@@ -13,7 +13,7 @@ The framework analyzes Bitcoin network and market indicators, including on-chain
 - no forward-looking data
 - immutable historical allocations
 
-
+[Read more on our blog](https://shrutisasi.github.io/AdaptiveSats/)
 
 ## Evaluation Methodology
 Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
@@ -96,17 +96,28 @@ Open terminal and run the following commands.
 
     ``` bash
     cd .. #If still in notebooks folder
-    quarto render docs/Proposal.qmd
+    quarto render docs/Proposal.qmd --to pdf
     ```
 
     The proposal pdf gets created at `AdaptiveSats\docs`
 
+#### Generate final report pdf
+
+7.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the final report:
+
+    ``` bash
+    cd .. #If still in notebooks folder
+    quarto render docs/final_report.qmd --to pdf
+    ```
+
+    The final_report pdf gets created at `AdaptiveSats\docs`
 
 ## Notebook Guide
 
 Start with core pipeline notebooks, then explore strategy notebooks
 
 ### Core Pipeline
+
 |#|**Notebook**|**Purpose**|
 |---|---|---|
 |1.|`download.ipynb`|Downloads ~1GB raw BRK metrics from Google Drive, creates `train.parquet` and `test.parquet`|
@@ -118,6 +129,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 
 ### Strategy Notebooks
 **Stacksats Built-in Strategies**  (stacksats_strategies) 
+
 |**Notebook**|**Strategy**|
 |---|---|
 |`simple_zscore_analysis.ipynb`|Z-score normalized signal with threshold-based allocation|
@@ -127,6 +139,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 |`experimental_strategies.ipynb`|experimental strategies - Example MVRV and MVRV Plus|
 
 **Proposed Strategies** (proposed_strategies)
+
 |**Notebook**|**Strategy**|
 |---|---|
 |`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
