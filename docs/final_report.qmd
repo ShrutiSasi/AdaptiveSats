@@ -1,0 +1,11 @@
+### Multi-Strategy Regime-Based Approach
+
+The multi-strategy regime-based approach was developed to make the Bitcoin accumulation strategy more adaptive than a single fixed signal. A single approach, such as using only momentum or only valuation, may work well in some market environments but poorly in others. Therefore, this method first classified each day into a market regime and then selected the candidate strategy that had historically performed best in that type of regime.
+
+The regime classification used both raw and engineered features. Raw features included Bitcoin price, MVRV, realized-cap growth rate, and market-cap growth rate. Engineered features included rolling simple moving averages, price-to-SMA ratios, and lookback returns. These features were used to describe Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
+
+For each regime, the model compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom SMA-based strategy. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using training-period performance only. In other words, the model was tuned using only 2018–2023 data, while 2024–2025 was used only for final evaluation.
+
+The approach was evaluated using sats per dollar, percentage improvement versus Uniform DCA, win rate, score, and exponential-decay percentile. These metrics were chosen because the main stakeholder goal was not short-term price prediction, but accumulating more Bitcoin for the same budget while maintaining consistent performance. After applying the final strategy to the 2024–2025 test period, the multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics, including higher sats per dollar and stronger StackSats comparison results.
+
+The approach is interpretable and flexible, but its main limitation is that rule-based regimes may not generalize perfectly to future Bitcoin cycles. Future improvements could include testing additional regime definitions, adding more candidate strategies, and using more realistic live budget pacing.
