@@ -56,22 +56,26 @@ Once the best strategy is learned for each regime, the same regime-to-strategy m
 
 ## Key features used
 
-The strategy used a small set of raw Bitcoin market and on-chain features, then created engineered rolling features from them.
+The strategy used a small set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. After the initial EDA and overall dataset understanding, feature selection was guided by the goal of capturing different Bitcoin market conditions rather than using a large number of unrelated indicators.
 
 The main raw input features were:
 
-* **price_usd**: Bitcoin price in USD
-* **mvrv**: market value to realized value ratio
-* **realized_cap_growth_rate**: growth rate of realized cap
-* **market_cap_growth_rate**: growth rate of market cap
+* **price_usd**: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy’s allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-SMA ratios, and lookback returns.
 
-These features were chosen because each one captures a different part of the Bitcoin market. Price captures market movement. MVRV captures valuation relative to on-chain cost basis. Realized-cap growth and market-cap growth help compare whether on-chain value or market price value is leading.
+* **mvrv**: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. This feature was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.
+
+* **realized_cap_growth_rate**: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This feature helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.
+
+* **market_cap_growth_rate**: This measures how quickly Bitcoin’s market capitalization is changing. Since market cap is closely tied to price, this feature captures price-driven growth. Comparing market-cap growth with realized-cap growth helped distinguish whether the market was being led more by price momentum or by on-chain realized value growth.
+
+Together, these raw features allowed the strategy to capture three important dimensions of Bitcoin market behavior: price trend, valuation, and the relationship between market-driven growth and on-chain value growth.
 
 The notebook then created engineered features from the Bitcoin price series. For each selected lookback window `d`, three rolling features were created:
 
 * **price_{d}d_sma**: the simple moving average of Bitcoin price over `d` days
 * **price_{d}d_sma_ratio**: the ratio of current Bitcoin price to its `d`-day moving average
 * **btc_return_{d}d**: Bitcoin return over the past `d` days
+
 
 For example, if the selected lookbacks included 30, 90, and 180 days, the engineered features would include:
 
