@@ -1,0 +1,11 @@
+### HMM-GARCH Adaptive Bitcoin Accumulation Strategy
+
+The HMM-GARCH strategy was developed to enhance traditional Dollar Cost Averaging (DCA) by dynamically adjusting Bitcoin purchases according to prevailing market conditions. The framework combines three complementary sources of information: market regimes, valuation, and volatility.
+
+A Hidden Markov Model (HMM) was used to identify latent Bitcoin market regimes from observable market features, including returns, volatility, and valuation metrics. Rather than assigning a single regime at each point in time, the model estimated probabilities of being in accumulation, neutral, or euphoric market states. These probabilities were then translated into regime-specific allocation weights, allowing the strategy to increase purchases during accumulation periods and reduce purchases during euphoric periods.
+
+To capture market risk, a GARCH(1,1) model was employed to estimate conditional volatility. This provided a measure of market stress and volatility clustering, where periods of high volatility tend to be followed by further high volatility. Volatility was interpreted in conjunction with valuation signals, allowing the strategy to distinguish between attractive capitulation events and periods of excessive speculation.
+
+Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
+
+The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions.
