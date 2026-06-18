@@ -1,4 +1,13 @@
-# Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks
+---
+title: "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks"
+description: "Adaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference."
+author: "Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
+date: "2026-06-18"
+categories: [research, bitcoin, data-science]
+bibliography: "../../references.bib"
+resources:
+    - "../../figures/**"
+---
 
 ## Introduction
 
