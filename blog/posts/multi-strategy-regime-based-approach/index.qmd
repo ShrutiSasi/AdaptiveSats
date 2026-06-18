@@ -9,8 +9,6 @@ format:
     toc: true
     toc-depth: 3
 ---
-# Multi-Strategy Regime-Based Approach for Bitcoin Accumulation
-
 ## Why this strategy was needed
 
 A simple dollar-cost averaging strategy invests the same amount of money at regular intervals, regardless of market conditions. This is easy to understand and is often a strong baseline for long-term Bitcoin accumulation. However, Bitcoin does not move in a straight line. It goes through very different market environments, including strong bull markets, deep bear markets, recovery periods, and sideways periods.
@@ -150,7 +148,7 @@ The final regime classification combines three types of information:
 
 Each component captures a different part of the market environment.
 
-## 1. Bitcoin trend regime
+### 1. Bitcoin trend regime
 
 The first part of the regime looks at the Bitcoin price trend. This helps separate the market into broad price-cycle conditions.
 
@@ -171,7 +169,7 @@ A **BTC Neutral** regime captures days that do not clearly fall into bull, bear,
 
 This trend component is useful because different accumulation strategies may behave differently across price-cycle phases. For example, momentum strategies may work well in bull markets, while valuation-based strategies may work better in weaker or cheaper markets.
 
-## 2. MVRV valuation regime
+### 2. MVRV valuation regime
 
 The second part of the regime uses **MVRV**, which stands for Market Value to Realized Value.
 
@@ -191,7 +189,7 @@ A **Normal MVRV** regime represents the middle range.
 
 This is important because the strategy is focused on accumulation. If Bitcoin is relatively undervalued, buying more may help improve the number of sats accumulated per dollar. At the same time, buying aggressively when Bitcoin is overheated may not be ideal.
 
-## 3. Growth regime
+### 3. Growth regime
 
 The third part of the regime compares two growth measures:
 
@@ -248,13 +246,13 @@ The candidate strategies used were:
 
 Each candidate strategy produces daily allocation weights. A higher weight means the strategy allocates more of the yearly budget to that day. A lower weight means it allocates less.
 
-## StackSats MVRV Strategy
+### StackSats MVRV Strategy
 
 The MVRV strategy is based on valuation. It is designed to allocate more when Bitcoin appears relatively undervalued and less when Bitcoin appears relatively expensive.
 
 This is useful for accumulation because the goal is to maximize the number of sats bought per dollar. If Bitcoin is cheaper relative to its realized value, buying more on those days may improve long-term accumulation.
 
-## StackSats Momentum Strategy
+### StackSats Momentum Strategy
 
 The momentum strategy uses price trend behavior. It tends to allocate based on the strength or direction of price movement.
 
@@ -262,7 +260,7 @@ Momentum-based strategies can be useful because markets often trend for periods 
 
 However, momentum can also struggle during choppy or sideways markets. That is one reason it is useful to combine it with other strategies instead of relying on it alone.
 
-## Custom SMA Strategy
+### Custom SMA Strategy
 
 The custom SMA strategy uses the relationship between Bitcoin’s price and a simple moving average.
 
