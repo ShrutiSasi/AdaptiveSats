@@ -212,6 +212,12 @@ This framework creates an adaptive DCA strategy that responds to changing market
 
 ------------------------------------------------------------------------
 
+## Performance
+
+![Price chart with weights and performance metrics](../../figures/full_garch_hmm_plot.png)
+
+------------------------------------------------------------------------
+
 # Strategy 2: HMM-Bayesian Adaptive Accumulation
 
 ## Motivation
@@ -328,6 +334,12 @@ The framework combines valuation, volatility, investor profitability, and market
 Additional evidence variables can be incorporated without redesigning the entire model.
 
 ------------------------------------------------------------------------
+
+## Performance
+
+![Price chart with weights and performance metrics](../../figures/full_bayes_hmm_plot.png)
+
+-------------------------------------------------------------------------
 
 # Comparison of the Two Approaches
 
