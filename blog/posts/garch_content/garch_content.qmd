@@ -30,7 +30,7 @@ The objective is not to predict short-term price direction. Instead, the goal is
 
 ------------------------------------------------------------------------
 
-# Data and Feature Engineering
+## Data and Feature Engineering
 
 The analysis combines traditional time-series techniques with Bitcoin-specific on-chain valuation metrics.
 
