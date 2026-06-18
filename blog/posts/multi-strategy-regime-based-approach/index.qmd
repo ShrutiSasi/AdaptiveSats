@@ -352,7 +352,7 @@ Together, these metrics helped evaluate both the size of the improvement and the
 
 ## Final backtest visualization
 
-![Final multi-strategy regime-based approach backtest. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.](multi-strategy-approach-plot.png){fig-align="center" width="100%"}
+![Final multi-strategy regime-based approach backtest. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.](../../figures/multi-strategy-approach-plot.png){fig-align="center" width="100%"}
 
 ## Key results
 
