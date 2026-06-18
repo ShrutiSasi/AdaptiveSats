@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/multi-strategy-regime-based-approach/index.html",
       "/posts/introduction/index.html",
       "/posts/composite-signal-index-strategy/index.html"
     ]

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AdaptiveSats Team">
+<meta name="dcterms.date" content="2026-06-16">
+<meta name="description" content="An adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime.">
+
+<title>Multi-Strategy Regime-Based Approach for Bitcoin Accumulation – AdaptiveSats</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-46f0abdcd605bdcd834e8a40f923e4ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AdaptiveSats</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-this-strategy-was-needed" id="toc-why-this-strategy-was-needed" class="nav-link active" data-scroll-target="#why-this-strategy-was-needed">Why this strategy was needed</a></li>
+  <li><a href="#high-level-idea" id="toc-high-level-idea" class="nav-link" data-scroll-target="#high-level-idea">High-level idea</a></li>
+  <li><a href="#key-features-used" id="toc-key-features-used" class="nav-link" data-scroll-target="#key-features-used">Key features used</a></li>
+  <li><a href="#grid-search-used" id="toc-grid-search-used" class="nav-link" data-scroll-target="#grid-search-used">Grid search used</a></li>
+  <li><a href="#the-three-components-of-the-regime" id="toc-the-three-components-of-the-regime" class="nav-link" data-scroll-target="#the-three-components-of-the-regime">The three components of the regime</a>
+  <ul class="collapse">
+  <li><a href="#bitcoin-trend-regime" id="toc-bitcoin-trend-regime" class="nav-link" data-scroll-target="#bitcoin-trend-regime">1. Bitcoin trend regime</a></li>
+  <li><a href="#mvrv-valuation-regime" id="toc-mvrv-valuation-regime" class="nav-link" data-scroll-target="#mvrv-valuation-regime">2. MVRV valuation regime</a></li>
+  <li><a href="#growth-regime" id="toc-growth-regime" class="nav-link" data-scroll-target="#growth-regime">3. Growth regime</a></li>
+  </ul></li>
+  <li><a href="#total-number-of-regimes" id="toc-total-number-of-regimes" class="nav-link" data-scroll-target="#total-number-of-regimes">Total number of regimes</a></li>
+  <li><a href="#candidate-strategies" id="toc-candidate-strategies" class="nav-link" data-scroll-target="#candidate-strategies">Candidate strategies</a>
+  <ul class="collapse">
+  <li><a href="#stacksats-mvrv-strategy" id="toc-stacksats-mvrv-strategy" class="nav-link" data-scroll-target="#stacksats-mvrv-strategy">StackSats MVRV Strategy</a></li>
+  <li><a href="#stacksats-momentum-strategy" id="toc-stacksats-momentum-strategy" class="nav-link" data-scroll-target="#stacksats-momentum-strategy">StackSats Momentum Strategy</a></li>
+  <li><a href="#custom-sma-strategy" id="toc-custom-sma-strategy" class="nav-link" data-scroll-target="#custom-sma-strategy">Custom SMA Strategy</a></li>
+  </ul></li>
+  <li><a href="#learning-the-best-strategy-per-regime" id="toc-learning-the-best-strategy-per-regime" class="nav-link" data-scroll-target="#learning-the-best-strategy-per-regime">Learning the best strategy per regime</a></li>
+  <li><a href="#fallback-strategy" id="toc-fallback-strategy" class="nav-link" data-scroll-target="#fallback-strategy">Fallback strategy</a></li>
+  <li><a href="#model-selection-and-final-testing" id="toc-model-selection-and-final-testing" class="nav-link" data-scroll-target="#model-selection-and-final-testing">Model Selection and Final Testing</a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation metrics</a></li>
+  <li><a href="#final-backtest-visualization" id="toc-final-backtest-visualization" class="nav-link" data-scroll-target="#final-backtest-visualization">Final backtest visualization</a></li>
+  <li><a href="#key-results" id="toc-key-results" class="nav-link" data-scroll-target="#key-results">Key results</a></li>
+  <li><a href="#why-this-approach-is-useful" id="toc-why-this-approach-is-useful" class="nav-link" data-scroll-target="#why-this-approach-is-useful">Why this approach is useful</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#final-interpretation" id="toc-final-interpretation" class="nav-link" data-scroll-target="#final-interpretation">Final interpretation</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Multi-Strategy Regime-Based Approach for Bitcoin Accumulation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Bitcoin</div>
+    <div class="quarto-category">Strategy</div>
+    <div class="quarto-category">Regime-Based</div>
+    <div class="quarto-category">Backtesting</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    An adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AdaptiveSats Team </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="why-this-strategy-was-needed" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-strategy-was-needed">Why this strategy was needed</h2>
+<p>A simple dollar-cost averaging strategy invests the same amount of money at regular intervals, regardless of market conditions. This is easy to understand and is often a strong baseline for long-term Bitcoin accumulation. However, Bitcoin does not move in a straight line. It goes through very different market environments, including strong bull markets, deep bear markets, recovery periods, and sideways periods.</p>
+<p>Because of this, one fixed strategy may not always be the best choice. A momentum-based strategy might work well during strong upward trends, but it may struggle when the market is choppy. A valuation-based strategy might work better when Bitcoin appears undervalued, but it may be less effective during strong momentum-driven markets. A moving-average strategy may help identify periods where price is below a longer-term trend level, but it may not work equally well in every market phase.</p>
+<p>The idea behind the multi-strategy regime-based approach was to avoid forcing one signal to work in all market conditions.</p>
+<p>Instead, this approach asks a more flexible question:</p>
+<p><strong>Can we identify the current market regime and use the strategy that historically worked best in that type of regime?</strong></p>
+<p>The goal is not to predict the exact future price of Bitcoin. The goal is to improve Bitcoin accumulation compared with Uniform DCA by changing the allocation pattern based on the market environment.</p>
+</section>
+<section id="high-level-idea" class="level2">
+<h2 class="anchored" data-anchor-id="high-level-idea">High-level idea</h2>
+<p>The strategy has two main parts:</p>
+<ol type="1">
+<li><strong>Classify each day into a market regime.</strong></li>
+<li><strong>Choose the best allocation strategy for each regime using training data.</strong></li>
+</ol>
+<p>A regime is a label that describes the type of Bitcoin market environment on a given day. In this strategy, each regime is created by combining three parts:</p>
+<ul>
+<li><strong>Bitcoin trend</strong>: whether the market looks like a bull, bear, recovery, or neutral period</li>
+<li><strong>MVRV valuation</strong>: whether Bitcoin looks relatively cheap, normal, or expensive based on MVRV</li>
+<li><strong>Growth relationship</strong>: whether market-cap growth or realized-cap growth is leading</li>
+</ul>
+<p>So each day receives a combined regime label in this format:</p>
+<p><strong>Bitcoin trend | MVRV valuation | Growth relationship</strong></p>
+<p>For example, one day might be classified as:</p>
+<p><strong>BTC Bull | Normal MVRV | Market Growth Leading</strong></p>
+<p>Another day might be classified as:</p>
+<p><strong>BTC Bear | Low MVRV | Realized Growth Leading</strong></p>
+<p>These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.</p>
+<p>Once the best strategy is learned for each regime, the same regime-to-strategy mapping is applied to the test period. This makes the strategy more adaptive than a single fixed rule, while still keeping the logic easy to explain.</p>
+</section>
+<section id="key-features-used" class="level2">
+<h2 class="anchored" data-anchor-id="key-features-used">Key features used</h2>
+<p>The strategy used a small set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. After the initial EDA and overall dataset understanding, feature selection was guided by the goal of capturing different Bitcoin market conditions rather than using a large number of unrelated indicators.</p>
+<p>The main raw input features were:</p>
+<ul>
+<li><p><strong>price_usd</strong>: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy’s allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-SMA ratios, and lookback returns.</p></li>
+<li><p><strong>mvrv</strong>: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. This feature was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.</p></li>
+<li><p><strong>realized_cap_growth_rate</strong>: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This feature helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.</p></li>
+<li><p><strong>market_cap_growth_rate</strong>: This measures how quickly Bitcoin’s market capitalization is changing. Since market cap is closely tied to price, this feature captures price-driven growth. Comparing market-cap growth with realized-cap growth helped distinguish whether the market was being led more by price momentum or by on-chain realized value growth.</p></li>
+</ul>
+<p>Together, these raw features allowed the strategy to capture three important dimensions of Bitcoin market behavior: price trend, valuation, and the relationship between market-driven growth and on-chain value growth.</p>
+<p>The notebook then created engineered features from the Bitcoin price series. For each selected lookback window <code>d</code>, three rolling features were created:</p>
+<ul>
+<li><strong>price_{d}d_sma</strong>: the simple moving average of Bitcoin price over <code>d</code> days</li>
+<li><strong>price_{d}d_sma_ratio</strong>: the ratio of current Bitcoin price to its <code>d</code>-day moving average</li>
+<li><strong>btc_return_{d}d</strong>: Bitcoin return over the past <code>d</code> days</li>
+</ul>
+<p>For example, if the selected lookbacks included 30, 90, and 180 days, the engineered features would include:</p>
+<ul>
+<li><strong>price_30d_sma</strong></li>
+<li><strong>price_30d_sma_ratio</strong></li>
+<li><strong>btc_return_30d</strong></li>
+<li><strong>price_90d_sma</strong></li>
+<li><strong>price_90d_sma_ratio</strong></li>
+<li><strong>btc_return_90d</strong></li>
+<li><strong>price_180d_sma</strong></li>
+<li><strong>price_180d_sma_ratio</strong></li>
+<li><strong>btc_return_180d</strong></li>
+</ul>
+<p>Feature engineering was important because raw price alone does not fully describe the market condition. A Bitcoin price of $60,000 can mean different things depending on whether price is above or below its moving average, whether recent returns are positive or negative, and whether valuation is high or low. The engineered SMA ratios and lookback returns helped convert raw price data into trend and momentum signals that could be used for regime classification.</p>
+<p>These engineered features were then used to classify each day into one of the combined market regimes. The trend regime used the selected SMA ratio, the regime SMA ratio, the momentum return, and the SMA return. MVRV was used to classify valuation as low, normal, or high. Realized-cap growth and market-cap growth were compared to classify whether realized growth or market growth was leading.</p>
+</section>
+<section id="grid-search-used" class="level2">
+<h2 class="anchored" data-anchor-id="grid-search-used">Grid search used</h2>
+<p>The strategy depends on several tuning settings. These settings are not regimes themselves. Instead, they control how the features and regime labels are created.</p>
+<p>The main tuning settings were:</p>
+<ul>
+<li><strong>Momentum lookback</strong></li>
+<li><strong>SMA lookback</strong></li>
+<li><strong>Regime lookback</strong></li>
+<li><strong>Fallback strategy</strong></li>
+</ul>
+<p>The grid search tested different values for each of these settings.</p>
+<p><strong>Momentum lookback grid</strong></p>
+<pre class="text"><code>[21, 30, 45, 60, 75, 90, 120, 150, 180]</code></pre>
+<p><strong>SMA lookback grid</strong></p>
+<pre class="text"><code>[60, 90, 120, 150, 180, 200, 210, 240, 270, 300, 340]</code></pre>
+<p><strong>Regime lookback grid</strong></p>
+<pre class="text"><code>[60, 90, 120, 150, 180, 200, 210, 240, 270, 300, 340]</code></pre>
+<p><strong>Fallback strategy grid</strong></p>
+<pre class="text"><code>["sma", "stacksats_mvrv_weight", "stacksats_momentum_weight"]</code></pre>
+<p>The full grid search tested the product of all possible momentum lookbacks, SMA lookbacks, regime lookbacks, and fallback choices. Each possible combination was evaluated using training data only. The best combination was selected based on training-period improvement, training win rate, and then lower total lookback as a tie-breaker. After the final combination was fixed, the strategy was evaluated on the 2024–2025 test period.</p>
+<p>A simple way to understand this is:</p>
+<p><strong>Lookback grid = recipe settings</strong></p>
+<p><strong>Regimes = market labels created by the chosen recipe</strong></p>
+<p>For example, one grid combination might use a 30-day momentum lookback, a 90-day SMA lookback, a 180-day regime lookback, and SMA as the fallback strategy. That combination would create features and classify each day into regimes. Another combination might use different lookbacks and produce slightly different regime labels.</p>
+</section>
+<section id="the-three-components-of-the-regime" class="level2">
+<h2 class="anchored" data-anchor-id="the-three-components-of-the-regime">The three components of the regime</h2>
+<p>The final regime classification combines three types of information:</p>
+<ol type="1">
+<li><strong>Bitcoin trend</strong></li>
+<li><strong>MVRV valuation</strong></li>
+<li><strong>Market-cap growth versus realized-cap growth</strong></li>
+</ol>
+<p>Each component captures a different part of the market environment.</p>
+<section id="bitcoin-trend-regime" class="level3">
+<h3 class="anchored" data-anchor-id="bitcoin-trend-regime">1. Bitcoin trend regime</h3>
+<p>The first part of the regime looks at the Bitcoin price trend. This helps separate the market into broad price-cycle conditions.</p>
+<p>The strategy uses moving-average ratios and past returns to classify Bitcoin into one of four trend states:</p>
+<ul>
+<li><strong>BTC Bull</strong></li>
+<li><strong>BTC Bear</strong></li>
+<li><strong>BTC Recovery</strong></li>
+<li><strong>BTC Neutral</strong></li>
+</ul>
+<p>A <strong>BTC Bull</strong> regime means Bitcoin is trading strongly above its longer-term trend and returns are positive. This usually represents a strong upward market.</p>
+<p>A <strong>BTC Bear</strong> regime means Bitcoin is trading below its trend and returns are negative. This usually represents a weak or declining market.</p>
+<p>A <strong>BTC Recovery</strong> regime means Bitcoin may still be below a key moving average, but short-term momentum has started to improve. This can happen after large drawdowns when the market begins to recover.</p>
+<p>A <strong>BTC Neutral</strong> regime captures days that do not clearly fall into bull, bear, or recovery conditions.</p>
+<p>This trend component is useful because different accumulation strategies may behave differently across price-cycle phases. For example, momentum strategies may work well in bull markets, while valuation-based strategies may work better in weaker or cheaper markets.</p>
+</section>
+<section id="mvrv-valuation-regime" class="level3">
+<h3 class="anchored" data-anchor-id="mvrv-valuation-regime">2. MVRV valuation regime</h3>
+<p>The second part of the regime uses <strong>MVRV</strong>, which stands for Market Value to Realized Value.</p>
+<p>In simple terms, MVRV compares Bitcoin’s current market value with its realized value. Realized value is based on the price at which coins last moved on-chain. Because of this, MVRV is often used as an on-chain valuation indicator.</p>
+<p>The strategy divides MVRV into three states:</p>
+<ul>
+<li><strong>Low MVRV</strong></li>
+<li><strong>Normal MVRV</strong></li>
+<li><strong>High MVRV</strong></li>
+</ul>
+<p>A <strong>Low MVRV</strong> regime suggests Bitcoin may be relatively cheap compared with its on-chain cost basis.</p>
+<p>A <strong>High MVRV</strong> regime suggests Bitcoin may be relatively expensive.</p>
+<p>A <strong>Normal MVRV</strong> regime represents the middle range.</p>
+<p>This is important because the strategy is focused on accumulation. If Bitcoin is relatively undervalued, buying more may help improve the number of sats accumulated per dollar. At the same time, buying aggressively when Bitcoin is overheated may not be ideal.</p>
+</section>
+<section id="growth-regime" class="level3">
+<h3 class="anchored" data-anchor-id="growth-regime">3. Growth regime</h3>
+<p>The third part of the regime compares two growth measures:</p>
+<ul>
+<li><strong>Market-cap growth</strong></li>
+<li><strong>Realized-cap growth</strong></li>
+</ul>
+<p>Market cap reflects the current market price multiplied by supply. It moves strongly with price.</p>
+<p>Realized cap is more connected to on-chain behavior and the value of coins based on when they last moved.</p>
+<p>The strategy classifies the growth relationship into two states:</p>
+<ul>
+<li><strong>Market Growth Leading</strong></li>
+<li><strong>Realized Growth Leading</strong></li>
+</ul>
+<p>If market-cap growth is stronger, the market price is leading. If realized-cap growth is stronger, on-chain realized value is leading.</p>
+<p>This adds another layer of context. It helps the strategy distinguish between price-driven moves and on-chain value changes.</p>
+</section>
+</section>
+<section id="total-number-of-regimes" class="level2">
+<h2 class="anchored" data-anchor-id="total-number-of-regimes">Total number of regimes</h2>
+<p>The final regime is created by combining the three components:</p>
+<ul>
+<li>4 Bitcoin trend states</li>
+<li>3 MVRV valuation states</li>
+<li>2 growth states</li>
+</ul>
+<p>So the total number of possible regimes is:</p>
+<p><strong>4 × 3 × 2 = 24 possible regimes</strong></p>
+<p>These regimes are not manually chosen one by one. They are produced by combining the three labels.</p>
+<p>For example:</p>
+<ul>
+<li>BTC Bull | High MVRV | Market Growth Leading</li>
+<li>BTC Bear | Low MVRV | Realized Growth Leading</li>
+<li>BTC Recovery | Normal MVRV | Market Growth Leading</li>
+<li>BTC Neutral | Normal MVRV | Realized Growth Leading</li>
+</ul>
+<p>Each regime represents a different market environment.</p>
+</section>
+<section id="candidate-strategies" class="level2">
+<h2 class="anchored" data-anchor-id="candidate-strategies">Candidate strategies</h2>
+<p>After classifying regimes, the next question is: what should the strategy do in each regime?</p>
+<p>To answer this, the approach compares multiple candidate allocation strategies.</p>
+<p>The candidate strategies used were:</p>
+<ol type="1">
+<li><strong>StackSats MVRV Strategy</strong></li>
+<li><strong>StackSats Momentum Strategy</strong></li>
+<li><strong>Custom SMA Strategy</strong></li>
+</ol>
+<p>Each candidate strategy produces daily allocation weights. A higher weight means the strategy allocates more of the yearly budget to that day. A lower weight means it allocates less.</p>
+<section id="stacksats-mvrv-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="stacksats-mvrv-strategy">StackSats MVRV Strategy</h3>
+<p>The MVRV strategy is based on valuation. It is designed to allocate more when Bitcoin appears relatively undervalued and less when Bitcoin appears relatively expensive.</p>
+<p>This is useful for accumulation because the goal is to maximize the number of sats bought per dollar. If Bitcoin is cheaper relative to its realized value, buying more on those days may improve long-term accumulation.</p>
+</section>
+<section id="stacksats-momentum-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="stacksats-momentum-strategy">StackSats Momentum Strategy</h3>
+<p>The momentum strategy uses price trend behavior. It tends to allocate based on the strength or direction of price movement.</p>
+<p>Momentum-based strategies can be useful because markets often trend for periods of time. In a strong bull market, momentum may help identify days where continued strength is present.</p>
+<p>However, momentum can also struggle during choppy or sideways markets. That is one reason it is useful to combine it with other strategies instead of relying on it alone.</p>
+</section>
+<section id="custom-sma-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="custom-sma-strategy">Custom SMA Strategy</h3>
+<p>The custom SMA strategy uses the relationship between Bitcoin’s price and a simple moving average.</p>
+<p>The basic idea is:</p>
+<ul>
+<li>If Bitcoin is below its moving average, the strategy may allocate more.</li>
+<li>If Bitcoin is above its moving average, the strategy may allocate less.</li>
+</ul>
+<p>This creates a simple mean-reversion-style accumulation rule. It tries to buy more when price is relatively weak compared with its recent trend.</p>
+<p>This strategy is easy to interpret and provides a useful contrast to MVRV and momentum.</p>
+</section>
+</section>
+<section id="learning-the-best-strategy-per-regime" class="level2">
+<h2 class="anchored" data-anchor-id="learning-the-best-strategy-per-regime">Learning the best strategy per regime</h2>
+<p>Once the candidate strategies are created, the model evaluates them inside each regime using the training period.</p>
+<p>The training period is 2018 to 2023. This period contains multiple Bitcoin market environments, including bull markets, bear markets, and recovery periods.</p>
+<p>For each regime, the strategy checks which candidate performed best during training. The best-performing candidate becomes the selected strategy for that regime.</p>
+<p>For example:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 58%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Regime</th>
+<th>Best strategy learned from training</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BTC Bull</td>
+<td>Normal MVRV</td>
+</tr>
+<tr class="even">
+<td>BTC Bear</td>
+<td>Low MVRV</td>
+</tr>
+<tr class="odd">
+<td>BTC Recovery</td>
+<td>Normal MVRV</td>
+</tr>
+</tbody>
+</table>
+<p>This table is only an example. The actual learned mapping depends on the data.</p>
+<p>The key idea is that the strategy does not use the same allocation rule everywhere. It learns a regime-to-strategy mapping from historical training data.</p>
+</section>
+<section id="fallback-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="fallback-strategy">Fallback strategy</h2>
+<p>One issue with regime-based methods is that not every possible regime may appear in the training period. The strategy can create up to 24 possible regimes, but some of them may be rare or absent in the 2018–2023 training data.</p>
+<p>This creates a practical problem during testing. If a new regime appears in the 2024–2025 test period and the model has not learned a best strategy for it, the model still needs a rule for how much to allocate.</p>
+<p>To handle this, the strategy used a fallback strategy. The fallback strategy is the default allocation rule used when the current regime does not have a learned regime-to-strategy mapping.</p>
+<p>The fallback options tested were:</p>
+<ul>
+<li><strong>SMA fallback</strong></li>
+<li><strong>MVRV fallback</strong></li>
+<li><strong>Momentum fallback</strong></li>
+</ul>
+<p>The fallback choice was selected using training performance only. This avoided using the test period to decide which fallback worked best. In the final strategy, the fallback rule helped make the model more robust because it could still produce an allocation even when an unseen or rare regime appeared.</p>
+</section>
+<section id="model-selection-and-final-testing" class="level2">
+<h2 class="anchored" data-anchor-id="model-selection-and-final-testing">Model Selection and Final Testing</h2>
+<p>A key part of the design was keeping model selection separate from final testing. The grid search was performed using training data only. This means the strategy selected its lookbacks and fallback strategy based on 2018–2023 performance.</p>
+<p>Only after the final configuration was selected was the model evaluated on the 2024–2025 test period.</p>
+<p>This matters because if test performance is used during tuning, the reported test result becomes less reliable. The strategy might look good only because it was indirectly optimized for the test period.</p>
+<p>The final workflow was:</p>
+<ol type="1">
+<li>Use training data to learn regime mappings.</li>
+<li>Use training data to select lookbacks and fallback strategy.</li>
+<li>Freeze the final configuration.</li>
+<li>Evaluate on the test period once.</li>
+</ol>
+</section>
+<section id="evaluation-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation-metrics">Evaluation metrics</h2>
+<p>The main metric used was <strong>sats per dollar</strong>, often shortened as SPD.</p>
+<p>This metric measures how many satoshis were accumulated for each dollar invested. Since the project is about Bitcoin accumulation, SPD is more relevant than simply measuring portfolio value in dollars. A strategy can be considered better than Uniform DCA if it accumulates more sats using the same dollar budget.</p>
+<p>For example, if two strategies both invest $1,000, the better strategy is the one that accumulates more sats.</p>
+<p>The comparison focused on several metrics:</p>
+<ul>
+<li><strong>Strategy SPD</strong></li>
+<li><strong>Percentage improvement versus DCA</strong></li>
+<li><strong>Win rate across evaluation windows</strong></li>
+<li><strong>Score</strong></li>
+<li><strong>Exponential-decay percentile</strong></li>
+</ul>
+<p>SPD and percentage improvement were the most important metrics because they directly measured whether the strategy accumulated more Bitcoin than Uniform DCA.</p>
+<p>Win rate was used to understand consistency across evaluation windows. A strategy with a high improvement but very low win rate may be less reliable, because it may depend on only a small number of strong periods.</p>
+<p>The StackSats comparison also provided additional metrics such as score and exponential-decay percentile. The score gave a broader summary of strategy performance. The exponential-decay percentile placed more emphasis on recent performance, which is useful because recent market behavior may be more relevant when deciding whether a strategy is still competitive.</p>
+<p>Together, these metrics helped evaluate both the size of the improvement and the consistency of the strategy.</p>
+</section>
+<section id="final-backtest-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="final-backtest-visualization">Final backtest visualization</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../figures/multi-strategy-approach-plot.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Final multi-strategy regime-based approach backtest. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.</figcaption>
+</figure>
+</div>
+</section>
+<section id="key-results" class="level2">
+<h2 class="anchored" data-anchor-id="key-results">Key results</h2>
+<p>The multi-strategy regime-based approach was evaluated against the Uniform DCA baseline using four main metrics:</p>
+<ul>
+<li><strong>Sats per dollar (SPD)</strong>: measures how many satoshis were accumulated for each dollar invested.</li>
+<li><strong>Win rate</strong>: measures how often the strategy outperformed the baseline across evaluation windows.</li>
+<li><strong>Score</strong>: provides an overall StackSats comparison metric.</li>
+<li><strong>Exponential-decay percentile</strong>: gives more weight to recent performance.</li>
+</ul>
+<p>For the <strong>training period (2018–2023)</strong>, the multi-strategy approach achieved an SPD of <strong>9,161.44</strong>, compared with <strong>8,418.79</strong> for Uniform DCA, which corresponds to an improvement of <strong>8.82%</strong>.</p>
+<p>For the <strong>test period (2024–2025)</strong>, the multi-strategy approach achieved an SPD of <strong>1,369.57</strong>, compared with <strong>1,292.12</strong> for Uniform DCA, corresponding to an improvement of <strong>5.99%</strong>.</p>
+<p>In the final StackSats comparison, the multi-strategy regime-based approach also achieved a <strong>win rate of 63.76%</strong>, a <strong>score of 51.24</strong>, and an <strong>exponential-decay percentile of 38.72</strong>. These results suggest that the strategy not only accumulated more sats per dollar than Uniform DCA in both train and test periods, but also remained competitive under the broader StackSats evaluation framework.</p>
+</section>
+<section id="why-this-approach-is-useful" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-approach-is-useful">Why this approach is useful</h2>
+<p>The main strength of this strategy is adaptability.</p>
+<p>Instead of saying “MVRV is always best” or “momentum is always best,” the strategy allows different signals to be useful in different environments.</p>
+<p>This makes sense because Bitcoin’s behavior changes across cycles. A valuation signal may be more useful after large drawdowns. A momentum signal may be more useful during strong upward markets. A moving-average signal may be more useful during recovery or mean-reversion periods.</p>
+<p>The approach is also interpretable. Each regime has a readable label, and each regime maps to a specific candidate strategy. This makes it easier to explain than a black-box model.</p>
+<p>For example, we can explain that the strategy selected MVRV in a low-valuation regime because that candidate historically accumulated more sats under similar conditions.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>The first limitation is that the regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.</p>
+<p>The second limitation is that Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.</p>
+<p>The third limitation is that some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.</p>
+<p>The fourth limitation is that annual budget normalization is useful for a clean backtest, but it is not exactly the same as live deployment. In a live system, future days in the year are unknown, so allocation would need to be handled with a real-time budget pacing rule.</p>
+</section>
+<section id="final-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="final-interpretation">Final interpretation</h2>
+<p>The multi-strategy regime-based approach is an interpretable adaptive allocation strategy. It classifies Bitcoin market conditions into regimes and learns which candidate strategy worked best in each regime during training.</p>
+<p>Its main contribution is that it combines multiple signals instead of relying on a single fixed strategy. It uses MVRV, momentum, and SMA-based behavior in a structured way, allowing the allocation rule to change depending on the market environment.</p>
+<p>The strategy is especially useful as a research framework because it helps answer a practical question:</p>
+<p><strong>Are different Bitcoin accumulation signals useful in different market regimes?</strong></p>
+<p>Based on the final evaluation, the approach can be compared against Uniform DCA using sats per dollar, percentage improvement, win rate, score, and exponential-decay percentile. SPD shows whether the strategy accumulated more Bitcoin per dollar, while win rate shows how consistently it outperformed across evaluation windows. The score and exponential-decay percentile provide additional StackSats comparison measures, including a view that gives more importance to recent performance.</p>
+<p>The final result should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, improving live budget pacing, and evaluating the method over future market cycles.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/<USERNAME>\.github\.io\/AdaptiveSats");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
