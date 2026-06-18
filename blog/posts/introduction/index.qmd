@@ -1,8 +1,11 @@
 ---
 title: "Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation"
-author: "Trilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
+author: "Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
 date: "2026-06-03"
 categories: [research, bitcoin, data-science]
+bibliography: "../../references.bib"
+resources:
+    - "../../figures/**"
 ---
 
 Detail introduction of the AdaptiveSats project
@@ -37,3 +40,4 @@ Our strategy explores key on-chain indicators known to historically signal favor
 We are actively applying feature reduction techniques to the 41k+ metrics and testing various baseline strategies (including Value Averaging and SMA-based momentum strategies) on an expansive train/test split. 
 
 Stay tuned as we continue to post updates on our backtesting results, model performance, and insights discovered from Bitcoin's transparent blockchain data!
+

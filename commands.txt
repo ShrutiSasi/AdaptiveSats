@@ -4,7 +4,6 @@ jupyter nbconvert --to notebook --execute --inplace download.ipynb
 jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
 jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
 jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
-jupyter nbconvert --to notebook --execute --inplace download.ipynb
 jupyter nbconvert --to notebook --execute --inplace eda.ipynb
 jupyter nbconvert --to notebook --execute --inplace btc_stl_analysis.ipynb
 cd stacksats_strategies
