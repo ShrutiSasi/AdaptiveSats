@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav">
+<meta name="dcterms.date" content="2026-06-03">
+<meta name="description" content="An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.">
 
-<title>Blog – AdaptiveSats</title>
+<title>Composite Signal Index Strategy for Bitcoin Accumulation – AdaptiveSats</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,28 +26,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-46f0abdcd605bdcd834e8a40f923e4ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-46f0abdcd605bdcd834e8a40f923e4ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,35 +92,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -132,17 +123,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">AdaptiveSats</span>
     </a>
   </div>
@@ -153,11 +144,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item compact">
@@ -173,116 +164,174 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Blog</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta column-page-left">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Yml0Y29pbg==">bitcoin <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZGF0YS1zY2llbmNl">data-science <span class="quarto-category-count">(2)</span></div><div class="category" data-category="cmVzZWFyY2g=">research <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#composite-signal-index-strategy" id="toc-composite-signal-index-strategy" class="nav-link active" data-scroll-target="#composite-signal-index-strategy">Composite Signal Index strategy</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Composite Signal Index Strategy for Bitcoin Accumulation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">research</div>
+    <div class="quarto-category">bitcoin</div>
+    <div class="quarto-category">data-science</div>
+  </div>
+  </div>
 
-
-
-
-<p>Welcome to the <strong>AdaptiveSats</strong> blog!</p>
-<p>We are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.</p>
-<p>This project, built in partnership with the <a href="https://www.trilemma.foundation/">Trilemma Foundation</a>, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive <strong>Dollar-Cost Averaging (DCA)</strong> approach, which serves as our primary baseline strategy.</p>
-<hr>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="cmVzZWFyY2glMkNiaXRjb2luJTJDZGF0YS1zY2llbmNl" data-listing-date-sort="1780444800000" data-listing-file-modified-sort="1781749063623" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="412">
-<div class="thumbnail"><a href="./posts/introduction/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/introduction/index.html" class="no-external">Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Yml0Y29pbg=='); return false;">bitcoin</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1zY2llbmNl'); return false;">data-science</div>
-
+<div>
+  <div class="description">
+    An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.
+  </div>
 </div>
-<div class="delink listing-description"><a href="./posts/introduction/index.html" class="no-external">
-Detail introduction of the AdaptiveSats project
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/introduction/index.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2026
-</div>
-<div class="listing-author">
-Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="cmVzZWFyY2glMkNiaXRjb2luJTJDZGF0YS1zY2llbmNl" data-listing-date-sort="1780444800000" data-listing-file-modified-sort="1781749063623" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="335">
-<div class="thumbnail"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
 
-<p class="card-img-top"><img loading='lazy' src="figures/fig_learned_signal_weights.png"  class="thumbnail-image card-img"/></p>
 
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">Composite Signal Index Strategy for Bitcoin Accumulation</a>
-</h3>
-<div class="listing-categories">
+<div class="quarto-title-meta">
 
-<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 3, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
-<div class="listing-category" onclick="window.quartoListingCategory('Yml0Y29pbg=='); return false;">bitcoin</div>
 
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1zY2llbmNl'); return false;">data-science</div>
+</header>
 
+
+<section id="composite-signal-index-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="composite-signal-index-strategy">Composite Signal Index strategy</h3>
+<div id="tbl-CSI-OnChainSignals" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[30,30,40]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CSI-OnChainSignals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Composite Signal Index On-Chain Signals
+</figcaption>
+<div aria-describedby="tbl-CSI-OnChainSignals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Signal</th>
+<th>Dimension</th>
+<th>When to buy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mvrv</td>
+<td>Market/realised-value ratio - valuation</td>
+<td>Low mvrv = market undervaluation</td>
+</tr>
+<tr class="even">
+<td>sopr_7d_ema</td>
+<td>Realised profit/loss of spending</td>
+<td>sopr &lt; 1 = investors selling at loss</td>
+</tr>
+<tr class="odd">
+<td>reserve_risk</td>
+<td>Holder conviction vs.&nbsp;price</td>
+<td>Low reserve risk = high confidence, good buy zone</td>
+</tr>
+<tr class="even">
+<td>greed_index</td>
+<td>Crowd sentiment</td>
+<td>0 = extreme fear, potential bottoms</td>
+</tr>
+<tr class="odd">
+<td>puell_multiple</td>
+<td>Miner economics</td>
+<td>Low puell multiple = miner stress/capitulation</td>
+</tr>
+<tr class="even">
+<td>lth_nupl</td>
+<td>Long-term holder unrealised P&amp;L</td>
+<td>Low lth nupl = capitualation/undervaluation</td>
+</tr>
+<tr class="odd">
+<td>sell_side_risk_ratio_7d_ema</td>
+<td>Short-term selling pressure</td>
+<td>Low = market participants not eager to sell</td>
+</tr>
+<tr class="even">
+<td>net_unrealized_pnl_rel_to_market_cap</td>
+<td>Aggregate unrealised P&amp;L (NUPL)</td>
+<td>Low = investors under water</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="delink listing-description"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
-<p>An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.</p>
-</a></div>
+</figure>
 </div>
-<div class="metadata">
-<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2026
+<p>Each of the above <a href="#tbl-CSI-OnChainSignals"><strong>on-chain signals</strong></a> is rolling-z-scored (365-day window), inverted into a <em>cheapness score</em> (the strategy wants a high score on cheap days; but cheap days produce negative z-scores; so simply negating flips the relationship), and blended via a <strong>softmax-weighted sum</strong>:</p>
+<p><span class="math display">\[\text{cheapness}_t = \sum_{i=1}^{8} w_i \cdot \left(-z_t^{(i)}\right), \qquad w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}\]</span></p>
+<p><span class="math display">\[\text{buy\_score}_t = \max(0,\; \text{cheapness}_t)^{\gamma}\]</span></p>
+<p>The signal logit vector <span class="math inline">\(\boldsymbol{\ell} \in \mathbb{R}^{8}\)</span> and exponent <span class="math inline">\(\gamma &gt; 0\)</span> are jointly optimised by <strong>Nelder-Mead</strong>(<span class="citation" data-cites="baudin2010neldermead">Baudin (<a href="#ref-baudin2010neldermead" role="doc-biblioref">2010</a>)</span>) on the training period to maximise sats-per-dollar (SPD) relative to uniform DCA.</p>
+<p>Each on-chain signal is standardised using a <strong>causal rolling 365-day z-score</strong>:</p>
+<p><span class="math display">\[z_t^{(i)} = \frac{x_t^{(i)} - \mu_{t,365}^{(i)}}{\sigma_{t,365}^{(i)} + \varepsilon}\]</span></p>
+<p>where <span class="math inline">\(\mu_{t,365}\)</span> and <span class="math inline">\(\sigma_{t,365}\)</span> are the mean and standard deviation computed over the trailing 365-day window ending at day <span class="math inline">\(t\)</span> (<code>min_periods=2</code> to handle the warm-up period). A small constant <span class="math inline">\(\varepsilon = 10^{-8}\)</span> prevents division by zero. Z-scores are computed on the combined dataset so that the rolling window is continuous across the train/test boundary, with each day’s z-score using only its own trailing window (no leakage).</p>
+<p><strong>Objective</strong></p>
+<p><span class="math display">\[\max_{\boldsymbol{\theta}} \;\frac{1}{K}\sum_{k=1}^{K} \frac{\text{SPD}_{\text{strategy}}^{(k)}}{\text{SPD}_{\text{DCA}}^{(k)}}\]</span></p>
+<p>where <span class="math inline">\(K\)</span> is the number of complete 365-day windows in the training period, and</p>
+<p><span class="math display">\[\text{SPD}^{(k)} = \sum_{t \in \text{window } k} \frac{w_t}{P_t}\]</span></p>
+<p>is the <strong>sats-per-dollar</strong> accumulated in window <span class="math inline">\(k\)</span> (higher = better). Implemented as minimize(objective, <span class="math inline">\(\boldsymbol{\theta}\)</span>, method=“Nelder-Mead”)(<span class="citation" data-cites="scipy_neldermead">SciPy Developers (<a href="#ref-scipy_neldermead" role="doc-biblioref">2026</a>)</span>).</p>
+<div id="fig-learned-signal-weights" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-learned-signal-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/fig_learned_signal_weights.png" class="img-fluid figure-img" data-fig-pos="H">
 </div>
-<div class="listing-author">
-Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-learned-signal-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Optimized Signal Weights
+</figcaption>
+</figure>
 </div>
-</a>
+<div id="fig-composite-signal-index-strategy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-composite-signal-index-strategy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/fig_composite_signal_index_strategy.png" class="img-fluid figure-img" data-fig-pos="H">
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-composite-signal-index-strategy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Composite Signal Index strategy vs Uniform DCA
+</figcaption>
+</figure>
 </div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-baudin2010neldermead" class="csl-entry" role="listitem">
+Baudin, Michael. 2010. <em>Nelder-Mead User’s Manual</em>. Consortium Scilab – Digiteo. <a href="https://www.scilab.org/sites/default/files/neldermead.pdf">https://www.scilab.org/sites/default/files/neldermead.pdf</a>.
 </div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<div id="ref-scipy_neldermead" class="csl-entry" role="listitem">
+SciPy Developers. 2026. <em>Minimize(method=’nelder-Mead’)</em>. <a href="https://docs.scipy.org/doc/scipy/reference/optimize.minimize-neldermead.html" class="uri">Https://docs.scipy.org/doc/scipy/reference/optimize.minimize-neldermead.html</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

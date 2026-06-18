@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Trilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav">
+<meta name="author" content="Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav">
 <meta name="dcterms.date" content="2026-06-03">
 
 <title>Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation – AdaptiveSats</title>
@@ -25,7 +25,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -44,7 +63,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-bba5ebae505b5c03f3f0d8040a416a6b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-46f0abdcd605bdcd834e8a40f923e4ad.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -77,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -98,6 +117,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
 </i> 
@@ -114,7 +137,20 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-challenge-with-naive-dca" id="toc-the-challenge-with-naive-dca" class="nav-link active" data-scroll-target="#the-challenge-with-naive-dca">The Challenge with Naive DCA</a></li>
+  <li><a href="#our-approach-adaptive-dca" id="toc-our-approach-adaptive-dca" class="nav-link" data-scroll-target="#our-approach-adaptive-dca">Our Approach: Adaptive DCA</a>
+  <ul class="collapse">
+  <li><a href="#key-data-signals" id="toc-key-data-signals" class="nav-link" data-scroll-target="#key-data-signals">Key Data &amp; Signals</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next?</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -135,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Trilenma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav </p>
+             <p>Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav </p>
           </div>
   </div>
     
@@ -155,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Detail introduction of the AdaptiveSats project</p>
-<p>This supports Trilemma’s goal of building an open-source framework for evaluating Bitcoin accumulation strategies. Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (<span class="citation" data-cites="brk">@brk</span>) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature reduction, and backtest adaptive allocation strategies against naive DCA.</p>
+<p>This supports Trilemma’s goal of building an open-source framework for evaluating Bitcoin accumulation strategies. Unlike naive DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (<span class="citation" data-cites="brk">Bitcoin Research Kit Contributors (<a href="#ref-brk" role="doc-biblioref">2025</a>)</span>) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature reduction, and backtest adaptive allocation strategies against naive DCA.</p>
 <section id="the-challenge-with-naive-dca" class="level2">
 <h2 class="anchored" data-anchor-id="the-challenge-with-naive-dca">The Challenge with Naive DCA</h2>
 <p>For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA)—investing a fixed amount at regular intervals—is a very common and disciplined strategy. However, naive DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoria phase or significantly undervalued during capitulation.</p>
@@ -177,9 +213,14 @@ ul.task-list li input[type="checkbox"] {
 <p>Stay tuned as we continue to post updates on our backtesting results, model performance, and insights discovered from Bitcoin’s transparent blockchain data!</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-brk" class="csl-entry" role="listitem">
+Bitcoin Research Kit Contributors. 2025. <em>Bitcoin Research Kit (<span>BRK</span>)</em>. Released. <a href="https://github.com/bitcoinresearchkit/brk">https://github.com/bitcoinresearchkit/brk</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
