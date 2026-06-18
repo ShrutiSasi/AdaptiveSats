@@ -77,8 +77,9 @@ To address this, a GARCH(1,1) model was fitted to Bitcoin returns.
 
 The model estimates conditional volatility according to:
 
-σ²(t) = ω + αε²(t−1) + βσ²(t−1)
-
+$$
+\sigma_t^2 = \omega + \alpha \varepsilon_{t-1}^2 + \beta \sigma_{t-1}^2
+$$
 where:
 
 -   ω represents long-run volatility
