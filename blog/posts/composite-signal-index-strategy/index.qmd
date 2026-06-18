@@ -1,0 +1,55 @@
+---
+title: "Composite Signal Index Strategy for Bitcoin Accumulation"
+description: "An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations."
+author: "Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
+date: "2026-06-03"
+categories: [research, bitcoin, data-science]
+bibliography: "../../references.bib"
+resources:
+    - "../../figures/**"
+---
+
+### Composite Signal Index strategy
+
+
+| Signal | Dimension | When to buy |
+|---|---|---|
+| mvrv | Market/realised-value ratio - valuation | Low mvrv = market undervaluation |
+| sopr_7d_ema | Realised profit/loss of spending | sopr < 1 = investors selling at loss |
+| reserve_risk | Holder conviction vs. price | Low reserve risk = high confidence, good buy zone |
+| greed_index | Crowd sentiment | 0 = extreme fear, potential bottoms |
+| puell_multiple | Miner economics | Low puell multiple = miner stress/capitulation |
+| lth_nupl | Long-term holder unrealised P&L | Low lth nupl = capitualation/undervaluation |
+| sell_side_risk_ratio_7d_ema | Short-term selling pressure | Low = market participants not eager to sell |
+| net_unrealized_pnl_rel_to_market_cap | Aggregate unrealised P&L (NUPL) | Low = investors under water |
+
+: Composite Signal Index On-Chain Signals {#tbl-CSI-OnChainSignals tbl-colwidths="\[30,30,40\]"}
+
+Each of the above [**on-chain signals**](#tbl-CSI-OnChainSignals) is rolling-z-scored (365-day window), inverted into a *cheapness score* (the strategy wants a high score on cheap days; but cheap days produce negative z-scores; so simply negating flips the relationship), and blended via a **softmax-weighted sum**:
+
+$$\text{cheapness}_t = \sum_{i=1}^{8} w_i \cdot \left(-z_t^{(i)}\right), \qquad w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}$$
+
+$$\text{buy\_score}_t = \max(0,\; \text{cheapness}_t)^{\gamma}$$
+
+The signal logit vector $\boldsymbol{\ell} \in \mathbb{R}^{8}$ and exponent $\gamma > 0$ are jointly optimised by **Nelder-Mead**(@baudin2010neldermead) on the training period to maximise sats-per-dollar (SPD) relative to uniform DCA.
+
+Each on-chain signal is standardised using a **causal rolling 365-day z-score**:
+
+$$z_t^{(i)} = \frac{x_t^{(i)} - \mu_{t,365}^{(i)}}{\sigma_{t,365}^{(i)} + \varepsilon}$$
+
+where $\mu_{t,365}$ and $\sigma_{t,365}$ are the mean and standard deviation computed over the trailing 365-day window ending at day $t$ (`min_periods=2` to handle the warm-up period). A small constant $\varepsilon = 10^{-8}$ prevents division by zero. Z-scores are computed on the combined dataset so that the rolling window is continuous across the train/test boundary, with each day's z-score using only its own trailing window (no leakage).
+
+**Objective**
+
+$$\max_{\boldsymbol{\theta}} \;\frac{1}{K}\sum_{k=1}^{K} \frac{\text{SPD}_{\text{strategy}}^{(k)}}{\text{SPD}_{\text{DCA}}^{(k)}}$$
+
+where $K$ is the number of complete 365-day windows in the training period, and
+
+$$\text{SPD}^{(k)} = \sum_{t \in \text{window } k} \frac{w_t}{P_t}$$
+
+is the **sats-per-dollar** accumulated in window $k$ (higher = better).
+Implemented as minimize(objective, $\boldsymbol{\theta}$, method="Nelder-Mead")(@scipy_neldermead).
+
+![Optimized Signal Weights](../../figures/fig_learned_signal_weights.png){#fig-learned-signal-weights fig-pos="H"}
+
+![Composite Signal Index strategy vs Uniform DCA](../../figures/fig_composite_signal_index_strategy.png){#fig-composite-signal-index-strategy fig-pos="H"}

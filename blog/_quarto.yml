@@ -15,5 +15,7 @@ website:
         href: https://github.com/ShrutiSasi/AdaptiveSats
 format:
   html:
-    theme: cosmo
+    theme: united
     css: styles.css
+    toc: true
+    toc-location: right

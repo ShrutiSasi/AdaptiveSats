@@ -8,6 +8,7 @@ The challenge of investing in Bitcoin is simple to describe but difficult to sol
 AdaptiveSats is a Python-based research platform built in partnership with the **Trilemma Foundation** (UBC DSCI591 Capstone, 2025–2026) to answer that question. Instead of focusing on Bitcoin's price in dollars, it focuses on maximizing the amount of Bitcoin accumulated over time.
 
 The framework analyzes Bitcoin network and market indicators, including on-chain activity, investor behavior, and market sentiment. It then identifies patterns that may signal whether Bitcoin appears relatively undervalued, overvalued, or fairly priced. Using these signals, AdaptiveSats creates dynamic investment strategies that automatically increase purchases during potentially attractive market conditions and reduce purchases when conditions appear less favorable. Every strategy is rigorously tested against a traditional Dollar Cost Averaging (DCA) approach. The framework keeps each strategy inside the core constraints:
+
 - fixed accumulation budget
 - fixed allocation horizon, defaulting to 365 days
 - no forward-looking data

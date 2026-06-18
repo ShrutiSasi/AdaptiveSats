@@ -115,35 +115,19 @@ local development.
    playwright install chromium
    ```
 
-6. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
+6. Create a branch for local development using the default branch (typically `dev`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
 
     ```shell
-    git checkout develop
+    git checkout dev
     git checkout -b fix-name-of-your-bugfix
     ```
 
     Now you can make your changes locally.
 
-7. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
-
-    ```bash
-    ruff check src/ --fix .
-    ruff format src/
-    ```
-
-8. Check that your changes pass our test suite.
-
-    ```bash
-    pytest -v --cov --cov-branch --cov-report=term-missing --cov-report=xml
-    ```
-
-9. Commit your changes and push your branch to GitHub. Please use [semantic commit messages](https://www.conventionalcommits.org/).
+7. Commit your changes and push your branch to GitHub. Please use [semantic commit messages](https://www.conventionalcommits.org/).
 
     ```shell
     git add .
     git commit -m "fix: summarize your changes"
     git push -u origin fix-name-of-your-bugfix
     ```
-
-10. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
-
