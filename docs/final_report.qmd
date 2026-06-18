@@ -1,0 +1,242 @@
+---
+title: "AdaptiveSats: Improving Institutional Bitcoin Accumulation Strategies"
+authors: ["Arafat B. Bello","Nguyen Nguyen","Raghav Gupta","Shruti Sasi"]
+date: today
+link-citations: true
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    fontsize: 11pt
+    number-sections: true
+    colorlinks: true
+    citecolor: blue 
+    fig-pos: "H"
+bibliography: references.bib
+---
+
+# Executive Summary
+
+In partnership with the Trilemma Foundation, this project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with uniform Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy. This supports Trilemma's goal of building an open-source framework for evaluating Bitcoin accumulation strategies. 
+Unlike uniform DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature selection, and backtest adaptive allocation strategies against uniform DCA.
+
+# Introduction
+
+The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
+
+Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. One common approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use uniform DCA as the baseline, but it has limitations because it does not adjust to changing market conditions. For institutions with fixed budgets, this may reduce efficiency by missing favorable buying periods.
+
+This problem is important because Bitcoin's public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
+
+We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to uniform DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against uniform DCA. The final product will include a cleaned data pipeline strategy, backtesting logic, and evaluation results comparing adaptive accumulation to uniform DCA for the Trilemma Foundation and the open-source community.
+
+## Objectives
+
+-   Identify on-chain/market signals predicting favorable accumulation windows
+-   Build and validate an adaptive daily allocation model
+-   Backtest against uniform DCA using Sats per Dollar (SPD), win rate, exponential-decay percentile and score as the key metrics
+
+# Data
+
+We used the BRK (@brk) dataset from the StackSats (@stacksats) ecosystem, which contains daily market and on-chain metrics for Bitcoin from 2009 to 2026. The dataset includes over 41,000 features across various categories such as price, market valuation, holder behavior, network activity, and technical indicators.
+
+| Property             | Value                    |
+|----------------------|--------------------------|
+| File size            | \~1.08 GiB               |
+| Total rows           | 236,259,020              |
+| Daily observations   | 6,274 days               |
+| Distinct metric keys | 41,407                   |
+| Date range           | 2009-01-03 to 2026-03-13 |
+
+: Dataset overview {#tbl-dataset-overview tbl-colwidths="\[50,30\]"}
+
+## Identifying Feature Families
+
+![Feature count by family](figures/feature_count_by_family.png){#fig-feature-families fig-pos="H"}
+
+# Data Science Methods
+
+## Baseline Strategy
+
+To evaluate our approach, we used **Uniform Dollar-Cost Averaging (DCA)** strategy as the baseline, where a fixed amount is invested at regular intervals. Our goal is to outperform it by improving accumulation efficiency.
+
+## Train/Test Split
+
+To avoid look-ahead bias and reflect a realistic backtesting setup, we used a chronological train/test split.
+
+-   **Training set:** January 2018 to December 2023
+-   **Test set:** January 2024 to December 2025
+
+The test set was untouched during model development and was only used for final evaluation.
+
+## Feature Selection
+
+With over 41,000 features, we aimed to identify which features capture similar information to make the dataset more manageable for modeling. To achieve this, we followed a structured feature reduction approach.
+
+This process was computationally intensive when run locally with limited resources. Hence, we **_pivoted to Feature Selection_** to identify the most important features for our model, which is more efficient and effective in handling the large feature set.
+
+After our initial EDA and overall dataset understanding, feature selection was guided by the goal of capturing different Bitcoin market conditions rather than using a large number of unrelated indicators.
+For some models, we used model-based feature importance (e.g. Nelder-Mead optimization) to rank features based on their relevance. And for others, we used engineered features to focus on the most informative features while reducing dimensionality.
+
+## StackSats Framework Constraints
+
+The StackSats framework enforces a fixed budget (daily weights must sum to 1), an allocation span of 90–1460 days, a minimum daily weight of 1e-5 and maximum of 0.1, and strict causal constraints - strategies may only use current and past data. Built-in strategies provided by the framework include Uniform DCA, Simple Z-Score, Momentum, and MVRV-based strategies.(@frameworkconstraints)
+
+### Key success metrics
+
+-   **Sats per Dollar - SPD:**\
+    We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
+-   **Win Rate:**\
+    Win Rate is binary, i.e., beating uniform DCA in a window is a win irrespective of the margin. Use the percentage of evaluation windows where the adaptive strategy outperforms uniform DCA in terms of SPD. A win rate above 50% indicates that the adaptive strategy is more effective than uniform DCA in the majority of cases.
+-  **Exponential-Decay Percentile:**\
+    This metric is a recency-weighted average of the strategy's percentile scores across all windows. Each window's percentile shows where the strategy's SPD falls between the minimum and maximum SPD for that window. Recent windows get higher weight, so the metric tells us how well the strategy performed overall, with more focus on recent performance.
+-   **Score:**\
+    A composite metric that combines 50% Win Rate and 50% Exponential-Decay Percentile to provide an overall performance score for the adaptive strategy. This score helps to summarize the effectiveness of the strategy in a single value, facilitating easier comparison against the baseline.
+
+## Model Development
+
+We developed below adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
+
+### HMM-GARCH Adaptive Strategy
+
+The HMM-GARCH strategy was developed to enhance traditional Dollar Cost Averaging (DCA) by dynamically adjusting Bitcoin purchases according to prevailing market conditions. The framework combines three complementary sources of information: 
+
+- market regimes
+- valuation
+- volatility
+
+A Hidden Markov Model (HMM) was used to identify latent Bitcoin market regimes from observable market features, including returns, volatility, and valuation metrics. Rather than assigning a single regime at each point in time, the model estimated probabilities of being in **accumulation**, **neutral**, or **euphoric** market states. These probabilities were then translated into regime-specific allocation weights, allowing the strategy to increase purchases during accumulation periods and reduce purchases during euphoric periods.
+
+To capture market risk, a GARCH(1,1) model was employed to estimate conditional volatility. This provided a measure of market stress and volatility clustering, where periods of high volatility tend to be followed by further high volatility. Volatility was interpreted in conjunction with valuation signals, allowing the strategy to distinguish between attractive capitulation events and periods of excessive speculation.
+
+Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
+
+The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for performance summary.
+
+### Multi-Strategy Regime-Based Approach
+
+The multi-strategy regime-based approach was developed to make the Bitcoin accumulation strategy more adaptive than a single fixed signal. A single approach, such as using only momentum or only valuation, may work well in some market environments but poorly in others. Therefore, this method first classified each day into a market regime and then selected the candidate strategy that had historically performed best in that type of regime.
+
+The regime classification used both raw and engineered features. 
+Raw features included:
+
+- Bitcoin price
+- MVRV
+- realized-cap growth rate 
+- market-cap growth rate 
+
+Engineered features included:
+
+- rolling simple moving averages
+- price-to-SMA ratios
+- lookback returns
+
+These features were used to describe Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
+
+For each regime, the model compared three candidate strategies: **StackSats MVRV**, **StackSats Momentum**, and a **custom SMA-based strategy**. The best strategy for each regime was learned and the model was tuned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using training-period performance only.
+
+After applying the final strategy to the 2024–2025 test period, the multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for performance summary.
+
+### Strategy Performance Comparison
+
+| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)
+|---|---|---|---|---|---|---|
+| Win Rate | 64.57% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
+| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 63.3% | 65.5% | 38.0% |
+| Score | 52.46% | 60.05% | 58.46% | 81.6% | 82.76% | 19.0% |
+| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1424 \newline (+3.58%) | 1346 \newline (+4.14%) | 1292 |
+
+: Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
+
+### Backtesting
+
+The backtesting process included two frameworks: Validation Checks and Performance Results @stacksats:
+
+**Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
+
+1.  **Weight Sum Validation**: Confirms that each window's daily allocations sum to exactly 100% of the budget within floating-point tolerance, ensuring a fair comparison against the uniform DCA baseline.
+2.  **Forward-Leakage Test**: Future data is masked and the model weights are recomputed to ensure the results remain consistent.
+3.  **Win-rate Requirement**: The model must outperform uniform DCA in more than 50% of the evaluation windows.
+
+**Performance Results** summarized the key SPD and percentile results:
+
+1.  **Percentile Statistics**: Measures the minimum, maximum, mean, median, and exponentially weighted percentile (where recent windows receive greater weight) of the winning rate against uniform DCA.
+2.  **Strategy Validation**: Evaluates whether the model outperforms uniform DCA based on the win-rate threshold (greater than 50%).
+
+The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
+
+### Ethical Considerations
+
+All data used is publicly available on-chain and market data with no personally identifiable information. The framework is MIT-licensed and fully reproducible, supporting independent audit. Users should note that backtested results can mislead if applied uncritically to live markets; results should always be validated against current market conditions and institutional risk policies. The methodology's asset-agnostic design does not change this caution.
+
+### Stakeholders
+
+-   **Trilemma Foundation:** Interested in improving long-term Bitcoin accumulation efficiency
+-   **Open-source community:** Focused on transparency, reproducibility, and practical usability of the strategy
+
+# Data Product
+
+-  **Open-source accumulation strategy framework** github repo consisting of Python notebooks, a feature engineering pipeline, and backtesting logic built on the StackSats engine, all MIT-licensed.
+-   **Blogpost** and **Video** detailing the strategies developed.
+
+The Trilemma Foundation and the open-source community can use these to evaluate existing strategies, develop new ones, and extend the methodology to other assets by swapping data inputs.
+
+**Strengths:** The framework is transparent, modular, and asset-agnostic. All budget and causal constraints are enforced by the StackSats engine, ensuring a fair comparison against uniform DCA. 
+
+_All strategies passed the full StackSats integrity suite._
+
+### Limitations and Future Improvements
+
+**Narrow Testing Window**
+
+- Test results should be interpreted carefully because of narrow test window.
+
+**Bitcoin Regime Shifts**
+
+- Bitcoin market evolve over time, so current features can be unreliable in future.
+- If future market cycles change shape, optimized weights may fail.
+
+**Strict Budget Constraint**
+
+- The 365-day rolling window forces full allocation before the deadline.
+
+ Future improvements could include testing additional regime definitions, and exploring ensemble approaches that blend multiple strategies based on regime probabilities.
+
+# Conclusions and Recommendations
+
+This project set out to answer whether public Bitcoin market and on-chain data can improve long-term accumulation efficiency over uniform DCA. Our results confirm that it can: all adaptive strategies surpassed the 50% win-rate validation threshold. 
+
+**Limitations:** Backtested performance does not guarantee live results; regime shifts can invalidate historically calibrated signals. No strategy was validated beyond December 2025.
+
+**Recommendations:** 
+
+- The most impactful near-term improvement would be a Streamlit dashboard for signal monitoring and strategy comparison, making the product accessible to non-technical allocators. 
+- Longer-term, building automated ingestion pipelines, creating an ensemble strategy that blends all approaches based on prevailing regime.
+
+# Appendix 1: On-Chain Metrics for Long Accumulation Identification {#sec-appendix-metrics .appendix}
+
+The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows.
+
+| Metric | Expands to | Definition | Accumulation Signal |
+|:-----------------|:-----------------|:-----------------|:-----------------|
+| **mvrv** | Market Value to Realized Value | Ratio of market capitalisation to realised capitalisation (the aggregate cost basis of all coins). | Values $<1$ (market price below aggregate cost basis) historically mark cycle bottoms and prime accumulation zones. |
+| **nupl** | Net Unrealized Profit/Loss | $\text{NUPL} = \frac{\text{Unrealized Profit} - \text{Unrealized Loss}}{\text{Market Cap}}$; measures the net paper gain/loss of all holders as a fraction of market cap. | Values $< 0$ indicate the majority of holders are in loss. |
+| **sopr** | Spent Output Profit Ratio | Ratio of the USD value of coins at the time they are spent (sold) to their USD value when they were created (cost basis). $\text{SOPR} = \frac{P_{\text{sell}}}{P_{\text{buy}}}$ | $\text{SOPR} < 1$ means coins are being sold at a loss on aggregate, indicating capitulation. |
+| **adjusted_sopr** | Adjusted SOPR | SOPR calculated after excluding very short-term (\< 1 hour) spends to remove noise from exchange transfers and re-organisations. | Same interpretation as SOPR but more reliable. |
+| **realized_price** | Realized Price | Average USD price at which every coin was last moved on-chain; represents the aggregate cost basis per coin. $\text{RP} = \frac{\text{Realized Cap}}{\text{Supply}}$ | When market price is below Realized Price, most holders are at an unrealized loss, which has historically signaled favorable accumulation opportunities. |
+
+: Key on-chain metrics and their role in long accumulation identification {#tbl-metrics tbl-colwidths="\[15,15,35,35\]"}
+
+# Appendix 2 : Glossary of Terms {#sec-appendix-glossary .appendix}
+
+-   **Bitcoin (BTC):** A decentralized digital currency that operates on a peer-to-peer network without a central authority. It was created in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto (@nakamoto2008).
+-   **On-chain data:** Information recorded on the blockchain, such as transactions, addresses, and balances, which is publicly accessible and can be analyzed to derive insights about market behavior and participant activity.
+-   **Dollar-Cost Averaging (DCA):** An investment strategy where a fixed amount of money is invested at regular intervals, regardless of the asset's price, to reduce the impact of volatility over time.
+-   **Uniform DCA:** A simple implementation of DCA where the same amount is invested at each interval without any adjustments based on market conditions or signals.
+-   **Sats per Dollar (SPD):** A metric that measures the amount of Bitcoin (in satoshis) accumulated per unit of USD invested, used to evaluate the efficiency of an accumulation strategy (1 BTC = 100,000,000 satoshis(Sats)).
+-   **Halving:** A programmed event in the Bitcoin protocol that occurs approximately every four years, reducing the block reward for miners by half, which historically has had significant impacts on Bitcoin's price and market dynamics.
+-   **Backtesting:** The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. Includes validation checks to ensure no violations and look-ahead bias and that the strategy is evaluated fairly against a baseline.
+-   **Hidden Markov Models (HMMs):** Hidden Markov models are probabilistic models in which observations, in this case prices or market regimes, are dependent on a latent (hidden) Markov process. They are used to represent systems that transition between hidden states over time, while producing observable outputs.
+-   **Variance Inflation Factor (VIF)**: A measure of multicollinearity in regression analysis, indicating how much the variance of an estimated regression coefficient increases due to collinearity among the predictors. A VIF value greater than 5 or 10 is often considered indicative of high multicollinearity.
+
+# References

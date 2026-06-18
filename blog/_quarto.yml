@@ -7,10 +7,15 @@ website:
   site-url: "https://<USERNAME>.github.io/AdaptiveSats"
   navbar:
     right:
-      - about.qmd
+      - text: "About"
+        href: about.qmd
+      - text: "Blog"
+        href: index.qmd      
       - icon: github
         href: https://github.com/ShrutiSasi/AdaptiveSats
 format:
   html:
-    theme: cosmo
+    theme: united
     css: styles.css
+    toc: true
+    toc-location: right
