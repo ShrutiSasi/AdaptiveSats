@@ -326,8 +326,6 @@ The final workflow was:
 3. Freeze the final configuration.
 4. Evaluate on the test period once.
 
-This makes the test period a more honest holdout evaluation.
-
 ## Evaluation metrics
 
 The main metric used was **sats per dollar**, often shortened as SPD.
