@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/index.html</loc>
-    <lastmod>2026-06-18T18:37:36.719Z</lastmod>
+    <lastmod>2026-06-19T18:29:32.568Z</lastmod>
   </url>
   <url>
     <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/posts/composite-signal-index-strategy/index.html</loc>
-    <lastmod>2026-06-18T18:37:36.720Z</lastmod>
+    <lastmod>2026-06-19T18:29:32.569Z</lastmod>
   </url>
   <url>
     <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/posts/multi-strategy-regime-based-approach/index.html</loc>
-    <lastmod>2026-06-18T18:37:36.720Z</lastmod>
+    <lastmod>2026-06-19T18:29:32.569Z</lastmod>
+  </url>
+  <url>
+    <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/posts/garch_content/index.html</loc>
+    <lastmod>2026-06-19T18:29:32.569Z</lastmod>
   </url>
   <url>
     <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/posts/introduction/index.html</loc>
-    <lastmod>2026-06-18T18:37:36.720Z</lastmod>
+    <lastmod>2026-06-19T18:29:32.569Z</lastmod>
   </url>
   <url>
     <loc>https://&lt;USERNAME&gt;.github.io/AdaptiveSats/about.html</loc>
-    <lastmod>2026-06-18T18:37:36.718Z</lastmod>
+    <lastmod>2026-06-19T18:29:32.565Z</lastmod>
   </url>
 </urlset>

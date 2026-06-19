@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Blog",
     "section": "",
-    "text": "Welcome to the AdaptiveSats blog!\nWe are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.\nThis project, built in partnership with the Trilemma Foundation, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive Dollar-Cost Averaging (DCA) approach, which serves as our primary baseline strategy.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMulti-Strategy Regime-Based Approach for Bitcoin Accumulation\n\n\n\nBitcoin\n\nStrategy\n\nRegime-Based\n\nBacktesting\n\n\n\nAn adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime.\n\n\n\n\n\nJun 16, 2026\n\n\nAdaptiveSats Team\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing AdaptiveSats: Data-Driven Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\n\n\n\n\n\n\nJun 3, 2026\n\n\nTrilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\n\n\n\n\n\n\n\nComposite Signal Index Strategy for Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\nAn adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.\n\n\n\n\n\nJun 3, 2026\n\n\nTrilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to the AdaptiveSats blog!\nWe are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.\nThis project, built in partnership with the Trilemma Foundation, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive Dollar-Cost Averaging (DCA) approach, which serves as our primary baseline strategy.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAdaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\nAdaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference.\n\n\n\n\n\nJun 18, 2026\n\n\nTrilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\n\n\n\n\n\n\n\nMulti-Strategy Regime-Based Approach for Bitcoin Accumulation\n\n\n\nBitcoin\n\nStrategy\n\nRegime-Based\n\nBacktesting\n\n\n\nAn adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime.\n\n\n\n\n\nJun 16, 2026\n\n\nAdaptiveSats Team\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing AdaptiveSats: Data-Driven Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\n\n\n\n\n\n\nJun 3, 2026\n\n\nTrilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\n\n\n\n\n\n\n\nComposite Signal Index Strategy for Bitcoin Accumulation\n\n\n\nresearch\n\nbitcoin\n\ndata-science\n\n\n\nAn adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.\n\n\n\n\n\nJun 3, 2026\n\n\nTrilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/composite-signal-index-strategy/index.html",
@@ -131,6 +131,153 @@
     "title": "Multi-Strategy Regime-Based Approach for Bitcoin Accumulation",
     "section": "Final interpretation",
     "text": "Final interpretation\nThe multi-strategy regime-based approach is an interpretable adaptive allocation strategy. It classifies Bitcoin market conditions into regimes and learns which candidate strategy worked best in each regime during training.\nIts main contribution is that it combines multiple signals instead of relying on a single fixed strategy. It uses MVRV, momentum, and SMA-based behavior in a structured way, allowing the allocation rule to change depending on the market environment.\nThe strategy is especially useful as a research framework because it helps answer a practical question:\nAre different Bitcoin accumulation signals useful in different market regimes?\nBased on the final evaluation, the approach can be compared against Uniform DCA using sats per dollar, percentage improvement, win rate, score, and exponential-decay percentile. SPD shows whether the strategy accumulated more Bitcoin per dollar, while win rate shows how consistently it outperformed across evaluation windows. The score and exponential-decay percentile provide additional StackSats comparison measures, including a view that gives more importance to recent performance.\nThe final result should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, improving live budget pacing, and evaluating the method over future market cycles."
+  },
+  {
+    "objectID": "posts/garch_content/index.html",
+    "href": "posts/garch_content/index.html",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "",
+    "text": "Dollar Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.\nDespite its simplicity and robustness, traditional DCA treats every investment period equally. Whether Bitcoin is historically cheap, historically expensive, experiencing extreme volatility, or trading in a speculative euphoric regime, the investor commits exactly the same amount of capital.\nThis raises an important question:\nCan we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?\nTo investigate this question, we developed two adaptive accumulation frameworks:\n\nHMM-GARCH Strategy\nHMM-Bayesian Strategy\n\nBoth approaches leverage market regimes, valuation metrics, and volatility information to modify accumulation weights over time.\nThe objective is not to predict short-term price direction. Instead, the goal is to identify periods that historically offered more attractive Bitcoin accumulation opportunities and allocate capital more efficiently during those periods."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#introduction",
+    "href": "posts/garch_content/index.html#introduction",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "",
+    "text": "Dollar Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.\nDespite its simplicity and robustness, traditional DCA treats every investment period equally. Whether Bitcoin is historically cheap, historically expensive, experiencing extreme volatility, or trading in a speculative euphoric regime, the investor commits exactly the same amount of capital.\nThis raises an important question:\nCan we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?\nTo investigate this question, we developed two adaptive accumulation frameworks:\n\nHMM-GARCH Strategy\nHMM-Bayesian Strategy\n\nBoth approaches leverage market regimes, valuation metrics, and volatility information to modify accumulation weights over time.\nThe objective is not to predict short-term price direction. Instead, the goal is to identify periods that historically offered more attractive Bitcoin accumulation opportunities and allocate capital more efficiently during those periods."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#data-and-feature-engineering",
+    "href": "posts/garch_content/index.html#data-and-feature-engineering",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Data and Feature Engineering",
+    "text": "Data and Feature Engineering\nThe analysis combines traditional time-series techniques with Bitcoin-specific on-chain valuation metrics.\nKey variables include:\n\nBitcoin price (USD)\nLog returns\nGARCH volatility\nMVRV Z-Score\nActive Price\nPrice versus Active Price"
+  },
+  {
+    "objectID": "posts/garch_content/index.html#mvrv-z-score",
+    "href": "posts/garch_content/index.html#mvrv-z-score",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "MVRV Z-Score",
+    "text": "MVRV Z-Score\nMVRV (Market Value to Realized Value) measures how expensive Bitcoin is relative to the aggregate cost basis of investors.\nRather than using the raw MVRV value, a rolling z-score transformation was applied. This standardizes valuation relative to recent historical conditions and allows valuation signals to remain comparable across different market cycles.\nNegative values indicate that Bitcoin is trading below its historical valuation norm, while positive values suggest increasingly expensive market conditions."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#active-price",
+    "href": "posts/garch_content/index.html#active-price",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Active Price",
+    "text": "Active Price\nActive Price estimates the average cost basis of economically active Bitcoin participants.\nThe derived feature:\nPrice vs Active Price\nmeasures how far Bitcoin’s current market price deviates from the average cost basis of active investors.\nHistorically, periods where Bitcoin trades below Active Price have frequently coincided with accumulation zones and long-term value opportunities."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#motivation",
+    "href": "posts/garch_content/index.html#motivation",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Motivation",
+    "text": "Motivation\nThe first strategy combines regime detection, valuation, volatility, and trend information into a dynamic allocation framework.\nRather than allocating a fixed amount every period, contribution weights vary according to prevailing market conditions."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#regime-based-allocation",
+    "href": "posts/garch_content/index.html#regime-based-allocation",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Regime-Based Allocation",
+    "text": "Regime-Based Allocation\nEach regime receives a different allocation multiplier.\nAccumulation regimes receive larger allocations.\nNeutral regimes receive baseline allocations.\nEuphoric regimes receive reduced allocations.\nInstead of selecting a single regime, the strategy uses regime probabilities:\nAllocation Weight = Σ(Regime Probability × Regime Multiplier)\nThis creates smoother transitions between market states and avoids abrupt allocation changes."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#valuation-adjustment",
+    "href": "posts/garch_content/index.html#valuation-adjustment",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Valuation Adjustment",
+    "text": "Valuation Adjustment\nThe strategy increases allocations when Bitcoin appears historically undervalued.\nA valuation signal is constructed from the negative component of the MVRV Z-Score.\nAs valuation becomes increasingly attractive, the allocation weight rises proportionally.\nThis mechanism encourages greater accumulation during periods of market pessimism and depressed valuations."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#volatility-adjustment",
+    "href": "posts/garch_content/index.html#volatility-adjustment",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Volatility Adjustment",
+    "text": "Volatility Adjustment\nVolatility is interpreted differently depending on valuation.\nWhen Bitcoin is cheap:\nHigh volatility may indicate capitulation and panic.\nThe strategy increases allocations.\nWhen Bitcoin is expensive:\nHigh volatility may indicate speculative excess.\nThe strategy reduces allocations.\nThis conditional interpretation allows volatility to act as context rather than a standalone signal."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#trend-adjustment",
+    "href": "posts/garch_content/index.html#trend-adjustment",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Trend Adjustment",
+    "text": "Trend Adjustment\nA 200-day moving average is used as a long-term trend indicator.\nThe objective is not trend following in the traditional sense.\nInstead, trend acts as a confidence modifier.\nThe strategy applies small adjustments depending on whether Bitcoin is trading above or below its long-term trend."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#final-allocation-signal",
+    "href": "posts/garch_content/index.html#final-allocation-signal",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Final Allocation Signal",
+    "text": "Final Allocation Signal\nThe final HMM-GARCH allocation weight combines:\n\nRegime probabilities\nValuation adjustment\nVolatility adjustment\nTrend adjustment\n\nThe resulting weight is bounded to prevent extreme allocations and smoothed using a rolling average to reduce noise.\nThis framework creates an adaptive DCA strategy that responds to changing market conditions while remaining systematic and interpretable."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#performance",
+    "href": "posts/garch_content/index.html#performance",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Performance",
+    "text": "Performance\n\n\n\nPrice chart with weights and performance metrics"
+  },
+  {
+    "objectID": "posts/garch_content/index.html#motivation-1",
+    "href": "posts/garch_content/index.html#motivation-1",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Motivation",
+    "text": "Motivation\nWhile the HMM-GARCH model relies on deterministic rules, the Bayesian framework introduces probabilistic reasoning.\nFinancial markets rarely provide certainty.\nInstead of asking:\n“Is this an accumulation opportunity?”\nthe Bayesian approach asks:\n“What is the probability that this is an accumulation opportunity?”"
+  },
+  {
+    "objectID": "posts/garch_content/index.html#bayesian-networks",
+    "href": "posts/garch_content/index.html#bayesian-networks",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Bayesian Networks",
+    "text": "Bayesian Networks\nA Bayesian Network models probabilistic relationships between variables.\nThe framework combines evidence from:\n\nMarket valuation\nVolatility conditions\nActive investor profitability\nHMM regime information\n\nto estimate the probability of a favorable accumulation environment."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#state-construction",
+    "href": "posts/garch_content/index.html#state-construction",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "State Construction",
+    "text": "State Construction\nContinuous variables are converted into interpretable states.\nExamples include:\n\nValuation\n\nCheap\nNeutral\nExpensive\n\n\n\nVolatility\n\nLow\nMedium\nHigh\n\n\n\nActive Price Relationship\n\nBelow Active Price\nNear Active Price\nAbove Active Price\n\n\n\nRegime Confidence\nEach HMM regime probability is transformed into:\n\nLow confidence\nMedium confidence\nHigh confidence\n\nThese categorical states become evidence variables within the Bayesian Network."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#probabilistic-inference",
+    "href": "posts/garch_content/index.html#probabilistic-inference",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Probabilistic Inference",
+    "text": "Probabilistic Inference\nFor every observation, the Bayesian Network receives evidence describing current market conditions.\nThe model then computes:\nP(Accumulation Opportunity | Evidence)\nThis probability reflects how strongly the current market resembles historically attractive accumulation environments."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#allocation-construction",
+    "href": "posts/garch_content/index.html#allocation-construction",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Allocation Construction",
+    "text": "Allocation Construction\nThe resulting probability is transformed into a dynamic allocation weight.\nHigher accumulation probabilities produce larger contribution weights.\nLower probabilities result in more conservative allocations.\nThe strategy therefore adjusts capital deployment according to the strength of evidence supporting accumulation."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#advantages-of-the-bayesian-framework",
+    "href": "posts/garch_content/index.html#advantages-of-the-bayesian-framework",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Advantages of the Bayesian Framework",
+    "text": "Advantages of the Bayesian Framework\nSeveral benefits emerge from this approach.\n\nProbabilistic Reasoning\nMarkets rarely provide certainty.\nBayesian inference naturally accommodates uncertainty.\n\n\nInterpretability\nEach input variable contributes explicitly to the final accumulation probability.\n\n\nMulti-Signal Integration\nThe framework combines valuation, volatility, investor profitability, and market regime information into a unified decision process.\n\n\nFlexibility\nAdditional evidence variables can be incorporated without redesigning the entire model."
+  },
+  {
+    "objectID": "posts/garch_content/index.html#performance-1",
+    "href": "posts/garch_content/index.html#performance-1",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "Performance",
+    "text": "Performance\n\n\n\nPrice chart with weights and performance metrics"
+  },
+  {
+    "objectID": "posts/garch_content/index.html#hmm-garch",
+    "href": "posts/garch_content/index.html#hmm-garch",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "HMM-GARCH",
+    "text": "HMM-GARCH\n\nRule-based\nDeterministic\nEasier to interpret\nDirectly incorporates volatility forecasts"
+  },
+  {
+    "objectID": "posts/garch_content/index.html#hmm-bayesian",
+    "href": "posts/garch_content/index.html#hmm-bayesian",
+    "title": "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks",
+    "section": "HMM-Bayesian",
+    "text": "HMM-Bayesian\n\nProbabilistic\nEvidence-driven\nNaturally handles uncertainty\nIntegrates multiple signals through Bayesian inference\n\nThe HMM-GARCH strategy answers:\n“What allocation should we use given current market conditions?”\nThe HMM-Bayesian strategy answers:\n“How likely is it that current conditions represent an attractive accumulation opportunity?”"
   },
   {
     "objectID": "posts/introduction/index.html",
