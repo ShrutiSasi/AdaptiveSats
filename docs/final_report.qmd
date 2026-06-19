@@ -156,9 +156,9 @@ After applying the final strategy to the 2024–2025 test period, the multi-stra
 | Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)
 |---|---|---|---|---|---|---|
 | Win Rate | 64.57% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
-| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 63.3% | 65.5% | 38.0% |
-| Score | 52.46% | 60.05% | 58.46% | 81.6% | 82.76% | 19.0% |
-| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1424 \newline (+3.58%) | 1346 \newline (+4.14%) | 1292 |
+| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 62.98% | 65.5% | 38.0% |
+| Score | 52.46% | 60.05% | 58.46% | 81.49% | 82.76% | 19.0% |
+| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1426 \newline (+4.30%) | 1346 \newline (+4.14%) | 1292 |
 
 : Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
 
