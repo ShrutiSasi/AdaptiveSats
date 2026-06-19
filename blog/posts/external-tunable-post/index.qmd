@@ -164,3 +164,7 @@ In the final StackSats comparison, the External Tunable approach also achieved a
 **1. Blind to big Bitcoin's Holder Dump:**
 
 Because it relies heavily on traditional U.S. Treasury data, the model easily detects slow global economic shifts but is completely blind to sudden, unpredictable crypto-specific events. For example, one of the major causes of Bitcoin crashes is when massive institutional holders (e.g., MicroStrategy) unexpectedly sell large amounts of Bitcoin. The market can crash violently within hours, but the macro-indicators would be completely unaware of this localized sell-off, incorrectly signaling a "safe" environment while the price plummets.
+
+**2. Not a dynamic, daily-learning model:**
+
+For this algorithm to be applied as a true dynamic model (where it automatically re-tunes its own parameters every day based on live data), significant computational resources would be required. Furthermore, because we optimized the threshold parameters strictly on the 2018–2023 training period, there is no guarantee that the model will perform equally well in future, unprecedented macroeconomic environments.
