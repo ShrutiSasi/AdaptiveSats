@@ -9,7 +9,7 @@ website:
     right:
       - text: "About"
         href: about.qmd
-      - text: "Blog"
+      - text: "₿log"
         href: index.qmd      
       - icon: github
         href: https://github.com/ShrutiSasi/AdaptiveSats

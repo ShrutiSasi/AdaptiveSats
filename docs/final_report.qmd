@@ -97,6 +97,16 @@ The StackSats framework enforces a fixed budget (daily weights must sum to 1), a
 
 We developed below adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
 
+### Composite Signal Index Strategy
+
+Inspired from the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints. 
+
+The strategy was trained using the Nelder-Mead optimization algorithm, which iteratively adjusts the signal weights to find the combination that yields the highest SPD on the training data. The optimized weights were then applied to the test period to evaluate performance against uniform DCA. See @tbl-strategy-comparison for performance summary.
+
+![Optimized Signal Weights](figures/fig_learned_signal_weights.png){#fig_learned_signal_weights fig-pos="H"}
+
+![Composite Signal Index Strategy vs Uniform DCA](figures/fig_composite_signal_index_strategy.png){#fig-composite-signal-index-strategy fig-pos="H"}
+
 ### HMM-GARCH Adaptive Strategy
 
 The HMM-GARCH strategy was developed to enhance traditional Dollar Cost Averaging (DCA) by dynamically adjusting Bitcoin purchases according to prevailing market conditions. The framework combines three complementary sources of information: 
@@ -112,6 +122,8 @@ To capture market risk, a GARCH(1,1) model was employed to estimate conditional 
 Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
 
 The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for performance summary.
+
+[HMM-GARCH Adaptive Strategy vs Uniform DCA]
 
 ### Multi-Strategy Regime-Based Approach
 
@@ -136,6 +148,8 @@ These features were used to describe Bitcoin trend, valuation, and whether marke
 For each regime, the model compared three candidate strategies: **StackSats MVRV**, **StackSats Momentum**, and a **custom SMA-based strategy**. The best strategy for each regime was learned and the model was tuned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using training-period performance only.
 
 After applying the final strategy to the 2024–2025 test period, the multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for performance summary.
+
+![Multi-Strategy Regime-Based Approach vs Uniform DCA](figures/multi-strategy-approach-plot.png){#multi-strategy-approach-plot fig-pos="H"}
 
 ### Strategy Performance Comparison
 
