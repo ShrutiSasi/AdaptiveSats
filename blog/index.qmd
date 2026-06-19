@@ -46,4 +46,28 @@ Our strategy explores key on-chain indicators known to historically signal favor
 - **NUPL (Net Unrealized Profit/Loss)**: Highlights periods when the majority of holders are underwater.
 - **SOPR (Spent Output Profit Ratio)**: Indicates capitulation when coins are sold at a loss on aggregate.
 
+### Defining Success: Metrics & Evaluation
+
+-   **Sats per Dollar - SPD:**\
+    We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
+-   **Win Rate:**\
+    Win Rate is binary, i.e., beating uniform DCA in a window is a win irrespective of the margin. Use the percentage of evaluation windows where the adaptive strategy outperforms uniform DCA in terms of SPD. A win rate above 50% indicates that the adaptive strategy is more effective than uniform DCA in the majority of cases.
+-  **Exponential-Decay Percentile:**\
+    This metric is a recency-weighted average of the strategy's percentile scores across all windows. Each window's percentile shows where the strategy's SPD falls between the minimum and maximum SPD for that window. Recent windows get higher weight, so the metric tells us how well the strategy performed overall, with more focus on recent performance.
+-   **Score:**\
+    A composite metric that combines 50% Win Rate and 50% Exponential-Decay Percentile to provide an overall performance score for the adaptive strategy. This score helps to summarize the effectiveness of the strategy in a single value, facilitating easier comparison against the baseline.
+
+**_Continue reading our strategies and results in the below posts!_**
+
+### Strategy Performance Comparison
+
+| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)
+|---|---|---|---|---|---|---|
+| Win Rate | 64.57% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
+| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 60.42% | 65.5% | 38.0% |
+| Score | 52.46% | 60.05% | 58.46% | 80.21% | 82.76% | 19.0% |
+| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.14%) | 1292 |
+
+: Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
+
 ---

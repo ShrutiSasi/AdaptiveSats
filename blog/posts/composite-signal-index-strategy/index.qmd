@@ -183,6 +183,18 @@ Nelder-Mead(@baudin2010neldermead) is a derivative-free simplex method - suitabl
 
 Optimization runs for up to 5,000 function evaluations with adaptive simplex scaling. Implemented as minimize(objective, $\boldsymbol{\theta}$, method="Nelder-Mead")(@scipy_neldermead).
 
+## Guardrails: Entropy Regularization and a Tighter Sharpness Bound
+
+Two design choices keep the optimizer from collapsing onto a degenerate, single-signal solution:
+
+**Entropy penalty on the logits**. The objective subtracts a penalty proportional to how far the softmax weight distribution drifts from uniform:
+
+$$\text{penalty}(\boldsymbol{\ell}) = \lambda \left(\log n - H(\mathbf{w})\right), \quad H(\mathbf{w}) = -\sum_i w_i \log w_i$$
+
+
+with $\lambda = 0.05$. This is zero when weights are perfectly uniform and grows as the distribution concentrates onto fewer signals, directly discouraging the optimizer from routing all its weight into one or two dominant signals purely because they happened to fit the training years best.
+
+**Tighter exponent bound**. $\log\gamma$ is clipped to [−1.6,1.6] (i.e., $\gamma \in [0.2, 5.0]$). This prevents the sharpness exponent from running away toward values that turn buy_score into a near-indicator function dominated by a handful of extreme-outlier days.
 
 ## Backtest Design
 
@@ -222,6 +234,14 @@ The framework provides:
 - `BaseStrategy` - the interface any custom strategy must implement.
 
 Composite Signal Index strategy extends this with its own optimization layer (Nelder-Mead over the SPD objective) that learns weights entirely from data, without hand-tuning individual signal importances.
+
+## Limitations
+
+- **Overfitting risk:** The model might memorize the timing of Bitcoin’s past halving cycles. If future cycles change shape, the optimized weights might fail.
+
+- **On-chain regime shifts:** The underlying metrics assume Bitcoin behaves the same way over time. But Bitcoin’s market structure keeps changing, traditional on-chain signals - may not predict market behavior reliably.
+
+
 
 ## Summary
 
