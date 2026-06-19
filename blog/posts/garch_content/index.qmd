@@ -1,4 +1,13 @@
-# Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks
+---
+title: "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks"
+description: "Adaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference."
+author: "Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
+date: "2026-06-18"
+categories: [research, bitcoin, data-science]
+bibliography: "../../references.bib"
+resources:
+    - "../../figures/**"
+---
 
 ## Introduction
 
@@ -21,7 +30,7 @@ The objective is not to predict short-term price direction. Instead, the goal is
 
 ------------------------------------------------------------------------
 
-# Data and Feature Engineering
+## Data and Feature Engineering
 
 The analysis combines traditional time-series techniques with Bitcoin-specific on-chain valuation metrics.
 
@@ -68,8 +77,9 @@ To address this, a GARCH(1,1) model was fitted to Bitcoin returns.
 
 The model estimates conditional volatility according to:
 
-σ²(t) = ω + αε²(t−1) + βσ²(t−1)
-
+$$
+\sigma_t^2 = \omega + \alpha \varepsilon_{t-1}^2 + \beta \sigma_{t-1}^2
+$$
 where:
 
 -   ω represents long-run volatility
@@ -202,6 +212,12 @@ This framework creates an adaptive DCA strategy that responds to changing market
 
 ------------------------------------------------------------------------
 
+## Performance
+
+![Price chart with weights and performance metrics](../../figures/full_garch_hmm_plot.png)
+
+------------------------------------------------------------------------
+
 # Strategy 2: HMM-Bayesian Adaptive Accumulation
 
 ## Motivation
@@ -318,6 +334,12 @@ The framework combines valuation, volatility, investor profitability, and market
 Additional evidence variables can be incorporated without redesigning the entire model.
 
 ------------------------------------------------------------------------
+
+## Performance
+
+![Price chart with weights and performance metrics](../../figures/full_bayes_hmm_plot.png)
+
+-------------------------------------------------------------------------
 
 # Comparison of the Two Approaches
 
