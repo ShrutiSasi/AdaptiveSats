@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/garch_content/index.html",
+      "/posts/external-tunable-post/index.html",
       "/posts/multi-strategy-regime-based-approach/index.html",
       "/posts/introduction/index.html",
       "/posts/composite-signal-index-strategy/index.html"
