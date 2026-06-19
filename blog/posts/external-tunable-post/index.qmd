@@ -1,5 +1,5 @@
 ---
-title: "External Tuneable Approach for Bitcoin Accumulation"
+title: "External Tunable Approach for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin's price momentum, it identifies 'Risk-On' and 'Risk-Off' market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash."
 author: "AdaptiveSats Team"
 date: "2026-06-18"
@@ -153,9 +153,9 @@ By evaluating hundreds of combinations of these parameters across thousands of 3
 
 * Optimal parameters: **`macro_spike`**: 0.2, **`mom_break`**: 0.05, **`boost`**: 1.2, **`dampen`**: 0.5
 
-For the **training period (2018–2023)**, the multi-strategy approach achieved an SPD of **8,210.91**, compared with **8,418.79** for Uniform DCA, which corresponds a **2.47%** down.
+For the **training period (2018–2023)**, the external-tunable approach achieved an SPD of **8,210.91**, compared with **8,418.79** for Uniform DCA, which corresponds a **2.47%** down.
 
-For the **test period (2024–2025)**, the multi-strategy approach achieved an SPD of **1,346.27**, compared with **1,292.12** for Uniform DCA, corresponding to an improvement of **4.19%**.
+For the **test period (2024–2025)**, the external-tunable approach achieved an SPD of **1,346.27**, compared with **1,292.12** for Uniform DCA, corresponding to an improvement of **4.19%**.
 
 In the final StackSats comparison, the External Tunable approach also achieved a **win rate of 62.43%**, a **score of 63.97%**, and an **exponential-decay percentile of 65.52%**. These results suggest that the strategy satisfy all of the requirement that ensure the model pass, and also perform better on the test period than Uniform DCA.
 
