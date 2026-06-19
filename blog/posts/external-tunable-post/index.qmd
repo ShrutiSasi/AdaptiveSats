@@ -159,4 +159,8 @@ For the **test period (2024–2025)**, the multi-strategy approach achieved an S
 
 In the final StackSats comparison, the External Tunable approach also achieved a **win rate of 62.43%**, a **score of 63.97%**, and an **exponential-decay percentile of 65.52%**. These results suggest that the strategy satisfy all of the requirement that ensure the model pass, and also perform better on the test period than Uniform DCA.
 
+## Limitations
 
+**1. Blind to big Bitcoin's Holder Dump:**
+
+Because it relies heavily on traditional U.S. Treasury data, the model easily detects slow global economic shifts but is completely blind to sudden, unpredictable crypto-specific events. For example, one of the major causes of Bitcoin crashes is when massive institutional holders (e.g., MicroStrategy) unexpectedly sell large amounts of Bitcoin. The market can crash violently within hours, but the macro-indicators would be completely unaware of this localized sell-off, incorrectly signaling a "safe" environment while the price plummets.
