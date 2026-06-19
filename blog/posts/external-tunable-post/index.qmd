@@ -13,17 +13,17 @@ format:
 
 ## The Core Concept: Why Macroeconomics?
 
-Uniform Dollar Cost Averaging (DCA) is blind—it buys the same amount of Bitcoin regardless of whether the market is crashing or skyrocketing. While our base models improve upon this by using on-chain signals like MVRV to identify overvalued or undervalued conditions, they are still limited to looking strictly at Bitcoin-native data.
+Uniform Dollar Cost Averaging (DCA) is blind—it buys the same amount of Bitcoin regardless of whether the market is crashing or skyrocketing. While some base models improve on this by using on-chain signals like MVRV to identify overvalued or undervalued conditions, they are still limited to examining only Bitcoin-native data.
 
 The **External Tunable Strategy** completely shifts this paradigm. It operates on the thesis that Bitcoin does not exist in a vacuum; it is a highly sensitive risk asset heavily influenced by global macroeconomic liquidity. 
 
-By integrating the external macroeconomic indicators, specifically the **10-Year U.S. Treasury Yields**, this strategy detects shifting financial environments. It identifies periods when borrowing money is cheap to aggressively boost Bitcoin accumulation, while identifying periods when borrowing gets expensive to safely slow down and conserve capital
+By integrating external macroeconomic indicators, specifically the **10-Year U.S. Treasury Yields**, this strategy detects shifts in the financial environment. It identifies periods when borrowing is cheap to aggressively boost Bitcoin accumulation, and periods when borrowing is expensive to safely slow down and conserve capital.
 
 ## The Original Features
 
 #### 1. **Bitcoin Price (in USD):** 
 
-The absolute price of the Bitcoin, sourced from the Bitcoin Value Research Kit.
+The absolute price of Bitcoin, sourced from the Bitcoin Value Research Kit.
 
 #### 2. **10-Year U.S. Treasury Yields:** 
 
@@ -31,8 +31,8 @@ The interest rate on 10-year government debt, sourced from Yahoo Finance. Acts a
 
 **Why the 10-Year U.S. Treasury Yields?**
 
-1. **The Global Baseline for Borrowing Costs**: When this yield falls, borrowing money becomes cheap, which stimulates economic growth and floods the market with capital. When the yield rises, borrowing becomes expensive, choking off liquidity (@investopedia_treasury).
-2. **The "Fear vs. Greed" Confidence Indicator**: U.S. Treasuries are considered one of the safest investments in the world. Therefore, when investors are terrified of a recession, they buy lots of them, which drives the yield down. When investors are confident, they sell their safe bonds to buy riskier, high-growth assets like Bitcoin, driving the yield up (@investopedia_treasury).
+1. **The Global Baseline for Borrowing Costs**: When this yield falls, borrowing money becomes cheaper, stimulating economic growth and flooding the market with capital. When yields rise, borrowing becomes more expensive, choking off liquidity (@investopedia_treasury).
+2. **The "Fear vs. Greed" Confidence Indicator**: U.S. Treasuries are considered one of the safest investments in the world. Therefore, when investors are terrified of a recession, they buy lots of bonds, which drives yields down. When investors are confident, they sell their safe bonds to buy riskier, high-growth assets like Bitcoin, driving the yield up (@investopedia_treasury).
 
 
 ## The Engineered Features
@@ -52,7 +52,7 @@ Mathematically, this calculates the exact percentage change in the 10-Year Treas
 
 **Why 90 days?**: 
 
-According to @investopedia_quarter, 90-day period perfectly represents one fiscal quarter (a 3-month cycle). The entire corporate and economic world operates on this quarterly rhythm. Public companies release their earnings reports, governments do budget planning, and massive institutional investors rebalance their portfolios every three months.
+According to @investopedia_quarter, a 90-day period perfectly represents one fiscal quarter (a 3-month cycle). The entire corporate and economic world operates on this quarterly rhythm. Public companies release their earnings reports, governments do budget planning, and massive institutional investors rebalance their portfolios every three months.
 
 By measuring the Treasury yield over a 90-day window, this strategy tracks exactly one full cycle of global economic data. It is long enough to ignore daily market noise, but short enough to immediately detect when the market is shifting its money for the next quarter.
 
@@ -69,7 +69,7 @@ Mathematically, this calculates the exact percentage change in Bitcoin's price o
 
 **Why 15 days?**
 
-A roughly 14 to 15 days window is the universall common choice for measuring the short-term trend of an asset. This window is based on the Relative Strength Index, a momentum oscillator that measures the speed and change of price movement (@investopedia_rsi).
+A roughly 14- to 15-day window is the most common choice for measuring an asset's short-term trend. This window is based on the Relative Strength Index, a momentum oscillator that measures the speed and change of price movement (@investopedia_rsi).
 
 #### 3. **1-Year Price Drop ($1YPR$):** 
 
@@ -81,7 +81,7 @@ Mathematically, this calculates the exact percentage change in Bitcoin's price o
 
 **Why 1-year?**: 
 
-As shown in the graph below, historical bear markets (where Bitcoin's price drops significantly) usually last for roughly 1 year. Therefore, we engineered this feature to mathematically detect these prolonged crash events, allowing the algorithm to capture the exact moments when Bitcoin is extremely undervalued.
+As shown in the graph below, historical bear markets (when Bitcoin’s price drops significantly) typically last about 1 year. Therefore, we engineered this feature to mathematically detect these prolonged crash events, allowing the algorithm to capture the exact moments when Bitcoin is extremely undervalued.
 
 ![ Bitcoin Macro Price History & Major Bear Market Cycles](../../figures/bear_bitcoin_cycle.png){.center width="100%" height="100%"}
 
@@ -92,7 +92,7 @@ The foundational target weight generated by the stacksats baseline engine. The f
 - When MVRV is low, the network is historically undervalued, and stacksats generates a high preference weight.
 - When MVRV is high, the network is historically overvalued, and stacksats generates a low preference weight.
 
-This Tunable Macro Strategy uses this stacksats output as the **_preference weight_** and then dynamically boosts or dampens it based on what the broader global economy is doing.
+This Tunable Macro Strategy uses Stacksat's output as the **_preference weight_** and dynamically boosts or dampens it based on the broader global economy's performance.
 
 ## The 4-Tier Decision Matrix
 
@@ -129,7 +129,7 @@ If interest rates are falling, making borrowing cheap and pushing capital out of
 
 #### **Tier 4: Normal Market (Default)**
 
-**Condition:** If none of the extreme regimes above are met, then the market is consider to be in a normal, sideways, or ambiguous state.
+**Condition:** If none of the extreme regimes above are met, then the market is considered to be in a normal, sideways, or ambiguous state.
 
 **Action:** Dampen the base signal to save cash for future volatile opportunities.
 
@@ -143,7 +143,7 @@ Rather than hardcoding the thresholds for these economic regimes, the strategy e
 3. **`boost` ($\gamma$):** The multiplier applied to the buy signal during a "Golden" Risk-On environment (e.g., $1.5x$ or $2.0x$).
 4. **`dampen` ($\delta$):** The multiplier used to suppress buying during normal, sideways markets (e.g., $0.6x$ or $0.8x$).
 
-By evaluating hundreds of combinations of these parameters across thousands of 365-day rolling windows, we optimized the model to maximize both the absolute **Win Rate**, the **Exponential-Decay Percentile**, and the **Average Sats Per Dollar**, proving how adapting to macroeconomic feature can help improve the algorithm overall performance.
+By evaluating hundreds of combinations of these parameters across thousands of 365-day rolling windows, we optimized the model to maximize the absolute **Win Rate**, the **Exponential-Decay Percentile**, and the **Average Sats Per Dollar**,  proving how adapting to macroeconomic features can improve the algorithm's overall performance.
 
 ## Final backtest visualization
 
@@ -153,18 +153,18 @@ By evaluating hundreds of combinations of these parameters across thousands of 3
 
 * Optimal parameters: **`macro_spike`**: 0.2, **`mom_break`**: 0.05, **`boost`**: 1.2, **`dampen`**: 0.5
 
-For the **training period (2018–2023)**, the External Tunable approach achieved an SPD of **8,210.91**, compared with **8,418.79** for Uniform DCA, which corresponds a **2.47%** down.
+For the **training period (2018–2023)**, the External Tunable approach achieved an SPD of **8,210.91**, compared with **8,418.79** for Uniform DCA, corresponding to a **2.47%** underperformance.
 
-For the **test period (2024–2025)**, the External Tunable approach achieved an SPD of **1,346.27**, compared with **1,292.12** for Uniform DCA, corresponding to an improvement of **4.19%**.
+For the **test period (2024–2025)**, the External Tunable approach achieved an SPD of **1,346.27**, compared with **1,292.12** for Uniform DCA, representing a **4.19%** improvement.
 
-In the final StackSats comparison, the External Tunable approach also achieved a **win rate of 62.43%**, a **score of 63.97%**, and an **exponential-decay percentile of 65.52%**. These results suggest that the strategy satisfy all of the requirement that ensure the model pass, and also perform better on the test period than Uniform DCA.
+In the final StackSats comparison, the External Tunable approach also achieved a **win rate of 62.43%**, a **score of 63.97%**, and an **exponential-decay percentile of 65.52%**. These results suggest that the strategy satisfies all requirements for the model to pass and also performs better during the test period than Uniform DCA.
 
 ## Limitations
 
 **1. Blind to big Bitcoin's Holder Dump:**
 
-Because it relies heavily on traditional U.S. Treasury data, the model easily detects slow global economic shifts but is completely blind to sudden, unpredictable crypto-specific events. For example, one of the major causes of Bitcoin crashes is when massive institutional holders (e.g., MicroStrategy) unexpectedly sell large amounts of Bitcoin. The market can crash violently within hours, but the macro-indicators would be completely unaware of this localized sell-off, incorrectly signaling a "safe" environment while the price plummets.
+Because it relies heavily on traditional U.S. Treasury data, the model readily detects gradual global economic shifts but is blind to sudden, unpredictable crypto-specific events. For example, one of the major causes of Bitcoin crashes is when massive institutional holders (e.g., MicroStrategy) unexpectedly sell large amounts of Bitcoin. The market can crash violently within hours, but macro indicators would be completely unaware of this localized sell-off, incorrectly signaling a “safe” environment even as the price plummets.
 
 **2. Not a dynamic, daily-learning model:**
 
-For this algorithm to be applied as a true dynamic model (where it automatically re-tunes its own parameters every day based on live data), significant computational resources would be required. Furthermore, because we optimized the threshold parameters strictly on the 2018–2023 training period, there is no guarantee that the model will perform equally well in future, unprecedented macroeconomic environments.
+For this algorithm to be applied as a true dynamic model (where it automatically retunes its parameters daily based on live data), significant computational resources would be required. Furthermore, because we optimized the threshold parameters strictly on the 2018–2023 training period, there is no guarantee that the model will perform equally well in future, unprecedented macroeconomic environments.
