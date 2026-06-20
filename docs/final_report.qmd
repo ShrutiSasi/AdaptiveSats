@@ -28,7 +28,7 @@ Long-term Bitcoin accumulation is important for institutions and foundations bui
 
 This problem is important because Bitcoin's public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
 
-We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to uniform DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against uniform DCA. The final product will include a cleaned data pipeline strategy, backtesting logic, and evaluation results comparing adaptive accumulation to uniform DCA for the Trilemma Foundation and the open-source community.
+We evaluate whether public Bitcoin market and on-chain data can support an adaptive DCA strategy that improves SPD relative to uniform DCA while using the same fixed accumulation budget. After initial analysis, we develop and backtest adaptive allocation strategies against uniform DCA. The final product includes a cleaned data pipeline strategy, backtesting logic, and evaluation results comparing adaptive accumulation to uniform DCA for the Trilemma Foundation and the open-source community.
 
 ## Objectives
 
@@ -80,7 +80,7 @@ For some models, we used model-based feature importance (e.g. Nelder-Mead optimi
 
 ## StackSats Framework Constraints
 
-The StackSats framework enforces a fixed budget (daily weights must sum to 1), an allocation span of 90–1460 days, a minimum daily weight of 1e-5 and maximum of 0.1, and strict causal constraints - strategies may only use current and past data. Built-in strategies provided by the framework include Uniform DCA, Simple Z-Score, Momentum, and MVRV-based strategies.(@frameworkconstraints)
+The StackSats framework enforces a fixed budget (daily weights must sum to 1), an allocation span of 90–1460 days, a minimum daily weight of 1e-5 and maximum of 0.1, and strict causal constraints - strategies may only use current and past data. Built-in strategies provided by the framework include Uniform DCA, Simple Z-Score, Momentum, and MVRV-based strategies (@frameworkconstraints).
 
 ### Key success metrics
 
@@ -95,13 +95,13 @@ The StackSats framework enforces a fixed budget (daily weights must sum to 1), a
 
 ## Model Development
 
-We developed the below adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
+We developed the following adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
 
 ### Composite Signal Index Strategy
 
-Inspired from the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints. 
+Inspired by the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints. 
 
-The strategy was trained using the Nelder-Mead optimization algorithm, which iteratively adjusts the signal weights to find the combination that yields the highest SPD on the training data. The optimized weights were then applied to the test period to evaluate performance against uniform DCA. See @tbl-strategy-comparison for performance summary.
+The strategy was trained using the Nelder-Mead optimization algorithm, which iteratively adjusts the signal weights to find the combination that yields the highest SPD on the training data. The optimized weights were then applied to the test period to evaluate performance against uniform DCA. See @tbl-strategy-comparison for the performance summary.
 
 ![Optimized Signal Weights](figures/fig_learned_signal_weights.png){#fig_learned_signal_weights fig-pos="H"}
 
@@ -129,7 +129,7 @@ To capture market risk, a GARCH(1,1) model was employed to estimate conditional 
 
 Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
 
-The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for performance summary.
+The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for the performance summary.
 
 ![HMM-GARCH Adaptive Strategy vs Uniform DCA](figures/full_garch_hmm_plot.png){#full_garch_hmm_plot fig-pos="H"}
 
@@ -137,7 +137,7 @@ The final allocation signal combined regime probabilities, valuation adjustments
 
 ### Multi-Strategy Regime-Based Approach
 
-The multi-strategy regime-based approach was developed to make the Bitcoin accumulation strategy more adaptive than a single fixed signal. A single approach, such as using only momentum or only valuation, may work well in some market environments but poorly in others. Therefore, this method first classified each day into a market regime and then selected the candidate strategy that had historically performed best in that type of regime.
+The multi-strategy regime-based approach was developed to make the Bitcoin accumulation strategy more adaptive than a single fixed signal. A single signal, such as momentum, valuation, or a moving-average rule, may work well in some market conditions but poorly in others. Therefore, this method first classified each day into a market regime and then selected the candidate strategy that performed best for that type of regime during training.
 
 The regime classification used both raw and engineered features. 
 Raw features included:
@@ -153,11 +153,11 @@ Engineered features included:
 - price-to-SMA ratios
 - lookback returns
 
-These features were used to describe Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
+These features were used to describe three dimensions of market conditions: Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
 
-For each regime, the model compared three candidate strategies: **StackSats MVRV**, **StackSats Momentum**, and a **custom SMA-based strategy**. The best strategy for each regime was learned and the model was tuned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using the training-period performance only.
+For each regime with sufficient training observations, the strategy compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom SMA-based strategy. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were also selected based only on training-period performance. The fallback strategy was selected from the same candidate strategy set and was used when a regime was rare or not observed during training, so the method could still assign an allocation during testing.
 
-After applying the final strategy to the 2024–2025 test period, the multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for performance summary.
+After the final configuration was fixed, the strategy was applied to the 2024–2025 test period. The multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for the performance summary.
 
 ![Multi-Strategy Regime-Based Approach vs Uniform DCA](figures/multi-strategy-approach-plot.png){#multi-strategy-approach-plot fig-pos="H"}
 
@@ -168,13 +168,13 @@ After applying the final strategy to the 2024–2025 test period, the multi-stra
 | Win Rate | 63.76% | 72.75% | 76.29% | 100% | 100% | N/A |
 | Exponential-Decay Percentile | 38.72% | 47.35% | 40.63% | 60.66% | 65.5% | 38.0% |
 | Score | 51.24% | 60.05% | 58.46% | 80.33% | 82.76% | 19.0% |
-| Avg SPD | 1369 \newline (+5.99%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.19%) | 1292 |
+| Avg SPD | 1370 \newline (+5.99%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.19%) | 1292 |
 
 : Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
 
 ### Backtesting
 
-The backtesting process included two frameworks: Validation Checks and Performance Results @stacksats:
+The backtesting process followed the StackSats validation and performance comparison framework (@stacksats), including validation checks and performance results.
 
 **Validation Checks** included integrity checks designed to reduce leakage risk and arithmetic drift. These were evaluated through:
 
@@ -189,11 +189,11 @@ The backtesting process included two frameworks: Validation Checks and Performan
 
 The model is then scored by combining the win rate and exponentially weighted percentile into a single benchmark.
 
-### Ethical Considerations
+# Ethical Considerations
 
 All data used is publicly available on-chain and market data with no personally identifiable information. The framework is MIT-licensed and fully reproducible, supporting independent audit. Users should note that backtested results can mislead if applied uncritically to live markets; results should always be validated against current market conditions and institutional risk policies. The methodology's asset-agnostic design does not change this caution.
 
-### Stakeholders
+# Stakeholders
 
 -   **Trilemma Foundation:** Interested in improving long-term Bitcoin accumulation efficiency
 -   **Open-source community:** Focused on transparency, reproducibility, and practical usability of the strategy
@@ -257,10 +257,15 @@ The following table summarises the key on-chain and market metrics and their rol
 -   **On-chain data:** Information recorded on the blockchain, such as transactions, addresses, and balances, which is publicly accessible and can be analyzed to derive insights about market behavior and participant activity.
 -   **Dollar-Cost Averaging (DCA):** An investment strategy where a fixed amount of money is invested at regular intervals, regardless of the asset's price, to reduce the impact of volatility over time.
 -   **Uniform DCA:** A simple implementation of DCA where the same amount is invested at each interval without any adjustments based on market conditions or signals.
--   **Sats per Dollar (SPD):** A metric that measures the amount of Bitcoin (in satoshis) accumulated per unit of USD invested, used to evaluate the efficiency of an accumulation strategy (1 BTC = 100,000,000 satoshis(Sats)).
+-   **Sats per Dollar (SPD):** A metric that measures the amount of Bitcoin (in satoshis) accumulated per unit of USD invested, used to evaluate the efficiency of an accumulation strategy (1 BTC = 100,000,000 satoshis (Sats)).
+-   **Simple Moving Average (SMA):** A technical indicator that calculates the average price of an asset over a fixed number of past days. In this project, SMA-based signals are used to compare Bitcoin’s current price with its recent trend and adjust allocations when price is above or below that moving average.
 -   **Halving:** A programmed event in the Bitcoin protocol that occurs approximately every four years, reducing the block reward for miners by half, which historically has had significant impacts on Bitcoin's price and market dynamics.
--   **Backtesting:** The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. Includes validation checks to ensure no violations and look-ahead bias and that the strategy is evaluated fairly against a baseline.
+-   **Backtesting:** The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. It includes validation checks to prevent look-ahead bias and ensure that the strategy is evaluated fairly against a baseline.
 -   **Hidden Markov Models (HMMs):** Hidden Markov models are probabilistic models in which observations, in this case prices or market regimes, are dependent on a latent (hidden) Markov process. They are used to represent systems that transition between hidden states over time, while producing observable outputs.
--   **Variance Inflation Factor (VIF)**: A measure of multicollinearity in regression analysis, indicating how much the variance of an estimated regression coefficient increases due to collinearity among the predictors. A VIF value greater than 5 or 10 is often considered indicative of high multicollinearity.
+-   **Variance Inflation Factor (VIF):** A measure of multicollinearity in regression analysis, indicating how much the variance of an estimated regression coefficient increases due to collinearity among the predictors. A VIF value greater than 5 or 10 is often considered indicative of high multicollinearity.
+-   **Market Capitalization:** The total market value of Bitcoin, generally calculated as Bitcoin price multiplied by circulating supply. In this project, market-cap growth helps capture price-driven growth in the Bitcoin market.
+-   **Realized Capitalization:** An on-chain valuation measure that values Bitcoin based on the price at which coins last moved, rather than the current market price. In this project, realized-cap growth helps capture changes in on-chain value.
+-   **Lookback Return:** The percentage change in Bitcoin price over a fixed past window, such as 30, 90, or 180 days. It is used to measure recent price momentum.
+-   **Price-to-SMA Ratio:** A ratio comparing Bitcoin’s current price with its simple moving average. A value above 1 means price is above its moving average, while a value below 1 means price is below its moving average.
 
 # References
