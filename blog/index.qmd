@@ -16,17 +16,20 @@ We are a team of 4 **Master of Data Science** students from the **University of 
 The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
 
 ![](figures/fig_bitcoin.jpeg){#fig_bitcoin fig-pos="H"}
+<div style="font-size: 0.8em;">
+Photo by Shruti Sasi
+</div>
 
-This project, built in partnership with the [Trilemma Foundation](https://www.trilemma.foundation/), aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive **Dollar-Cost Averaging (DCA)** approach, which serves as our primary baseline strategy.
+This project, built in partnership with the [Trilemma Foundation](https://www.trilemma.foundation/), aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a uniform **Dollar-Cost Averaging (DCA)** approach, which serves as our primary baseline strategy.
 
-The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature reduction, and backtest adaptive allocation strategies against naive DCA.
+The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the [BRK metrics dataset](https://github.com/bitcoinresearchkit/brk) from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature selection, and backtest adaptive allocation strategies against uniform DCA.
 
 
-## The Challenge with Naive DCA
+## The Challenge with Uniform DCA
 
-For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, naive DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoria phase or significantly undervalued during capitulation.
+For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, uniform DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoric phase or significantly undervalued during a capitulation phase.
 
-For investors with fixed accumulation budgets, this rigidity can lead to reduced efficiency, meaning they miss out on prime opportunities to acquire more Bitcoin for the same fiat cost.
+For investors with fixed accumulation budgets, this rigidity can reduce efficiency, leading them to miss prime opportunities to acquire more Bitcoin at the same fiat cost.
 
 ## Our Approach: Adaptive DCA
 
@@ -51,23 +54,22 @@ Our strategy explores key on-chain indicators known to historically signal favor
 -   **Sats per Dollar - SPD:**\
     We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.
 -   **Win Rate:**\
-    Win Rate is binary, i.e., beating uniform DCA in a window is a win irrespective of the margin. Use the percentage of evaluation windows where the adaptive strategy outperforms uniform DCA in terms of SPD. A win rate above 50% indicates that the adaptive strategy is more effective than uniform DCA in the majority of cases.
+    Win rate is binary: beating uniform DCA within a window is a win, irrespective of the margin. Uses the percentage of evaluation windows where the adaptive strategy outperforms uniform DCA in terms of SPD. A win rate above 50% indicates that the adaptive strategy is more effective than uniform DCA in the majority of cases.
 -  **Exponential-Decay Percentile:**\
     This metric is a recency-weighted average of the strategy's percentile scores across all windows. Each window's percentile shows where the strategy's SPD falls between the minimum and maximum SPD for that window. Recent windows get higher weight, so the metric tells us how well the strategy performed overall, with more focus on recent performance.
 -   **Score:**\
-    A composite metric that combines 50% Win Rate and 50% Exponential-Decay Percentile to provide an overall performance score for the adaptive strategy. This score helps to summarize the effectiveness of the strategy in a single value, facilitating easier comparison against the baseline.
-
-**_Continue reading our strategies and results in the below posts!_**
+    A composite metric that combines 50% win rate and 50% exponential-decay percentile to provide an overall performance score for the adaptive strategy. This score helps to summarize the effectiveness of the strategy in a single value, facilitating easier comparison against the baseline.
 
 ### Strategy Performance Comparison
 
-| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)
-|---|---|---|---|---|---|---|
-| Win Rate | 64.57% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
-| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 60.42% | 65.5% | 38.0% |
-| Score | 52.46% | 60.05% | 58.46% | 80.21% | 82.76% | 19.0% |
-| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.14%) | 1292 |
+| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline) |
+|:---|---|---|---|---|---|---|
+| Win Rate | 63.76% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
+| Exponential-Decay Percentile | 38.72% | 47.35% | 40.63% | 60.66% | 65.5% | 38.0% |
+| Score | 51.24% | 60.05% | 58.46% | 80.33% | 82.76% | 19.0% |
+| Avg SPD | 1369 <br><small>(+5.99%)</small> | 1313 <br><small>(+1.60%)</small> | 1297 <br><small>(+0.37%)</small> | 1423 <br><small>(+10.13%)</small> | 1346 <br><small>(+4.14%)</small> | 1292 |
 
 : Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
 
+**Continue reading our strategies & results in the following posts...**
 ---

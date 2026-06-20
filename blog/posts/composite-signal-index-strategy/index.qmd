@@ -3,7 +3,7 @@ title: "Composite Signal Index Strategy for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that uses On-Chain Signal Blending. Inspired by the StackSats built-in strategy framework"
 author: AdaptiveSats Team
 date: "2026-06-19"
-categories: [research, bitcoin, strategy, data-science, backtesting]
+categories: [Research, Bitcoin, Strategy, Data-Science]
 bibliography: "../../references.bib"
 resources:
     - "../../figures/**"
@@ -21,7 +21,7 @@ This post walks through the full architecture of the strategy: the signals it us
 
 The strategy is built on a simple premise: **on-chain data contains persistent signals of market undervaluation**. When long-term holders are underwater, when miners are stressed, when sentiment is at rock bottom - these are historically the best moments to accumulate more sats per dollar.
 
-Rather than betting everything on a single signal, the **Composite Signal Index** strategy blends eight complementary dimension of market state into one composite score. The score drives a budget allocation system that front-loads buying on cheap days and throttles back when the market looks expensive - all within a fixed annual budget, exactly like DCA.
+Rather than betting everything on a single signal, the **Composite Signal Index** strategy blends eight complementary dimensions of market state into one composite score. The score drives a budget allocation system that front-loads buying on cheap days and throttles back when the market looks expensive - all within a fixed annual budget, exactly like DCA.
 
 ## The Eight On-Chain Signals
 
@@ -34,7 +34,7 @@ Each signal measures a distinct facet of market health. Together they paint a mu
 | `reserve_risk` | Holder conviction vs. price | Low = strong conviction relative to price, good buy zone |
 | `greed_index` | Crowd sentiment | 0 = extreme fear, potential market bottoms |
 | `puell_multiple` | Miner revenue relative to annual average | Low = miner stress/capitulation |
-| `lth_nupl` | Long-Term Holder Net Unrealized P&L | Low = capitualation/undervaluation |
+| `lth_nupl` | Long-Term Holder Net Unrealized P&L | Low = capitulation/undervaluation |
 | `sell_side_risk_ratio_7d_ema` | Short-term selling pressure | Low = market participants not eager to sell |
 | `net_unrealized_pnl_rel_to_market_cap` | Aggregate NUPL(Net Unrealized Profit/Loss) | Low = widespread unrealized losses |
 
@@ -65,7 +65,7 @@ With all signals on a comparable z-scale, the strategy computes a single cheapne
 
 The eight signals are combined using a **softmax-weighted** blend. Instead of tuning weights directly (which would require a constrained optimization over the simplex), the model learns an unconstrained **logit vector** $\boldsymbol{\ell} \in \mathbb{R}^8$, and the actual weights are:
 
-$$\qquad w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}$$
+$$w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}$$
 
 This parameterization is unconstrained during optimization (**Nelder-Mead**(@baudin2010neldermead) works in unconstrained space), but always produces valid weights that sum to 1 and are strictly positive.
 
@@ -93,7 +93,7 @@ Both the logit vector $\boldsymbol{\ell}$ and exponent $\gamma$ are learned from
 
 ## Step 3: Budget Allocation
 
-The strategy operates under a strict budget constraint: **the entire annual budget must be deployed within each 365-day window**, with per-day bounds of [$10^{−5}$,0.1].
+The strategy operates under a strict budget constraint: **the entire annual budget must be deployed within each 365-day window**, with per-day bounds of [$10^{−5}$, 0.1].
 
 The allocator must decide, day by day, how much of the remaining budget to spend - without knowing how cheap future days will be.
 
@@ -153,7 +153,7 @@ The logit vector $\boldsymbol{\ell} \in \mathbb{R}^8$ and log-exponent $log \gam
 
 | Parameter | Representation | Count |
 |:---|:---|:---|
-| Signal logits $\ell_1 \dots \ell_{12}$ | Unconstrained reals; signal weights $= \text{softmax}(\boldsymbol{\ell})$ | 8 |
+| Signal logits $\ell_1 \dots \ell_{8}$ | Unconstrained reals; signal weights $= \text{softmax}(\boldsymbol{\ell})$ | 8 |
 | Log-exponent $\log \gamma$ | Unconstrained real; $\gamma = e^{\log\gamma}$ clipped to $[e^{-3}, e^{3}]$ | 1 |
 | **Total** | - | **9** |
 
@@ -194,7 +194,7 @@ $$\text{penalty}(\boldsymbol{\ell}) = \lambda \left(\log n - H(\mathbf{w})\right
 
 with $\lambda = 0.05$. This is zero when weights are perfectly uniform and grows as the distribution concentrates onto fewer signals, directly discouraging the optimizer from routing all its weight into one or two dominant signals purely because they happened to fit the training years best.
 
-**Tighter exponent bound**. $\log\gamma$ is clipped to [−1.6,1.6] (i.e., $\gamma \in [0.2, 5.0]$). This prevents the sharpness exponent from running away toward values that turn buy_score into a near-indicator function dominated by a handful of extreme-outlier days.
+**Tighter exponent bound**. $\log \gamma$ is clipped to [−1.6,1.6] (i.e., $\gamma \in [0.2, 5.0]$). This prevents the sharpness exponent from running away toward values that turn buy_score into a near-indicator function dominated by a handful of extreme-outlier days.
 
 ## Backtest Design
 
@@ -213,14 +213,19 @@ Each calendar year contributes exactly 365 rows to the evaluation window. For le
 
 **What the Optimization Learns**
 
-After Nelder-Mead converges, the learned signal weights (via softmax of the optimized logits) reveal which signals were most predictive of subsequent price appreciation over the training period. Signals that receive above-equal-weight (>1/8=0.125) are shown in blue; those below are shown in coral in the weight visualization.
+After Nelder-Mead converges, the learned signal weights (via softmax of the optimized logits) reveal which signals were most predictive of subsequent price appreciation over the training period. Signals that receive above-equal-weight (>1/8 = 0.125) are shown in blue; those below are shown in coral in the weight visualization.
 
 The learned $\gamma$ also tells a story: a value greater than 1 confirms the optimizer found it beneficial to sharply concentrate capital on the cheapest days rather than spreading it smoothly - the cheapness signal has enough predictive power to justify aggressiveness.
 
 ![Optimized Signal Weights](../../figures/fig_learned_signal_weights.png){#fig-learned-signal-weights fig-pos="H"}
 
+## Performance 
+
 ![Composite Signal Index strategy vs Uniform DCA](../../figures/fig_composite_signal_index_strategy.png){#fig-composite-signal-index-strategy fig-pos="H"}
 
+For the training period (2018-2023), the Composite Signal Index strategy achieved an SPD of 8,435, compared with 8,419 for Uniform DCA, corresponding to an improvement of 0.20%.
+
+For the test period (2024-2025), the Composite Signal Index strategy achieved an SPD of 1,427, compared with 1,292 for Uniform DCA, representing an improvement of 10.44%. It also achieved a win rate of 100%, a score of 80.33%, and an exponential-decay percentile of 60.66%. 
 
 ## Connections to the Stacksats Framework
 
@@ -237,15 +242,13 @@ Composite Signal Index strategy extends this with its own optimization layer (Ne
 
 ## Limitations
 
-- **Overfitting risk:** The model might memorize the timing of Bitcoin’s past halving cycles. If future cycles change shape, the optimized weights might fail.
+- **Overfitting risk:** The model might memorize the timing of Bitcoin's past halving cycles. If future cycles change shape, the optimized weights might fail.
 
-- **On-chain regime shifts:** The underlying metrics assume Bitcoin behaves the same way over time. But Bitcoin’s market structure keeps changing, traditional on-chain signals - may not predict market behavior reliably.
-
-
+- **On-chain regime shifts:** The underlying metrics assume Bitcoin behaves the same way over time. But Bitcoin's market structure keeps changing, traditional on-chain signals may not predict market behavior reliably.
 
 ## Summary
 
-The Composite Signal Index strategy is a principled, data-driven approach to Bitcoin accumulation. By blending eight complementary on-chain metrics into a single cheapness score, optimizing signal importances and allocation sharpness jointly via Nelder-Mead, and deploying capital through a causal online budget algorithm, Composite Signal Index strategy  aims to systematically accumulate more sats per dollar than a naive uniform DCA - without ever using future information or violating budget constraints.
+The Composite Signal Index strategy is a principled, data-driven approach to Bitcoin accumulation. By blending eight complementary on-chain metrics into a single cheapness score, optimizing signal importances and allocation sharpness jointly via Nelder-Mead, and deploying capital through a causal online budget algorithm, Composite Signal Index strategy aims to systematically accumulate more sats per dollar than a naive uniform DCA - without ever using future information or violating budget constraints.
 
 It is not a market timing system. It doesn't predict prices. It reads the accumulated behavioral signal of the entire Bitcoin ecosystem - holders, miners, traders, and sentiment - and leans into the moments when that signal points most clearly toward undervaluation.
 

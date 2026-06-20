@@ -3,7 +3,7 @@ title: "Multi-Strategy Regime-Based Approach for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime."
 author: "AdaptiveSats Team"
 date: "2026-06-16"
-categories: [Bitcoin, Strategy, Regime-Based, Backtesting]
+categories: [Research, Bitcoin, Strategy, Regime-Based, Backtesting]
 format:
   html:
     toc: true
@@ -38,15 +38,15 @@ A regime is a label that describes the type of Bitcoin market environment on a g
 
 So each day receives a combined regime label in this format:
 
-**Bitcoin trend | MVRV valuation | Growth relationship**
+> **Bitcoin trend | MVRV valuation | Growth relationship**
 
 For example, one day might be classified as:
 
-**BTC Bull | Normal MVRV | Market Growth Leading**
+> **BTC Bull | Normal MVRV | Market Growth Leading**
 
 Another day might be classified as:
 
-**BTC Bear | Low MVRV | Realized Growth Leading**
+> **BTC Bear | Low MVRV | Realized Growth Leading**
 
 These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.
 
@@ -285,9 +285,9 @@ For example:
 
 | Regime                                             | Best strategy learned from training |
 | -------------------------------------------------- | ----------------------------------- |
-| BTC Bull | Normal MVRV | Market Growth Leading     | Momentum                            |
-| BTC Bear | Low MVRV | Realized Growth Leading      | MVRV                                |
-| BTC Recovery | Normal MVRV | Market Growth Leading | SMA                                 |
+| BTC Bull \| Normal MVRV \| Market Growth Leading     | Momentum                            |
+| BTC Bear \| Low MVRV \| Realized Growth Leading      | MVRV                                |
+| BTC Recovery \| Normal MVRV \| Market Growth Leading | SMA                                 |
 
 This table is only an example. The actual learned mapping depends on the data.
 
@@ -381,13 +381,13 @@ For example, we can explain that the strategy selected MVRV in a low-valuation r
 
 ## Limitations
 
-The first limitation is that the regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.
+- The regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.
 
-The second limitation is that Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.
+- Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.
 
-The third limitation is that some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.
+- Some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.
 
-The fourth limitation is that annual budget normalization is useful for a clean backtest, but it is not exactly the same as live deployment. In a live system, future days in the year are unknown, so allocation would need to be handled with a real-time budget pacing rule.
+- Annual budget normalization is useful for a clean backtest, but it is not exactly the same as live deployment. In a live system, future days in the year are unknown, so allocation would need to be handled with a real-time budget pacing rule.
 
 ## Final interpretation
 
@@ -397,7 +397,7 @@ Its main contribution is that it combines multiple signals instead of relying on
 
 The strategy is especially useful as a research framework because it helps answer a practical question:
 
-**Are different Bitcoin accumulation signals useful in different market regimes?**
+**_Are different Bitcoin accumulation signals useful in different market regimes?_**
 
 Based on the final evaluation, the approach can be compared against Uniform DCA using sats per dollar, percentage improvement, win rate, score, and exponential-decay percentile. SPD shows whether the strategy accumulated more Bitcoin per dollar, while win rate shows how consistently it outperformed across evaluation windows. The score and exponential-decay percentile provide additional StackSats comparison measures, including a view that gives more importance to recent performance.
 
