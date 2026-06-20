@@ -34,7 +34,7 @@ We evaluate whether public Bitcoin market and on-chain data can support an adapt
 
 -   Identify on-chain/market signals predicting favorable accumulation windows
 -   Build and validate an adaptive daily allocation model
--   Backtest against uniform DCA using Sats per Dollar (SPD), win rate, exponential-decay percentile and score as the key metrics
+-   Backtest against uniform DCA using Sats per Dollar (SPD), win rate, exponential-decay percentile, and score as the key metrics
 
 # Data
 
@@ -95,7 +95,7 @@ The StackSats framework enforces a fixed budget (daily weights must sum to 1), a
 
 ## Model Development
 
-We developed below adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
+We developed the below adaptive strategies, each using different metrics and methods to identify undervaluation and dynamically adjust daily allocation weights to improve SPD over uniform DCA.
 
 ### Composite Signal Index Strategy
 
@@ -113,9 +113,11 @@ The External Tunable approach was developed to make the Bitcoin accumulation str
 
 After applying the optimized strategy to the 2024–2025 test period, the External Tunable approach successfully outperformed the Uniform DCA baseline across key evaluation metrics. See @tbl-strategy-comparison for a performance summary.
 
+![External Tunable Strategy vs Uniform DCA](figures/external_tunable_approach_plot.png){#external_tunable_approach_plot fig-pos="H"}
+
 ### HMM-GARCH Adaptive Strategy
 
-The HMM-GARCH strategy was developed to enhance traditional Dollar Cost Averaging (DCA) by dynamically adjusting Bitcoin purchases according to prevailing market conditions. The framework combines three complementary sources of information: 
+The HMM-GARCH strategy was developed to enhance traditional Dollar-Cost Averaging (DCA) by dynamically adjusting Bitcoin purchases according to prevailing market conditions. The framework combines three complementary sources of information: 
 
 - market regimes
 - valuation
@@ -129,7 +131,9 @@ Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether B
 
 The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for performance summary.
 
-[HMM-GARCH Adaptive Strategy vs Uniform DCA]
+![HMM-GARCH Adaptive Strategy vs Uniform DCA](figures/full_garch_hmm_plot.png){#full_garch_hmm_plot fig-pos="H"}
+
+![HMM-BAYES Adaptive Strategy vs Uniform DCA](figures/full_bayes_hmm_plot.png){#full_bayes_hmm_plot fig-pos="H"}
 
 ### Multi-Strategy Regime-Based Approach
 
@@ -151,7 +155,7 @@ Engineered features included:
 
 These features were used to describe Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
 
-For each regime, the model compared three candidate strategies: **StackSats MVRV**, **StackSats Momentum**, and a **custom SMA-based strategy**. The best strategy for each regime was learned and the model was tuned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using training-period performance only.
+For each regime, the model compared three candidate strategies: **StackSats MVRV**, **StackSats Momentum**, and a **custom SMA-based strategy**. The best strategy for each regime was learned and the model was tuned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were selected using the training-period performance only.
 
 After applying the final strategy to the 2024–2025 test period, the multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for performance summary.
 
@@ -159,12 +163,12 @@ After applying the final strategy to the 2024–2025 test period, the multi-stra
 
 ### Strategy Performance Comparison
 
-| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)
+| Metric | Multi-Strategy Regime-Based |HMM-GARCH Adaptive | HMM-BAYES Adaptive | Composite Signal Index | External Tunable | Uniform (Baseline)|
 |---|---|---|---|---|---|---|
-| Win Rate | 64.57% | 72.75% | 76.29% | 100% | 100% | can't beat itself |
-| Exponential-Decay Percentile | 40.36% | 47.35% | 40.63% | 60.66% | 65.5% | 38.0% |
-| Score | 52.46% | 60.05% | 58.46% | 80.33% | 82.76% | 19.0% |
-| Avg SPD | 1346 \newline (+4.14%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.14%) | 1292 |
+| Win Rate | 63.76% | 72.75% | 76.29% | 100% | 100% | N/A |
+| Exponential-Decay Percentile | 38.72% | 47.35% | 40.63% | 60.66% | 65.5% | 38.0% |
+| Score | 51.24% | 60.05% | 58.46% | 80.33% | 82.76% | 19.0% |
+| Avg SPD | 1369 \newline (+5.99%) | 1313 \newline (+1.60%) | 1297 \newline (+0.37%) | 1423 \newline (+10.13%) | 1346 \newline (+4.19%) | 1292 |
 
 : Strategy performance summary (test period, 2024–2025) {#tbl-strategy-comparison tbl-colwidths="[15,15,15,15,15,15,10]"}
 
@@ -197,7 +201,7 @@ All data used is publicly available on-chain and market data with no personally 
 # Data Product
 
 -  **Open-source accumulation strategy framework** github repo consisting of Python notebooks, a feature engineering pipeline, and backtesting logic built on the StackSats engine, all MIT-licensed.
--   **Blogpost** and **Video** detailing the strategies developed.
+-   **Blog post** and **Video** detailing the strategies developed.
 
 The Trilemma Foundation and the open-source community can use these to evaluate existing strategies, develop new ones, and extend the methodology to other assets by swapping data inputs.
 
@@ -209,11 +213,11 @@ _All strategies passed the full StackSats integrity suite._
 
 **Narrow Testing Window**
 
-- Test results should be interpreted carefully because of narrow test window.
+- Test results should be interpreted carefully because of a narrow test window.
 
 **Bitcoin Regime Shifts**
 
-- Bitcoin market evolve over time, so current features can be unreliable in future.
+- Bitcoin market evolves over time, so current features can be unreliable in future.
 - If future market cycles change shape, optimized weights may fail.
 
 **Strict Budget Constraint**

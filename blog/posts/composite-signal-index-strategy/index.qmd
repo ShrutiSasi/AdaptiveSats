@@ -248,7 +248,7 @@ Composite Signal Index strategy extends this with its own optimization layer (Ne
 
 ## Summary
 
-The Composite Signal Index strategy is a principled, data-driven approach to Bitcoin accumulation. By blending eight complementary on-chain metrics into a single cheapness score, optimizing signal importances and allocation sharpness jointly via Nelder-Mead, and deploying capital through a causal online budget algorithm, Composite Signal Index strategy aims to systematically accumulate more sats per dollar than a naive uniform DCA - without ever using future information or violating budget constraints.
+The Composite Signal Index strategy is a principled, data-driven approach to Bitcoin accumulation. By blending eight complementary on-chain metrics into a single cheapness score, optimizing signal importances and allocation sharpness jointly via Nelder-Mead, and deploying capital through a causal online budget algorithm, Composite Signal Index strategy aims to systematically accumulate more sats per dollar than uniform DCA - without ever using future information or violating budget constraints.
 
 It is not a market timing system. It doesn't predict prices. It reads the accumulated behavioral signal of the entire Bitcoin ecosystem - holders, miners, traders, and sentiment - and leans into the moments when that signal points most clearly toward undervaluation.
 
