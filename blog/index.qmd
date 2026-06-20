@@ -24,7 +24,6 @@ This project, built in partnership with the [Trilemma Foundation](https://www.tr
 
 The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the [BRK metrics dataset](https://github.com/bitcoinresearchkit/brk) from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature selection, and backtest adaptive allocation strategies against uniform DCA.
 
-
 ## The Challenge with Uniform DCA
 
 For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, uniform DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoric phase or significantly undervalued during a capitulation phase.
