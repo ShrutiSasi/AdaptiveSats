@@ -229,3 +229,30 @@ notebooks/proposed_strategies/output/notebooks/output/
 **/.quarto/
 **/*.quarto_ipynb
 **/_site/
+
+blog/video/media/
+blog/video/renders/
+*.mp4
+# Video renders/assets
+media/
+blog/video/final/
+blog/video/assets/*.mp4
+blog/video/assets/*.mov
+blog/video/assets/*.mp3
+
+# Manim renders
+media/
+
+# Final rendered videos
+*.mp4
+*.mov
+
+# Presenter recordings
+presenter/
+recordings/
+
+# Video exports
+blog/video/final/notebooks/output/
+
+notebooks/output/
+notebooks/proposed_strategies/output/

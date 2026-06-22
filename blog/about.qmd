@@ -10,10 +10,13 @@ about:
 
 ---
 
-AdaptiveSats is a research project conducted in partnership with the Trilemma Foundation. Our goal is to evaluate whether public Bitcoin market and on-chain data can improve long-term Bitcoin accumulation strategies compared to naive Dollar-Cost Averaging (DCA).
+AdaptiveSats is a research project conducted in partnership with the [Trilemma Foundation](https://www.trilemma.foundation/). Our goal is to evaluate whether public Bitcoin market and on-chain data can improve long-term Bitcoin accumulation strategies compared to naive Dollar-Cost Averaging (DCA).
 
 **Team:**
 - Arafat B. Bello
 - Nguyen Nguyen
 - Raghav Gupta
 - Shruti Sasi
+
+**Mentor:**
+- Firas Moosvi

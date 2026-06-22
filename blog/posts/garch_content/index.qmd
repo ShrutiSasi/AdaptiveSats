@@ -1,9 +1,9 @@
 ---
 title: "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks"
 description: "Adaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference."
-author: "Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav"
+author: AdaptiveSats Team
 date: "2026-06-18"
-categories: [research, bitcoin, data-science]
+categories: [Research, Bitcoin, Strategy, Data-Science]
 bibliography: "../../references.bib"
 resources:
     - "../../figures/**"
@@ -11,13 +11,13 @@ resources:
 
 ## Introduction
 
-Dollar Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.
+Dollar-Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.
 
 Despite its simplicity and robustness, traditional DCA treats every investment period equally. Whether Bitcoin is historically cheap, historically expensive, experiencing extreme volatility, or trading in a speculative euphoric regime, the investor commits exactly the same amount of capital.
 
 This raises an important question:
 
-**Can we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?**
+**_Can we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?_**
 
 To investigate this question, we developed two adaptive accumulation frameworks:
 
@@ -43,7 +43,7 @@ Key variables include:
 -   Active Price
 -   Price versus Active Price
 
-## MVRV Z-Score
+### MVRV Z-Score
 
 MVRV (Market Value to Realized Value) measures how expensive Bitcoin is relative to the aggregate cost basis of investors.
 
@@ -51,21 +51,19 @@ Rather than using the raw MVRV value, a rolling z-score transformation was appli
 
 Negative values indicate that Bitcoin is trading below its historical valuation norm, while positive values suggest increasingly expensive market conditions.
 
-## Active Price
+### Active Price
 
 Active Price estimates the average cost basis of economically active Bitcoin participants.
 
-The derived feature:
+### Price vs Active Price
 
-Price vs Active Price
-
-measures how far Bitcoin's current market price deviates from the average cost basis of active investors.
+This derived feature measures how far Bitcoin's current market price deviates from the average cost basis of active investors.
 
 Historically, periods where Bitcoin trades below Active Price have frequently coincided with accumulation zones and long-term value opportunities.
 
 ------------------------------------------------------------------------
 
-# Volatility Modelling with GARCH
+## Volatility Modelling with GARCH
 
 Financial markets exhibit a well-documented phenomenon known as volatility clustering.
 
@@ -92,7 +90,7 @@ This volatility estimate serves as a measure of market stress and uncertainty.
 
 ------------------------------------------------------------------------
 
-# Hidden Markov Models for Regime Detection
+## Hidden Markov Models for Regime Detection
 
 Financial markets operate in distinct regimes.
 
@@ -125,9 +123,9 @@ This probabilistic representation preserves uncertainty and provides richer info
 
 ------------------------------------------------------------------------
 
-# Strategy 1: HMM-GARCH Adaptive Accumulation
+## Strategy 1: HMM-GARCH Adaptive Accumulation
 
-## Motivation
+### Motivation
 
 The first strategy combines regime detection, valuation, volatility, and trend information into a dynamic allocation framework.
 
@@ -135,57 +133,55 @@ Rather than allocating a fixed amount every period, contribution weights vary ac
 
 ------------------------------------------------------------------------
 
-## Regime-Based Allocation
+### Regime-Based Allocation
 
 Each regime receives a different allocation multiplier.
 
-Accumulation regimes receive larger allocations.
-
-Neutral regimes receive baseline allocations.
-
-Euphoric regimes receive reduced allocations.
+> Accumulation regimes receive larger allocations.
+>
+> Neutral regimes receive baseline allocations.
+> 
+> Euphoric regimes receive reduced allocations.
 
 Instead of selecting a single regime, the strategy uses regime probabilities:
 
-Allocation Weight = Σ(Regime Probability × Regime Multiplier)
+$$Allocation Weight = \sum(\text{Regime Probability} \times \text{Regime Multiplier})$$
 
 This creates smoother transitions between market states and avoids abrupt allocation changes.
 
 ------------------------------------------------------------------------
 
-## Valuation Adjustment
+### Valuation Adjustment
 
 The strategy increases allocations when Bitcoin appears historically undervalued.
 
 A valuation signal is constructed from the negative component of the MVRV Z-Score.
 
-As valuation becomes increasingly attractive, the allocation weight rises proportionally.
+> As valuation becomes increasingly attractive, the allocation weight rises proportionally.
 
 This mechanism encourages greater accumulation during periods of market pessimism and depressed valuations.
 
 ------------------------------------------------------------------------
 
-## Volatility Adjustment
+### Volatility Adjustment
 
 Volatility is interpreted differently depending on valuation.
 
-When Bitcoin is cheap:
-
-High volatility may indicate capitulation and panic.
-
-The strategy increases allocations.
-
-When Bitcoin is expensive:
-
-High volatility may indicate speculative excess.
-
-The strategy reduces allocations.
+> When Bitcoin is cheap:
+> 
+> High volatility may indicate capitulation and panic.
+> The strategy increases allocations.
+>
+> When Bitcoin is expensive:
+>
+> High volatility may indicate speculative excess.
+> The strategy reduces allocations.
 
 This conditional interpretation allows volatility to act as context rather than a standalone signal.
 
 ------------------------------------------------------------------------
 
-## Trend Adjustment
+### Trend Adjustment
 
 A 200-day moving average is used as a long-term trend indicator.
 
@@ -197,7 +193,7 @@ The strategy applies small adjustments depending on whether Bitcoin is trading a
 
 ------------------------------------------------------------------------
 
-## Final Allocation Signal
+### Final Allocation Signal
 
 The final HMM-GARCH allocation weight combines:
 
@@ -212,15 +208,15 @@ This framework creates an adaptive DCA strategy that responds to changing market
 
 ------------------------------------------------------------------------
 
-## Performance
+### Performance
 
 ![Price chart with weights and performance metrics](../../figures/full_garch_hmm_plot.png)
 
 ------------------------------------------------------------------------
 
-# Strategy 2: HMM-Bayesian Adaptive Accumulation
+## Strategy 2: HMM-Bayesian Adaptive Accumulation
 
-## Motivation
+### Motivation
 
 While the HMM-GARCH model relies on deterministic rules, the Bayesian framework introduces probabilistic reasoning.
 
@@ -228,15 +224,15 @@ Financial markets rarely provide certainty.
 
 Instead of asking:
 
-"Is this an accumulation opportunity?"
+_"Is this an accumulation opportunity?"_
 
 the Bayesian approach asks:
 
-"What is the probability that this is an accumulation opportunity?"
+**_"What is the probability that this is an accumulation opportunity?"_**
 
 ------------------------------------------------------------------------
 
-## Bayesian Networks
+### Bayesian Networks
 
 A Bayesian Network models probabilistic relationships between variables.
 
@@ -251,31 +247,31 @@ to estimate the probability of a favorable accumulation environment.
 
 ------------------------------------------------------------------------
 
-## State Construction
+### State Construction
 
 Continuous variables are converted into interpretable states.
 
 Examples include:
 
-### Valuation
+#### Valuation
 
 -   Cheap
 -   Neutral
 -   Expensive
 
-### Volatility
+#### Volatility
 
 -   Low
 -   Medium
 -   High
 
-### Active Price Relationship
+#### Active Price Relationship
 
 -   Below Active Price
 -   Near Active Price
 -   Above Active Price
 
-### Regime Confidence
+#### Regime Confidence
 
 Each HMM regime probability is transformed into:
 
@@ -287,72 +283,72 @@ These categorical states become evidence variables within the Bayesian Network.
 
 ------------------------------------------------------------------------
 
-## Probabilistic Inference
+### Probabilistic Inference
 
 For every observation, the Bayesian Network receives evidence describing current market conditions.
 
 The model then computes:
 
-P(Accumulation Opportunity \| Evidence)
+$$P(\text{Accumulation Opportunity} \mid \text{Evidence})$$
 
 This probability reflects how strongly the current market resembles historically attractive accumulation environments.
 
 ------------------------------------------------------------------------
 
-## Allocation Construction
+### Allocation Construction
 
 The resulting probability is transformed into a dynamic allocation weight.
 
-Higher accumulation probabilities produce larger contribution weights.
-
-Lower probabilities result in more conservative allocations.
+> Higher accumulation probabilities produce larger contribution weights.
+> 
+> Lower probabilities result in more conservative allocations.
 
 The strategy therefore adjusts capital deployment according to the strength of evidence supporting accumulation.
 
 ------------------------------------------------------------------------
 
-## Advantages of the Bayesian Framework
+### Advantages of the Bayesian Framework
 
 Several benefits emerge from this approach.
 
-### Probabilistic Reasoning
+#### Probabilistic Reasoning
 
 Markets rarely provide certainty.
 
 Bayesian inference naturally accommodates uncertainty.
 
-### Interpretability
+#### Interpretability
 
 Each input variable contributes explicitly to the final accumulation probability.
 
-### Multi-Signal Integration
+#### Multi-Signal Integration
 
 The framework combines valuation, volatility, investor profitability, and market regime information into a unified decision process.
 
-### Flexibility
+#### Flexibility
 
 Additional evidence variables can be incorporated without redesigning the entire model.
 
 ------------------------------------------------------------------------
 
-## Performance
+### Performance
 
 ![Price chart with weights and performance metrics](../../figures/full_bayes_hmm_plot.png)
 
 -------------------------------------------------------------------------
 
-# Comparison of the Two Approaches
+## Comparison of the Two Approaches
 
 Although both strategies use HMM-derived market regimes, they differ fundamentally in how information is combined.
 
-## HMM-GARCH
+### HMM-GARCH
 
 -   Rule-based
 -   Deterministic
 -   Easier to interpret
 -   Directly incorporates volatility forecasts
 
-## HMM-Bayesian
+### HMM-Bayesian
 
 -   Probabilistic
 -   Evidence-driven
@@ -361,15 +357,15 @@ Although both strategies use HMM-derived market regimes, they differ fundamental
 
 The HMM-GARCH strategy answers:
 
-"What allocation should we use given current market conditions?"
+**_"What allocation should we use given current market conditions?"_**
 
 The HMM-Bayesian strategy answers:
 
-"How likely is it that current conditions represent an attractive accumulation opportunity?"
+**_"How likely is it that current conditions represent an attractive accumulation opportunity?"_**
 
 ------------------------------------------------------------------------
 
-# Conclusion
+## Conclusion
 
 This research demonstrates how traditional DCA can be enhanced using modern quantitative techniques.
 
