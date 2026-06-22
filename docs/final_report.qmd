@@ -159,7 +159,7 @@ Engineered features included:
 
 These features were used to describe three dimensions of market conditions: Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
 
-For each regime with sufficient training observations, the strategy compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom SMA-based strategy. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were also selected based only on training-period performance. The fallback strategy was selected from the same candidate strategy set and was used when a regime was rare or not observed during training, so the method could still assign an allocation during testing.
+For each regime with sufficient training observations, the strategy compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom Simple Moving Average (SMA)-based strategy. The custom SMA-based strategy used the relationship between Bitcoin's current price and its simple moving average to guide allocation: when price was below its moving average, the strategy treated Bitcoin as relatively cheaper and allocated more; when price was above its moving average, it allocated less. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were also selected based only on training-period performance. The fallback strategy was selected from the same candidate strategy set and was used when a regime was rare or not observed during training, so the method could still assign an allocation during testing. For additional details on the regime construction features, candidate strategies, model selection process, and fallback strategy, see @sec-appendix-multi-strategy-regime-based.
 
 After the final configuration was fixed, the strategy was applied to the 2024–2025 test period. The multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for the performance summary.
 
@@ -267,10 +267,6 @@ The following table summarises the key on-chain and market metrics and their rol
 -   **Backtesting:** The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. It includes validation checks to prevent look-ahead bias and ensure that the strategy is evaluated fairly against a baseline.
 -   **Hidden Markov Models (HMMs):** Hidden Markov models are probabilistic models in which observations, in this case prices or market regimes, are dependent on a latent (hidden) Markov process. They are used to represent systems that transition between hidden states over time, while producing observable outputs.
 -   **Variance Inflation Factor (VIF):** A measure of multicollinearity in regression analysis, indicating how much the variance of an estimated regression coefficient increases due to collinearity among the predictors. A VIF value greater than 5 or 10 is often considered indicative of high multicollinearity.
--   **Market Capitalization:** The total market value of Bitcoin, generally calculated as Bitcoin price multiplied by circulating supply. In this project, market-cap growth helps capture price-driven growth in the Bitcoin market.
--   **Realized Capitalization:** An on-chain valuation measure that values Bitcoin based on the price at which coins last moved, rather than the current market price. In this project, realized-cap growth helps capture changes in on-chain value.
--   **Lookback Return:** The percentage change in Bitcoin price over a fixed past window, such as 30, 90, or 180 days. It is used to measure recent price momentum.
--   **Price-to-SMA Ratio:** A ratio comparing Bitcoin’s current price with its simple moving average. A value above 1 means price is above its moving average, while a value below 1 means price is below its moving average.
 
 # Appendix 3: Composite Signal Index Strategy Details {#sec-appendix-composite-signal-index .appendix}
 
@@ -503,5 +499,94 @@ Rather than hardcoding the thresholds for these economic regimes, the strategy e
 By evaluating hundreds of combinations of these parameters across thousands of 365-day rolling windows, we optimized the model to maximize the absolute **Win Rate**, the **Exponential-Decay Percentile**, and the **Average Sats Per Dollar**, proving how adapting to macroeconomic features can improve the algorithm's overall performance.
 
 * Optimal parameters generated from Grid Search: **`macro_spike`**: 0.2, **`mom_break`**: 0.05, **`boost`**: 1.2, **`dampen`**: 0.5
+
+# Appendix 5: Multi-Strategy Regime-Based Approach Details {#sec-appendix-multi-strategy-regime-based .appendix}
+
+This appendix provides additional technical details and glossary-style definitions for the Multi-Strategy Regime-Based Approach. The main report summarizes the overall method; this appendix focuses on the feature definitions, regime components, candidate strategies, tuning choices, and fallback logic used to implement the approach.
+
+## Feature Definitions
+
+The regime-based strategy used a focused set of original and engineered Bitcoin market and on-chain features. These features were selected to describe trend, valuation, and the relationship between market-driven growth and realized on-chain value.
+
+### Original Features
+
+- **Bitcoin Price:** The daily market price of Bitcoin in U.S. dollars. This was the core feature used to create trend-based signals, including moving averages, price-to-SMA ratios, and lookback returns.
+
+- **MVRV:** MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market valuation with its realized valuation, which is based on the price at which coins last moved on-chain. In this strategy, MVRV was used as a valuation signal to classify whether Bitcoin appeared relatively undervalued, neutral, or overheated.
+
+- **Market Capitalization:** The total market value of Bitcoin, generally calculated as Bitcoin price multiplied by circulating supply. In this project, market-cap growth was used to capture price-driven expansion or contraction in Bitcoin’s overall market value.
+
+- **Realized Capitalization:** An on-chain valuation measure that values Bitcoin based on the price at which coins last moved, rather than the current market price. Realized capitalization helps approximate the aggregate cost basis of Bitcoin holders.
+
+- **Market-Cap Growth Rate:** The rate of change in Bitcoin’s market capitalization. This feature helped identify periods where price-driven market value was expanding or contracting.
+
+- **Realized-Cap Growth Rate:** The rate of change in realized capitalization. This feature helped capture whether the aggregate on-chain cost basis was increasing or slowing, providing information about underlying realized value growth.
+
+### Engineered Features
+
+- **Rolling Simple Moving Average:** The average Bitcoin price over a fixed historical window. Rolling SMAs were used to smooth short-term price fluctuations and provide a trend reference.
+
+- **Price-to-SMA Ratio:** The ratio of Bitcoin’s current price to its simple moving average. A value above 1 indicates that price is above its moving average, while a value below 1 indicates that price is below its moving average. This feature helped identify whether Bitcoin was trading above or below its recent trend.
+
+- **Lookback Return:** The percentage change in Bitcoin price over a fixed past window, such as 30, 90, or 180 days. Lookback returns were used to capture recent price momentum.
+
+- **Momentum Lookback:** The historical window used to calculate recent Bitcoin price momentum. Different momentum lookbacks were tested during model selection.
+
+- **SMA Lookback:** The historical window used to calculate the simple moving average. This controlled how short-term or long-term the moving-average comparison was.
+
+- **Regime Lookback:** The historical window used to construct regime-related features and classify market conditions.
+
+All engineered features were computed using only current and past observations to preserve the causal structure required for backtesting.
+
+## Regime Components
+
+The final regime label combined three components: Bitcoin trend, MVRV valuation, and the relationship between market-cap growth and realized-cap growth.
+
+1. **Bitcoin Trend:** Classified each day as BTC Bull, BTC Bear, BTC Recovery, or BTC Neutral using moving-average ratios and recent returns.
+2. **MVRV Valuation:** Classified each day as Low MVRV, Normal MVRV, or High MVRV based on Bitcoin’s relative valuation.
+3. **Growth Relationship:** Classified each day as Market Growth Leading or Realized Growth Leading by comparing market-cap growth with realized-cap growth.
+
+The full regime label followed this structure:
+
+[
+\text{Bitcoin Trend} ;|; \text{MVRV Valuation} ;|; \text{Growth Relationship}
+]
+
+For example, a day could be classified as `BTC Bull | Normal MVRV | Market Growth Leading` or `BTC Bear | Low MVRV | Realized Growth Leading`. Combining 4 trend states, 3 valuation states, and 2 growth states produced up to 24 possible regimes.
+
+## Candidate Strategy Definitions
+
+For each regime with sufficient training observations, the method compared three candidate allocation strategies: StackSats Momentum, StackSats MVRV, and a custom SMA-based strategy. The best-performing strategy for each regime was selected using only the 2018–2023 training period.
+
+**StackSats Momentum Strategy:**
+The StackSats Momentum strategy is a price-based allocation strategy that uses Bitcoin’s recent price movement to generate a daily accumulation signal. It measures short-term momentum using the percentage change in Bitcoin’s price over a lookback window. The strategy applies a contrarian interpretation of momentum: recent positive price momentum reduces the accumulation signal, while recent negative price momentum increases it. This encourages relatively higher accumulation after short-term price declines and relatively lower accumulation after short-term price increases. To reduce sensitivity to extreme price movements, the momentum signal is bounded within a fixed range before being converted into valid allocation weights under the StackSats framework constraints (@stacksats; @frameworkconstraints).
+
+**StackSats MVRV Strategy:**
+The StackSats MVRV strategy is a valuation- and trend-based allocation strategy that assigns a daily preference score for Bitcoin accumulation. It uses MVRV-related signals together with price-relative-to-moving-average information to estimate whether Bitcoin appears undervalued, fairly valued, or overheated. When valuation signals suggest that Bitcoin is in a deep-value or undervalued zone, the preference score is increased. When signals indicate caution, overvaluation, or elevated volatility, the preference score is reduced. These daily preference scores are then converted into valid allocation weights while respecting the StackSats fixed-budget, minimum/maximum allocation, and causal constraints (@stacksats; @frameworkconstraints).
+
+**Custom SMA-Based Strategy:**
+The custom SMA-based strategy used the relationship between Bitcoin’s current price and its simple moving average to guide allocation decisions. When the current price was below its moving average, the strategy treated Bitcoin as relatively cheaper compared with its recent trend and assigned a higher accumulation signal. When the current price was above its moving average, the strategy assigned a lower accumulation signal. This provided a simple trend-aware, mean-reversion-style candidate strategy.
+
+## Model Selection Details
+
+The strategy required several tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy. These settings controlled how features were created and how daily regime labels were assigned.
+
+A grid search was performed to tune the regime-based strategy using only the 2018–2023 training period. The grid was constructed around four tuning choices: momentum lookback, SMA lookback, regime lookback, and fallback strategy. The momentum grid focused on short- to medium-term trend windows, while the SMA and regime grids covered medium- to longer-term windows used for trend smoothing and regime classification.
+
+| Tuning parameter  | Candidate values tested                                  |
+| ----------------- | -------------------------------------------------------- |
+| Momentum lookback | 21, 30, 45, 60, 75, 90, 120, 150, 180 days               |
+| SMA lookback      | 60, 90, 120, 150, 180, 200, 210, 240, 270, 300, 340 days |
+| Regime lookback   | 60, 90, 120, 150, 180, 200, 210, 240, 270, 300, 340 days |
+| Fallback strategy | Custom SMA, StackSats MVRV, StackSats Momentum           |
+
+The search evaluated the full Cartesian product of these settings, meaning that each momentum lookback was tested with each SMA lookback, each regime lookback, and each fallback option. For each configuration, the strategy rebuilt the engineered features, assigned daily regime labels, learned the best candidate strategy for each regime, and measured training-period performance against Uniform DCA. The final configuration was selected based on improvement over Uniform DCA, win rate, and lower total lookback as a tie-breaker. Once selected, the configuration was frozen and evaluated on the 2024–2025 test period without additional tuning.
+
+## Fallback Strategy
+
+Some regimes were rare or absent in the training period. To ensure that the model could still produce allocation weights during testing, a fallback strategy was selected from the same candidate strategy set. The fallback was used whenever the current regime did not have enough historical training observations to support a reliable regime-specific strategy choice.
+
+This fallback logic ensured that the approach remained fully defined during the test period while still using only information available from the training period.
+
 
 # References
