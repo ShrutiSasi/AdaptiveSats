@@ -111,7 +111,7 @@ The strategy was trained using the Nelder-Mead optimization algorithm, which ite
 
 The **External Tunable Strategy** was developed to address the limitations of Uniform Dollar Cost Averaging (DCA), which blindly accumulates Bitcoin regardless of market extremes. Operating on the thesis that Bitcoin is a highly sensitive risk asset driven by global liquidity, this strategy integrates external macroeconomic indicators—specifically the 10-Year U.S. Treasury Yield—with short-term price momentum to adapt to changing financial environments.
 
-Utilizing the *stacksats* baseline MVRV (Market-Value-to-Realized-Value) preference weight as a foundation, the model dynamically modifies this signal using a 4-Tier Decision Matrix. It evaluates the macroeconomic environment daily, identifying "Risk-On" regimes (cheap borrowing) to aggressively boost accumulation, and "Risk-Off" environments (tightening liquidity) to conserve capital. The model also features an absolute priority override to buy aggressively during generational, multi-month price crashes *(For exact features definitions and the complete decision tree logic, see @sec-appendix-external-tunable).*
+Utilizing the *Stacksats* baseline MVRV (Market-Value-to-Realized-Value) preference weight as a foundation, the model dynamically modifies this signal using a 4-Tier Decision Matrix. It evaluates the macroeconomic environment daily, identifying "Risk-On" regimes (cheap borrowing) to aggressively boost accumulation, and "Risk-Off" environments (tightening liquidity) to conserve capital. The model also features an absolute priority override to buy aggressively during generational, multi-month price crashes *(For exact features definitions and the complete decision tree logic, see @sec-appendix-external-tunable).*
 
 To prevent human bias, the strategy's thresholds were rigorously optimized via a grid-search algorithm across the 2018–2023 training period. When applied to the out-of-sample 2024–2025 test period, the External Tunable approach achieved an average Sats-Per-Dollar (SPD) of 1,346.27, representing a **4.19%** improvement over the Uniform DCA baseline (See @tbl-strategy-comparison for a performance summary). It secured a highly consistent win rate of 100% and a 65.5% exponential-decay percentile.
 
@@ -400,9 +400,9 @@ with $\lambda = 0.05$. This is zero when weights are perfectly uniform and grows
 
 **Why the 10-Year U.S. Treasury Yields?**
 
-1. **The Global Baseline for Borrowing Costs**: When this yield falls, borrowing money becomes cheaper, stimulating economic growth and flooding the market with capital. When yields rise, borrowing becomes more expensive, choking off liquidity (@investopedia_treasury).
+1. **The Global Baseline for Borrowing Costs**: When this yield falls, borrowing costs decrease, stimulating economic activity and increasing the availability of capital in financial markets. When yields rise, borrowing becomes more expensive, constraining liquidity conditions (@investopedia_treasury).
 
-2. **The "Fear vs. Greed" Confidence Indicator**: U.S. Treasuries are considered one of the safest investments in the world. Therefore, when investors are terrified of a recession, they buy lots of bonds, which drives yields down. When investors are confident, they sell their safe bonds to buy riskier, high-growth assets like Bitcoin, driving the yield up (@investopedia_treasury).
+2. **The "Fear vs. Greed" Confidence Indicator**: U.S. Treasuries are considered among the safest investments in the world. When investors anticipate economic contraction, demand for bonds increases, driving yields down. When investor confidence is high, capital rotates out of low-risk government bonds into higher-risk, high-growth assets such as Bitcoin, driving yields up (@investopedia_treasury).
 
 ## The Engineered Features
 
@@ -432,7 +432,7 @@ $$MOM15_t = \frac{Price_t}{Price_{t-15}} - 1$$
 Mathematically, this calculates the exact percentage change in Bitcoin's price over a rolling 15-day window. It takes today's price, divides it by the price from exactly 15 days ago, and subtracts 1 for the raw percentage difference.
 
 - If the result is _positive_ (e.g., 0.10), it means Bitcoin is currently in a short-term uptrend (e.g., short-term 10% uptrend) 
-- If the result is _negative_ (e.g., -0.05), it means Bitcoin is bleeding and has lost its value over the last two weeks (e.g., lost 5% value)
+- If the result is _negative_ (e.g., -0.05), it means Bitcoin's price has lost its value over the last two weeks (e.g., lost 5% value)
 
 **Why 15 days?**
 
@@ -450,12 +450,14 @@ Mathematically, this calculates the exact percentage change in Bitcoin's price o
 
 As shown in the graph below, historical bear markets (when Bitcoin’s price drops significantly) typically last about 1 year. Therefore, we engineered this feature to mathematically detect these prolonged crash events, allowing the algorithm to capture the exact moments when Bitcoin is extremely undervalued.
 
+![1-year price drop](figures/bear_bitcoin_cycle.png){#bear_bitcoin_cycle fig-pos="H"}
+
 ## The Baseline Foundation: Base Preference ($\rho_t$):
 
-The foundational target weight generated by the stacksats baseline engine. The framework calculates this preference score by analyzing the **MVRV (Market-Value-to-Realized-Value) ratio**, a famous on-chain metric that compares Bitcoin's current market cap to the price at which coins last moved (@stacksats).
+The foundational target weight generated by the Stacksats baseline engine. The framework calculates this preference score by analyzing the **MVRV (Market-Value-to-Realized-Value) ratio**, a famous on-chain metric that compares Bitcoin's current market cap to the price at which coins last moved (@stacksats).
 
-- When MVRV is low, the network is historically undervalued, and stacksats generates a high preference weight.
-- When MVRV is high, the network is historically overvalued, and stacksats generates a low preference weight.
+- When MVRV is low, the network is historically undervalued, and Stacksats generates a high preference weight.
+- When MVRV is high, the network is historically overvalued, and Stacksats generates a low preference weight.
 
 This Tunable Macro Strategy uses Stacksat's output as the **_preference weight_** and dynamically boosts or dampens it based on the broader global economy's performance.
 
@@ -465,27 +467,27 @@ This Tunable Macro Strategy uses Stacksat's output as the **_preference weight_*
 
 - **Condition:** If today's Bitcoin price is $\leq 60\%$ lower than it was 1 year ago.
 When Bitcoin suffers a catastrophic, multi-month crash, it represents an excellent buying opportunity regardless of what the broader macro economy is doing.
-- **Action:** Aggressively buy the blood. 
+- **Action:** Increase allocation aggressively to capitalize on the depressed price environment. 
 - **Math:** $w_t = \max(2.0 \cdot \rho_t, 0.6)$
 
 **Tier 2: The Macro Crash (Risk-Off)**
 
 - **Condition:** If `Treasury_90d_Delta` $\geq \alpha_{spike}$ **AND** `MOM15` $\leq \beta_{break}$.
 This tier detects toxic financial environments. If Treasury yields are spiking (indicating tightening global liquidity) and Bitcoin's momentum is dying, the model recognizes a "Risk-Off" regime.
-- **Action:** Conserve cash. Stop aggressively buying falling knives.
+- **Action:** Reduce allocation to preserve capital. Avoid increasing exposure during adverse, liquidity-constrained market conditions.
 - **Math:** $w_t = 0.5$
 
 **Tier 3: The Golden Environment (Risk-On)**
 
 - **Condition:** If `Treasury_90d_Delta` $\leq 0.0$ **AND** `MOM15` $\geq 0.0$.
 If interest rates are falling, making borrowing cheap and pushing capital out of safe-haven bonds into risk assets, and Bitcoin's momentum is already confirming the upward trend.
-- **Action:** Heavily boost the standard MVRV buy signal to capture the incoming liquidity wave.
+- **Action:** Amplify the baseline MVRV signal to capture the incoming liquidity wave.
 - **Math:** $w_t = \max(\gamma_{boost} \cdot \rho_t, 0.4)$
 
 **Tier 4: Normal Market (Default)**
 
 - **Condition:** If none of the extreme regimes above are met, then the market is considered to be in a normal, sideways, or ambiguous state.
-- **Action:** Dampen the base signal to save cash for future volatile opportunities.
+- **Action:** Dampen the baseline MVRV signal to save cash for future volatile opportunities.
 - **Math:** $w_t = \max(\delta_{dampen} \cdot \rho_t, 0.5)$
 
 ## Hyperparameter Tuning Methodology
