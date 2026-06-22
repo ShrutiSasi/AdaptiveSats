@@ -233,3 +233,9 @@ notebooks/proposed_strategies/output/notebooks/output/
 blog/video/media/
 blog/video/renders/
 *.mp4
+# Video renders/assets
+media/
+blog/video/final/
+blog/video/assets/*.mp4
+blog/video/assets/*.mov
+blog/video/assets/*.mp3

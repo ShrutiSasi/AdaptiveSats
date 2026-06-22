@@ -177,7 +177,7 @@ class OpeningScene(Scene):
         )
         self.play(FadeIn(question, scale=0.97), run_time=0.7)
         self.add(counter)
-        hold(self, 8.0)
+        hold(self, 55.0)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
