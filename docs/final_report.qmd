@@ -99,7 +99,7 @@ We developed the following adaptive strategies, each using different metrics and
 
 ### Composite Signal Index Strategy
 
-Inspired by the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints. 
+Inspired by the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints (see @sec-appendix-composite-signal-index for detailed explanation). 
 
 The strategy was trained using the Nelder-Mead optimization algorithm, which iteratively adjusts the signal weights to find the combination that yields the highest SPD on the training data. The optimized weights were then applied to the test period to evaluate performance against uniform DCA. See @tbl-strategy-comparison for the performance summary.
 
@@ -272,7 +272,129 @@ The following table summarises the key on-chain and market metrics and their rol
 -   **Lookback Return:** The percentage change in Bitcoin price over a fixed past window, such as 30, 90, or 180 days. It is used to measure recent price momentum.
 -   **Price-to-SMA Ratio:** A ratio comparing Bitcoin’s current price with its simple moving average. A value above 1 means price is above its moving average, while a value below 1 means price is below its moving average.
 
-# Appendix 3: External Tunable Strategy Details {#sec-appendix-external-tunable .appendix}
+# Appendix 4: Composite Signal Index Strategy Details {#sec-appendix-composite-signal-index .appendix}
+
+## The Eight On-Chain Signals
+
+Each signal measures a distinct facet of market health. Together they paint a multidimensional picture of whether Bitcoin is cheap or expensive on any given day.
+
+| Signal | What it measures | Cheap signal when... |
+|:---|:---|:---|
+| `mvrv` | Market Value to Realized Value ratio | Low = market undervaluation |
+| `sopr_7d_ema` | Spent Output Profit Ratio (7-day EMA) | sopr < 1 = investors selling at loss |
+| `reserve_risk` | Holder conviction vs. price | Low = strong conviction relative to price, good buy zone |
+| `greed_index` | Crowd sentiment | 0 = extreme fear, potential market bottoms |
+| `puell_multiple` | Miner revenue relative to annual average | Low = miner stress/capitulation |
+| `lth_nupl` | Long-Term Holder Net Unrealized P&L | Low = capitulation/undervaluation |
+| `sell_side_risk_ratio_7d_ema` | Short-term selling pressure | Low = market participants not eager to sell |
+| `net_unrealized_pnl_rel_to_market_cap` | Aggregate NUPL(Net Unrealized Profit/Loss) | Low = widespread unrealized losses |
+
+: Composite Signal Index On-Chain Signals {#tbl-CSI-OnChainSignals tbl-colwidths="\[50,20,30\]"}
+
+## Step 1: Causal Rolling Z-Score Standardization
+
+Raw signal values aren't directly comparable - MVRV lives in a different numeric range than the Greed Index. The first preprocessing step standardizes each signal using a causal rolling 365-day z-score:
+
+$$z_t^{(i)} = \frac{x_{t-1}^{(i)}-\mu_{t-1,365}^{(i)}}{\sigma_{t-1,365}^{(i)}+\varepsilon}$$
+
+where $\mu_{t-1,365}$ and $\sigma_{t-1,365}$ are the mean and standard deviation computed over the trailing 365-day window ending at day $t-1$. A small constant $\varepsilon = 10^{-8}$ prevents division by zero. 
+
+**Why 365 days?** A one-year window captures approximately one full seasonal cycle, giving stable statistics while remaining responsive to changing market regimes. With min_periods=2, the window starts computing as soon as two data points are available.
+
+Sparse signals (like reserve_risk, which may have data gaps) are handled with **forward-fill** - the most recent known value is carried forward. Crucially, no backward fill is used; only past data fills gaps.
+
+## Step 2: Building the Composite Cheapness Score
+
+With all signals on a comparable z-scale, the strategy computes a single cheapness score for each day.
+
+**Signal Weights via Softmax**
+
+The eight signals are combined using a **softmax-weighted** blend. Instead of tuning weights directly (which would require a constrained optimization over the simplex), the model learns an unconstrained **logit vector** $\boldsymbol{\ell} \in \mathbb{R}^8$, and the actual weights are:
+
+$$w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}$$
+
+This parameterization is unconstrained during optimization (**Nelder-Mead**(@baudin2010neldermead) works in unconstrained space), but always produces valid weights that sum to 1 and are strictly positive.
+
+**Cheapness Score**
+
+A positive z-score means a signal is elevated - market is "hot". Negating the z-scores flips them into cheapness contributions. The composite cheapness for day $t$ is:
+
+$$\text{cheapness}_t = \sum_{i=1}^{8}w_i \cdot \left(-z_t^{i}\right)$$
+
+When the composite of all signals points toward undervaluation, this score is high and positive. When the market is overheated across most dimensions, the score goes negative.
+
+**Buy Score with Sharpness Exponent**
+
+The raw cheapness score is transformed into a buy score via a non-negative exponentiation:
+
+$$\text{buy\_score}_t = \max(0,\; \text{cheapness}_t)^{\gamma}$$
+
+- **Clamping at zero:** When the market is expensive ($\text{cheapness}_t \leq 0$), the buy score is exactly zero. The strategy doesn't try to avoid buying on those days - it simply falls back to minimum allocation.
+- **Sharpness exponent $\gamma$:** This controls how aggressively the strategy concentrates capital on the best days.
+    - $\gamma > 1$: Amplifies the peaks. The strategy accumulates capital for deployment on only the cheapest periods.
+    - $\gamma < 1$: Smooths contributions. Spreads buying more evenly across moderately cheap days.
+    - $\gamma = 1$: Linear relationship between cheapness and allocation weight.
+
+Both the logit vector $\boldsymbol{\ell}$ and exponent $\gamma$ are learned from data, giving the optimizer two degrees of freedom: which signals to trust and how sharply to act on the cheapness signal.
+
+## Step 3: Budget Allocation
+
+The strategy operates under a strict budget constraint: **the entire annual budget must be deployed within each 365-day window**, with per-day bounds of [$10^{−5}$, 0.1].
+
+The allocator must decide, day by day, how much of the remaining budget to spend - without knowing how cheap future days will be.
+
+## Step 4: Nelder-Mead Optimization
+
+The logit vector $\boldsymbol{\ell} \in \mathbb{R}^8$ and log-exponent $log \gamma$ form a **9-dimensional parameter vector** that is jointly optimized on the training period (2018 - 2023).
+
+### Parameter Space
+
+| Parameter | Representation | Count |
+|:---|:---|:---|
+| Signal logits $\ell_1 \dots \ell_{8}$ | Unconstrained reals; signal weights $= \text{softmax}(\boldsymbol{\ell})$ | 8 |
+| Log-exponent $\log \gamma$ | Unconstrained real; $\gamma = e^{\log\gamma}$ clipped to $[e^{-3}, e^{3}]$ | 1 |
+| **Total** | - | **9** |
+
+: Parameters {#tbl-parameters tbl-colwidths="\[30,60,10\]"}
+
+The starting point $\boldsymbol{\theta}_0 = \mathbf{0}$ corresponds to equal signal weights and $\gamma$ = 1 - effectively the simplest possible composite index with no learned preferences.
+
+**Objective: Maximize Sats Per Dollar (SPD)**
+
+The optimizer maximizes **mean sats-per-dollar (SPD) ratio** relative to uniform DCA, averaged across all complete 365-day windows in the training period:
+
+$$\max_{\boldsymbol{\theta}} \;\frac{1}{K}\sum_{k=1}^{K} \frac{\text{SPD}_{\text{strategy}}^{(k)}}{\text{SPD}_{\text{DCA}}^{(k)}}$$
+
+where 
+
+$$\text{SPD}^{(k)} = \sum_{t \in \text{window } k} \frac{w_t}{P_t}$$
+
+SPD is the natural objective for a Bitcoin accumulation strategy. Higher SPD means more BTC (or sats) acquired per dollar deployed. By expressing it as a ratio to DCA, the objective is dimensionless and comparable across different price environments.
+
+**Why Nelder-Mead?**
+
+Nelder-Mead(@baudin2010neldermead) is a derivative-free simplex method - suitable here because:
+
+- The objective function (SPD ratio after budget allocation) is not analytically differentiable with respect to the parameters.
+- The parameter space is small (9 dimensions), making gradient-free search computationally tractable.
+- The algorithm is robust to mild non-convexity, which is expected in this type of financial optimization.
+
+Optimization runs for up to 5,000 function evaluations with adaptive simplex scaling. Implemented as minimize(objective, $\boldsymbol{\theta}$, method="Nelder-Mead")(@scipy_neldermead).
+
+## Guardrails: Entropy Regularization and a Tighter Sharpness Bound
+
+Two design choices keep the optimizer from collapsing onto a degenerate, single-signal solution:
+
+**Entropy penalty on the logits**. The objective subtracts a penalty proportional to how far the softmax weight distribution drifts from uniform:
+
+$$\text{penalty}(\boldsymbol{\ell}) = \lambda \left(\log n - H(\mathbf{w})\right), \quad H(\mathbf{w}) = -\sum_i w_i \log w_i$$
+
+
+with $\lambda = 0.05$. This is zero when weights are perfectly uniform and grows as the distribution concentrates onto fewer signals, directly discouraging the optimizer from routing all its weight into one or two dominant signals purely because they happened to fit the training years best.
+
+**Tighter exponent bound**. $\log \gamma$ is clipped to [−1.6,1.6] (i.e., $\gamma \in [0.2, 5.0]$). This prevents the sharpness exponent from running away toward values that turn buy_score into a near-indicator function dominated by a handful of extreme-outlier days.
+
+# Appendix 4: External Tunable Strategy Details {#sec-appendix-external-tunable .appendix}
 
 ## The Original Features
 
@@ -294,7 +416,7 @@ From the Original Features above, we engineered the following features to captur
 
 The 90-day percentage change in the 10-Year Treasury Yield. This acts as a leading indicator of global liquidity. A rapidly dropping yield signals an influx of cheap money into the economy, while spiking yields signal inflation fears and tightening liquidity.
 
-$\Delta T_{90} = \frac{Yield_t}{Yield_{t-90}} - 1$
+$$\Delta T_{90} = \frac{Yield_t}{Yield_{t-90}} - 1$$
 
 Mathematically, this calculates the exact percentage change in the 10-Year Treasury Yield over a rolling 90-day window. It takes today's Yield, divides it by the Yield from exactly 90 days ago, and subtracts 1 for the raw percentage difference.
 
@@ -309,7 +431,7 @@ According to @investopedia_quarter, a 90-day period perfectly represents one fis
 
 A short-term trend indicator tracking whether Bitcoin's price is currently accelerating upwards or breaking downwards. 
 
-$MOM15_t = \frac{Price_t}{Price_{t-15}} - 1$
+$$MOM15_t = \frac{Price_t}{Price_{t-15}} - 1$$
 
 Mathematically, this calculates the exact percentage change in Bitcoin's price over a rolling 15-day window. It takes today's price, divides it by the price from exactly 15 days ago, and subtracts 1 for the raw percentage difference.
 
@@ -324,7 +446,7 @@ A roughly 14- to 15-day window is the most common choice for measuring an asset'
 
 A comparative metric calculating the percentage difference between today's Bitcoin price and the price exactly 365 days ago, used to detect catastrophic value crashes.
 
-$1YPR_t = \frac{Price_t}{Price_{t-365}} - 1$
+$$1YPR_t = \frac{Price_t}{Price_{t-365}} - 1$$
 
 Mathematically, this calculates the exact percentage change in Bitcoin's price over a rolling 365-day window. It takes today's price, divides it by the price from exactly 365 days ago, and subtracts 1 for the raw percentage difference.
 
