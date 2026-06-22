@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav">
+<meta name="author" content="AdaptiveSats Team">
 <meta name="dcterms.date" content="2026-06-18">
 <meta name="description" content="Adaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference.">
 
@@ -130,7 +130,7 @@ window.Quarto = {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Blog</span></a>
+<span class="menu-text">₿log</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
@@ -154,9 +154,12 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#data-and-feature-engineering" id="toc-data-and-feature-engineering" class="nav-link" data-scroll-target="#data-and-feature-engineering">Data and Feature Engineering</a></li>
+  <li><a href="#data-and-feature-engineering" id="toc-data-and-feature-engineering" class="nav-link" data-scroll-target="#data-and-feature-engineering">Data and Feature Engineering</a>
+  <ul class="collapse">
   <li><a href="#mvrv-z-score" id="toc-mvrv-z-score" class="nav-link" data-scroll-target="#mvrv-z-score">MVRV Z-Score</a></li>
   <li><a href="#active-price" id="toc-active-price" class="nav-link" data-scroll-target="#active-price">Active Price</a></li>
+  <li><a href="#price-vs-active-price" id="toc-price-vs-active-price" class="nav-link" data-scroll-target="#price-vs-active-price">Price vs Active Price</a></li>
+  </ul></li>
   <li><a href="#volatility-modelling-with-garch" id="toc-volatility-modelling-with-garch" class="nav-link" data-scroll-target="#volatility-modelling-with-garch">Volatility Modelling with GARCH</a></li>
   <li><a href="#hidden-markov-models-for-regime-detection" id="toc-hidden-markov-models-for-regime-detection" class="nav-link" data-scroll-target="#hidden-markov-models-for-regime-detection">Hidden Markov Models for Regime Detection</a></li>
   <li><a href="#strategy-1-hmm-garch-adaptive-accumulation" id="toc-strategy-1-hmm-garch-adaptive-accumulation" class="nav-link" data-scroll-target="#strategy-1-hmm-garch-adaptive-accumulation">Strategy 1: HMM-GARCH Adaptive Accumulation</a>
@@ -173,22 +176,10 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#motivation-1" id="toc-motivation-1" class="nav-link" data-scroll-target="#motivation-1">Motivation</a></li>
   <li><a href="#bayesian-networks" id="toc-bayesian-networks" class="nav-link" data-scroll-target="#bayesian-networks">Bayesian Networks</a></li>
-  <li><a href="#state-construction" id="toc-state-construction" class="nav-link" data-scroll-target="#state-construction">State Construction</a>
-  <ul class="collapse">
-  <li><a href="#valuation" id="toc-valuation" class="nav-link" data-scroll-target="#valuation">Valuation</a></li>
-  <li><a href="#volatility" id="toc-volatility" class="nav-link" data-scroll-target="#volatility">Volatility</a></li>
-  <li><a href="#active-price-relationship" id="toc-active-price-relationship" class="nav-link" data-scroll-target="#active-price-relationship">Active Price Relationship</a></li>
-  <li><a href="#regime-confidence" id="toc-regime-confidence" class="nav-link" data-scroll-target="#regime-confidence">Regime Confidence</a></li>
-  </ul></li>
+  <li><a href="#state-construction" id="toc-state-construction" class="nav-link" data-scroll-target="#state-construction">State Construction</a></li>
   <li><a href="#probabilistic-inference" id="toc-probabilistic-inference" class="nav-link" data-scroll-target="#probabilistic-inference">Probabilistic Inference</a></li>
   <li><a href="#allocation-construction" id="toc-allocation-construction" class="nav-link" data-scroll-target="#allocation-construction">Allocation Construction</a></li>
-  <li><a href="#advantages-of-the-bayesian-framework" id="toc-advantages-of-the-bayesian-framework" class="nav-link" data-scroll-target="#advantages-of-the-bayesian-framework">Advantages of the Bayesian Framework</a>
-  <ul class="collapse">
-  <li><a href="#probabilistic-reasoning" id="toc-probabilistic-reasoning" class="nav-link" data-scroll-target="#probabilistic-reasoning">Probabilistic Reasoning</a></li>
-  <li><a href="#interpretability" id="toc-interpretability" class="nav-link" data-scroll-target="#interpretability">Interpretability</a></li>
-  <li><a href="#multi-signal-integration" id="toc-multi-signal-integration" class="nav-link" data-scroll-target="#multi-signal-integration">Multi-Signal Integration</a></li>
-  <li><a href="#flexibility" id="toc-flexibility" class="nav-link" data-scroll-target="#flexibility">Flexibility</a></li>
-  </ul></li>
+  <li><a href="#advantages-of-the-bayesian-framework" id="toc-advantages-of-the-bayesian-framework" class="nav-link" data-scroll-target="#advantages-of-the-bayesian-framework">Advantages of the Bayesian Framework</a></li>
   <li><a href="#performance-1" id="toc-performance-1" class="nav-link" data-scroll-target="#performance-1">Performance</a></li>
   </ul></li>
   <li><a href="#comparison-of-the-two-approaches" id="toc-comparison-of-the-two-approaches" class="nav-link" data-scroll-target="#comparison-of-the-two-approaches">Comparison of the Two Approaches</a>
@@ -207,9 +198,10 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatility, and Bayesian Networks</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">research</div>
-    <div class="quarto-category">bitcoin</div>
-    <div class="quarto-category">data-science</div>
+    <div class="quarto-category">Research</div>
+    <div class="quarto-category">Bitcoin</div>
+    <div class="quarto-category">Strategy</div>
+    <div class="quarto-category">Data-Science</div>
   </div>
   </div>
 
@@ -225,7 +217,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav </p>
+             <p>AdaptiveSats Team </p>
           </div>
   </div>
     
@@ -246,10 +238,10 @@ window.Quarto = {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Dollar Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.</p>
+<p>Dollar-Cost Averaging (DCA) is one of the most widely recommended strategies for accumulating Bitcoin. By investing a fixed amount at regular intervals, investors reduce the impact of market timing and benefit from long-term exposure to the asset.</p>
 <p>Despite its simplicity and robustness, traditional DCA treats every investment period equally. Whether Bitcoin is historically cheap, historically expensive, experiencing extreme volatility, or trading in a speculative euphoric regime, the investor commits exactly the same amount of capital.</p>
 <p>This raises an important question:</p>
-<p><strong>Can we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?</strong></p>
+<p><strong><em>Can we improve Bitcoin accumulation by dynamically adjusting contributions according to market conditions while preserving the simplicity of DCA?</em></strong></p>
 <p>To investigate this question, we developed two adaptive accumulation frameworks:</p>
 <ol type="1">
 <li><strong>HMM-GARCH Strategy</strong></li>
@@ -271,24 +263,25 @@ window.Quarto = {
 <li>Active Price</li>
 <li>Price versus Active Price</li>
 </ul>
-</section>
-<section id="mvrv-z-score" class="level2">
-<h2 class="anchored" data-anchor-id="mvrv-z-score">MVRV Z-Score</h2>
+<section id="mvrv-z-score" class="level3">
+<h3 class="anchored" data-anchor-id="mvrv-z-score">MVRV Z-Score</h3>
 <p>MVRV (Market Value to Realized Value) measures how expensive Bitcoin is relative to the aggregate cost basis of investors.</p>
 <p>Rather than using the raw MVRV value, a rolling z-score transformation was applied. This standardizes valuation relative to recent historical conditions and allows valuation signals to remain comparable across different market cycles.</p>
 <p>Negative values indicate that Bitcoin is trading below its historical valuation norm, while positive values suggest increasingly expensive market conditions.</p>
 </section>
-<section id="active-price" class="level2">
-<h2 class="anchored" data-anchor-id="active-price">Active Price</h2>
+<section id="active-price" class="level3">
+<h3 class="anchored" data-anchor-id="active-price">Active Price</h3>
 <p>Active Price estimates the average cost basis of economically active Bitcoin participants.</p>
-<p>The derived feature:</p>
-<p>Price vs Active Price</p>
-<p>measures how far Bitcoin’s current market price deviates from the average cost basis of active investors.</p>
+</section>
+<section id="price-vs-active-price" class="level3">
+<h3 class="anchored" data-anchor-id="price-vs-active-price">Price vs Active Price</h3>
+<p>This derived feature measures how far Bitcoin’s current market price deviates from the average cost basis of active investors.</p>
 <p>Historically, periods where Bitcoin trades below Active Price have frequently coincided with accumulation zones and long-term value opportunities.</p>
 <hr>
 </section>
-<section id="volatility-modelling-with-garch" class="level1">
-<h1>Volatility Modelling with GARCH</h1>
+</section>
+<section id="volatility-modelling-with-garch" class="level2">
+<h2 class="anchored" data-anchor-id="volatility-modelling-with-garch">Volatility Modelling with GARCH</h2>
 <p>Financial markets exhibit a well-documented phenomenon known as volatility clustering.</p>
 <p>Periods of high volatility tend to be followed by high volatility, while calm periods tend to remain calm.</p>
 <p>Standard models often assume constant volatility, which is unrealistic for Bitcoin.</p>
@@ -306,8 +299,8 @@ window.Quarto = {
 <p>This volatility estimate serves as a measure of market stress and uncertainty.</p>
 <hr>
 </section>
-<section id="hidden-markov-models-for-regime-detection" class="level1">
-<h1>Hidden Markov Models for Regime Detection</h1>
+<section id="hidden-markov-models-for-regime-detection" class="level2">
+<h2 class="anchored" data-anchor-id="hidden-markov-models-for-regime-detection">Hidden Markov Models for Regime Detection</h2>
 <p>Financial markets operate in distinct regimes.</p>
 <p>Examples include:</p>
 <ul>
@@ -334,55 +327,59 @@ window.Quarto = {
 <p>This probabilistic representation preserves uncertainty and provides richer information than a single regime label.</p>
 <hr>
 </section>
-<section id="strategy-1-hmm-garch-adaptive-accumulation" class="level1">
-<h1>Strategy 1: HMM-GARCH Adaptive Accumulation</h1>
-<section id="motivation" class="level2">
-<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<section id="strategy-1-hmm-garch-adaptive-accumulation" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-1-hmm-garch-adaptive-accumulation">Strategy 1: HMM-GARCH Adaptive Accumulation</h2>
+<section id="motivation" class="level3">
+<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
 <p>The first strategy combines regime detection, valuation, volatility, and trend information into a dynamic allocation framework.</p>
 <p>Rather than allocating a fixed amount every period, contribution weights vary according to prevailing market conditions.</p>
 <hr>
 </section>
-<section id="regime-based-allocation" class="level2">
-<h2 class="anchored" data-anchor-id="regime-based-allocation">Regime-Based Allocation</h2>
+<section id="regime-based-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="regime-based-allocation">Regime-Based Allocation</h3>
 <p>Each regime receives a different allocation multiplier.</p>
+<blockquote class="blockquote">
 <p>Accumulation regimes receive larger allocations.</p>
 <p>Neutral regimes receive baseline allocations.</p>
 <p>Euphoric regimes receive reduced allocations.</p>
+</blockquote>
 <p>Instead of selecting a single regime, the strategy uses regime probabilities:</p>
-<p>Allocation Weight = Σ(Regime Probability × Regime Multiplier)</p>
+<p><span class="math display">\[Allocation Weight = \sum(\text{Regime Probability} \times \text{Regime Multiplier})\]</span></p>
 <p>This creates smoother transitions between market states and avoids abrupt allocation changes.</p>
 <hr>
 </section>
-<section id="valuation-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="valuation-adjustment">Valuation Adjustment</h2>
+<section id="valuation-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="valuation-adjustment">Valuation Adjustment</h3>
 <p>The strategy increases allocations when Bitcoin appears historically undervalued.</p>
 <p>A valuation signal is constructed from the negative component of the MVRV Z-Score.</p>
+<blockquote class="blockquote">
 <p>As valuation becomes increasingly attractive, the allocation weight rises proportionally.</p>
+</blockquote>
 <p>This mechanism encourages greater accumulation during periods of market pessimism and depressed valuations.</p>
 <hr>
 </section>
-<section id="volatility-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="volatility-adjustment">Volatility Adjustment</h2>
+<section id="volatility-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="volatility-adjustment">Volatility Adjustment</h3>
 <p>Volatility is interpreted differently depending on valuation.</p>
+<blockquote class="blockquote">
 <p>When Bitcoin is cheap:</p>
-<p>High volatility may indicate capitulation and panic.</p>
-<p>The strategy increases allocations.</p>
+<p>High volatility may indicate capitulation and panic. The strategy increases allocations.</p>
 <p>When Bitcoin is expensive:</p>
-<p>High volatility may indicate speculative excess.</p>
-<p>The strategy reduces allocations.</p>
+<p>High volatility may indicate speculative excess. The strategy reduces allocations.</p>
+</blockquote>
 <p>This conditional interpretation allows volatility to act as context rather than a standalone signal.</p>
 <hr>
 </section>
-<section id="trend-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="trend-adjustment">Trend Adjustment</h2>
+<section id="trend-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="trend-adjustment">Trend Adjustment</h3>
 <p>A 200-day moving average is used as a long-term trend indicator.</p>
 <p>The objective is not trend following in the traditional sense.</p>
 <p>Instead, trend acts as a confidence modifier.</p>
 <p>The strategy applies small adjustments depending on whether Bitcoin is trading above or below its long-term trend.</p>
 <hr>
 </section>
-<section id="final-allocation-signal" class="level2">
-<h2 class="anchored" data-anchor-id="final-allocation-signal">Final Allocation Signal</h2>
+<section id="final-allocation-signal" class="level3">
+<h3 class="anchored" data-anchor-id="final-allocation-signal">Final Allocation Signal</h3>
 <p>The final HMM-GARCH allocation weight combines:</p>
 <ul>
 <li>Regime probabilities</li>
@@ -394,8 +391,8 @@ window.Quarto = {
 <p>This framework creates an adaptive DCA strategy that responds to changing market conditions while remaining systematic and interpretable.</p>
 <hr>
 </section>
-<section id="performance" class="level2">
-<h2 class="anchored" data-anchor-id="performance">Performance</h2>
+<section id="performance" class="level3">
+<h3 class="anchored" data-anchor-id="performance">Performance</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../figures/full_garch_hmm_plot.png" class="img-fluid figure-img"></p>
@@ -405,20 +402,20 @@ window.Quarto = {
 <hr>
 </section>
 </section>
-<section id="strategy-2-hmm-bayesian-adaptive-accumulation" class="level1">
-<h1>Strategy 2: HMM-Bayesian Adaptive Accumulation</h1>
-<section id="motivation-1" class="level2">
-<h2 class="anchored" data-anchor-id="motivation-1">Motivation</h2>
+<section id="strategy-2-hmm-bayesian-adaptive-accumulation" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-2-hmm-bayesian-adaptive-accumulation">Strategy 2: HMM-Bayesian Adaptive Accumulation</h2>
+<section id="motivation-1" class="level3">
+<h3 class="anchored" data-anchor-id="motivation-1">Motivation</h3>
 <p>While the HMM-GARCH model relies on deterministic rules, the Bayesian framework introduces probabilistic reasoning.</p>
 <p>Financial markets rarely provide certainty.</p>
 <p>Instead of asking:</p>
-<p>“Is this an accumulation opportunity?”</p>
+<p><em>“Is this an accumulation opportunity?”</em></p>
 <p>the Bayesian approach asks:</p>
-<p>“What is the probability that this is an accumulation opportunity?”</p>
+<p><strong><em>“What is the probability that this is an accumulation opportunity?”</em></strong></p>
 <hr>
 </section>
-<section id="bayesian-networks" class="level2">
-<h2 class="anchored" data-anchor-id="bayesian-networks">Bayesian Networks</h2>
+<section id="bayesian-networks" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-networks">Bayesian Networks</h3>
 <p>A Bayesian Network models probabilistic relationships between variables.</p>
 <p>The framework combines evidence from:</p>
 <ul>
@@ -430,36 +427,36 @@ window.Quarto = {
 <p>to estimate the probability of a favorable accumulation environment.</p>
 <hr>
 </section>
-<section id="state-construction" class="level2">
-<h2 class="anchored" data-anchor-id="state-construction">State Construction</h2>
+<section id="state-construction" class="level3">
+<h3 class="anchored" data-anchor-id="state-construction">State Construction</h3>
 <p>Continuous variables are converted into interpretable states.</p>
 <p>Examples include:</p>
-<section id="valuation" class="level3">
-<h3 class="anchored" data-anchor-id="valuation">Valuation</h3>
+<section id="valuation" class="level4">
+<h4 class="anchored" data-anchor-id="valuation">Valuation</h4>
 <ul>
 <li>Cheap</li>
 <li>Neutral</li>
 <li>Expensive</li>
 </ul>
 </section>
-<section id="volatility" class="level3">
-<h3 class="anchored" data-anchor-id="volatility">Volatility</h3>
+<section id="volatility" class="level4">
+<h4 class="anchored" data-anchor-id="volatility">Volatility</h4>
 <ul>
 <li>Low</li>
 <li>Medium</li>
 <li>High</li>
 </ul>
 </section>
-<section id="active-price-relationship" class="level3">
-<h3 class="anchored" data-anchor-id="active-price-relationship">Active Price Relationship</h3>
+<section id="active-price-relationship" class="level4">
+<h4 class="anchored" data-anchor-id="active-price-relationship">Active Price Relationship</h4>
 <ul>
 <li>Below Active Price</li>
 <li>Near Active Price</li>
 <li>Above Active Price</li>
 </ul>
 </section>
-<section id="regime-confidence" class="level3">
-<h3 class="anchored" data-anchor-id="regime-confidence">Regime Confidence</h3>
+<section id="regime-confidence" class="level4">
+<h4 class="anchored" data-anchor-id="regime-confidence">Regime Confidence</h4>
 <p>Each HMM regime probability is transformed into:</p>
 <ul>
 <li>Low confidence</li>
@@ -470,46 +467,48 @@ window.Quarto = {
 <hr>
 </section>
 </section>
-<section id="probabilistic-inference" class="level2">
-<h2 class="anchored" data-anchor-id="probabilistic-inference">Probabilistic Inference</h2>
+<section id="probabilistic-inference" class="level3">
+<h3 class="anchored" data-anchor-id="probabilistic-inference">Probabilistic Inference</h3>
 <p>For every observation, the Bayesian Network receives evidence describing current market conditions.</p>
 <p>The model then computes:</p>
-<p>P(Accumulation Opportunity | Evidence)</p>
+<p><span class="math display">\[P(\text{Accumulation Opportunity} \mid \text{Evidence})\]</span></p>
 <p>This probability reflects how strongly the current market resembles historically attractive accumulation environments.</p>
 <hr>
 </section>
-<section id="allocation-construction" class="level2">
-<h2 class="anchored" data-anchor-id="allocation-construction">Allocation Construction</h2>
+<section id="allocation-construction" class="level3">
+<h3 class="anchored" data-anchor-id="allocation-construction">Allocation Construction</h3>
 <p>The resulting probability is transformed into a dynamic allocation weight.</p>
+<blockquote class="blockquote">
 <p>Higher accumulation probabilities produce larger contribution weights.</p>
 <p>Lower probabilities result in more conservative allocations.</p>
+</blockquote>
 <p>The strategy therefore adjusts capital deployment according to the strength of evidence supporting accumulation.</p>
 <hr>
 </section>
-<section id="advantages-of-the-bayesian-framework" class="level2">
-<h2 class="anchored" data-anchor-id="advantages-of-the-bayesian-framework">Advantages of the Bayesian Framework</h2>
+<section id="advantages-of-the-bayesian-framework" class="level3">
+<h3 class="anchored" data-anchor-id="advantages-of-the-bayesian-framework">Advantages of the Bayesian Framework</h3>
 <p>Several benefits emerge from this approach.</p>
-<section id="probabilistic-reasoning" class="level3">
-<h3 class="anchored" data-anchor-id="probabilistic-reasoning">Probabilistic Reasoning</h3>
+<section id="probabilistic-reasoning" class="level4">
+<h4 class="anchored" data-anchor-id="probabilistic-reasoning">Probabilistic Reasoning</h4>
 <p>Markets rarely provide certainty.</p>
 <p>Bayesian inference naturally accommodates uncertainty.</p>
 </section>
-<section id="interpretability" class="level3">
-<h3 class="anchored" data-anchor-id="interpretability">Interpretability</h3>
+<section id="interpretability" class="level4">
+<h4 class="anchored" data-anchor-id="interpretability">Interpretability</h4>
 <p>Each input variable contributes explicitly to the final accumulation probability.</p>
 </section>
-<section id="multi-signal-integration" class="level3">
-<h3 class="anchored" data-anchor-id="multi-signal-integration">Multi-Signal Integration</h3>
+<section id="multi-signal-integration" class="level4">
+<h4 class="anchored" data-anchor-id="multi-signal-integration">Multi-Signal Integration</h4>
 <p>The framework combines valuation, volatility, investor profitability, and market regime information into a unified decision process.</p>
 </section>
-<section id="flexibility" class="level3">
-<h3 class="anchored" data-anchor-id="flexibility">Flexibility</h3>
+<section id="flexibility" class="level4">
+<h4 class="anchored" data-anchor-id="flexibility">Flexibility</h4>
 <p>Additional evidence variables can be incorporated without redesigning the entire model.</p>
 <hr>
 </section>
 </section>
-<section id="performance-1" class="level2">
-<h2 class="anchored" data-anchor-id="performance-1">Performance</h2>
+<section id="performance-1" class="level3">
+<h3 class="anchored" data-anchor-id="performance-1">Performance</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../figures/full_bayes_hmm_plot.png" class="img-fluid figure-img"></p>
@@ -519,11 +518,11 @@ window.Quarto = {
 <hr>
 </section>
 </section>
-<section id="comparison-of-the-two-approaches" class="level1">
-<h1>Comparison of the Two Approaches</h1>
+<section id="comparison-of-the-two-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-of-the-two-approaches">Comparison of the Two Approaches</h2>
 <p>Although both strategies use HMM-derived market regimes, they differ fundamentally in how information is combined.</p>
-<section id="hmm-garch" class="level2">
-<h2 class="anchored" data-anchor-id="hmm-garch">HMM-GARCH</h2>
+<section id="hmm-garch" class="level3">
+<h3 class="anchored" data-anchor-id="hmm-garch">HMM-GARCH</h3>
 <ul>
 <li>Rule-based</li>
 <li>Deterministic</li>
@@ -531,8 +530,8 @@ window.Quarto = {
 <li>Directly incorporates volatility forecasts</li>
 </ul>
 </section>
-<section id="hmm-bayesian" class="level2">
-<h2 class="anchored" data-anchor-id="hmm-bayesian">HMM-Bayesian</h2>
+<section id="hmm-bayesian" class="level3">
+<h3 class="anchored" data-anchor-id="hmm-bayesian">HMM-Bayesian</h3>
 <ul>
 <li>Probabilistic</li>
 <li>Evidence-driven</li>
@@ -540,14 +539,14 @@ window.Quarto = {
 <li>Integrates multiple signals through Bayesian inference</li>
 </ul>
 <p>The HMM-GARCH strategy answers:</p>
-<p>“What allocation should we use given current market conditions?”</p>
+<p><strong><em>“What allocation should we use given current market conditions?”</em></strong></p>
 <p>The HMM-Bayesian strategy answers:</p>
-<p>“How likely is it that current conditions represent an attractive accumulation opportunity?”</p>
+<p><strong><em>“How likely is it that current conditions represent an attractive accumulation opportunity?”</em></strong></p>
 <hr>
 </section>
 </section>
-<section id="conclusion" class="level1">
-<h1>Conclusion</h1>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>This research demonstrates how traditional DCA can be enhanced using modern quantitative techniques.</p>
 <p>By combining:</p>
 <ul>

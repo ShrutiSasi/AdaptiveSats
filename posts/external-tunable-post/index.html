@@ -8,7 +8,7 @@
 
 <meta name="author" content="AdaptiveSats Team">
 <meta name="dcterms.date" content="2026-06-18">
-<meta name="description" content="An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum, it identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.">
+<meta name="description" content="An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum. It identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.">
 
 <title>External Tunable Approach for Bitcoin Accumulation – AdaptiveSats</title>
 <style>
@@ -149,7 +149,7 @@ window.Quarto = {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Blog</span></a>
+<span class="menu-text">₿log</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
@@ -206,6 +206,7 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">External Tunable Approach for Bitcoin Accumulation</h1>
   <div class="quarto-categories">
+    <div class="quarto-category">Research</div>
     <div class="quarto-category">Bitcoin</div>
     <div class="quarto-category">Strategy</div>
   </div>
@@ -213,7 +214,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum, it identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.
+    An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum. It identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.
   </div>
 </div>
 
@@ -250,12 +251,12 @@ window.Quarto = {
 </section>
 <section id="the-original-features" class="level2">
 <h2 class="anchored" data-anchor-id="the-original-features">The Original Features</h2>
-<section id="bitcoin-price-in-usd" class="level4">
-<h4 class="anchored" data-anchor-id="bitcoin-price-in-usd">1. <strong>Bitcoin Price (in USD):</strong></h4>
+<section id="bitcoin-price-in-usd" class="level3">
+<h3 class="anchored" data-anchor-id="bitcoin-price-in-usd">1. <strong>Bitcoin Price (in USD):</strong></h3>
 <p>The absolute price of Bitcoin, sourced from the Bitcoin Value Research Kit.</p>
 </section>
-<section id="year-u.s.-treasury-yields" class="level4">
-<h4 class="anchored" data-anchor-id="year-u.s.-treasury-yields">2. <strong>10-Year U.S. Treasury Yields:</strong></h4>
+<section id="year-u.s.-treasury-yields" class="level3">
+<h3 class="anchored" data-anchor-id="year-u.s.-treasury-yields">2. <strong>10-Year U.S. Treasury Yields:</strong></h3>
 <p>The interest rate on 10-year government debt, sourced from Yahoo Finance. Acts as the foundational benchmark for global borrowing costs and is the ultimate indicator of whether investors are feeling fearful or confident (<span class="citation" data-cites="investopedia_treasury">Zucchi (<a href="#ref-investopedia_treasury" role="doc-biblioref">2026</a>)</span>)</p>
 <p><strong>Why the 10-Year U.S. Treasury Yields?</strong></p>
 <ol type="1">
@@ -266,24 +267,24 @@ window.Quarto = {
 </section>
 <section id="the-engineered-features" class="level2">
 <h2 class="anchored" data-anchor-id="the-engineered-features">The Engineered Features</h2>
-<p>From the Original Features above, we engineered the following features to capture the macroeconomic trends:</p>
-<section id="treasury_90d_delta" class="level4">
-<h4 class="anchored" data-anchor-id="treasury_90d_delta">1. <strong>Treasury_90d_Delta:</strong></h4>
+<p>From the original features above, we engineered the following features to capture the macroeconomic trends:</p>
+<section id="treasury_90d_delta" class="level3">
+<h3 class="anchored" data-anchor-id="treasury_90d_delta">1. <strong>Treasury_90d_Delta:</strong></h3>
 <p>The 90-day percentage change in the 10-Year Treasury Yield. This acts as a leading indicator of global liquidity. A rapidly dropping yield signals an influx of cheap money into the economy, while spiking yields signal inflation fears and tightening liquidity.</p>
-<p><span class="math inline">\(\Delta T_{90} = \frac{Yield_t}{Yield_{t-90}} - 1\)</span></p>
+<p><span class="math display">\[\Delta T_{90} = \frac{Yield_t}{Yield_{t-90}} - 1\]</span></p>
 <p>Mathematically, this calculates the exact percentage change in the 10-Year Treasury Yield over a rolling 90-day window. It takes today’s Yield, divides it by the Yield from exactly 90 days ago, and subtracts 1 for the raw percentage difference.</p>
 <ul>
 <li>If the result is <em>positive</em> (e.g., 0.15), it means Treasury Yields are spiking and have jumped 15% over the last quarter, signaling tightening liquidity.</li>
 <li>If the result is <em>negative</em> (e.g., -0.10), it means Yields are dropping and have fallen 10% over the last quarter, signaling an influx of cheap money.</li>
 </ul>
-<p><strong>Why 90 days?</strong>:</p>
+<p><strong>Why 90 days?</strong></p>
 <p>According to <span class="citation" data-cites="investopedia_quarter">Fernando (<a href="#ref-investopedia_quarter" role="doc-biblioref">2026</a>)</span>, a 90-day period perfectly represents one fiscal quarter (a 3-month cycle). The entire corporate and economic world operates on this quarterly rhythm. Public companies release their earnings reports, governments do budget planning, and massive institutional investors rebalance their portfolios every three months.</p>
 <p>By measuring the Treasury yield over a 90-day window, this strategy tracks exactly one full cycle of global economic data. It is long enough to ignore daily market noise, but short enough to immediately detect when the market is shifting its money for the next quarter.</p>
 </section>
-<section id="mom15-15-day-momentum" class="level4">
-<h4 class="anchored" data-anchor-id="mom15-15-day-momentum">2. <strong>MOM15 (15-Day Momentum):</strong></h4>
+<section id="mom15-15-day-momentum" class="level3">
+<h3 class="anchored" data-anchor-id="mom15-15-day-momentum">2. <strong>MOM15 (15-Day Momentum):</strong></h3>
 <p>A short-term trend indicator tracking whether Bitcoin’s price is currently accelerating upwards or breaking downwards.</p>
-<p><span class="math inline">\(MOM15_t = \frac{Price_t}{Price{t-15}} - 1\)</span></p>
+<p><span class="math display">\[MOM15_t = \frac{Price_t}{Price_{t-15}} - 1\]</span></p>
 <p>Mathematically, this calculates the exact percentage change in Bitcoin’s price over a rolling 15-day window. It takes today’s price, divides it by the price from exactly 15 days ago, and subtracts 1 for the raw percentage difference.</p>
 <ul>
 <li>If the result is <em>positive</em> (e.g., 0.10), it means Bitcoin is currently in a short-term uptrend (e.g., short-term 10% uptrend)</li>
@@ -292,12 +293,12 @@ window.Quarto = {
 <p><strong>Why 15 days?</strong></p>
 <p>A roughly 14- to 15-day window is the most common choice for measuring an asset’s short-term trend. This window is based on the Relative Strength Index, a momentum oscillator that measures the speed and change of price movement (<span class="citation" data-cites="investopedia_rsi">Fernando (<a href="#ref-investopedia_rsi" role="doc-biblioref">2025</a>)</span>).</p>
 </section>
-<section id="year-price-drop-1ypr" class="level4">
-<h4 class="anchored" data-anchor-id="year-price-drop-1ypr">3. <strong>1-Year Price Drop (<span class="math inline">\(1YPR\)</span>):</strong></h4>
+<section id="year-price-drop-1ypr" class="level3">
+<h3 class="anchored" data-anchor-id="year-price-drop-1ypr">3. <strong>1-Year Price Drop (<span class="math inline">\(1YPR\)</span>):</strong></h3>
 <p>A comparative metric calculating the percentage difference between today’s Bitcoin price and the price exactly 365 days ago, used to detect catastrophic value crashes.</p>
-<p><span class="math inline">\(1YPR_t = \frac{Price_t}{Price{t-365}} - 1\)</span></p>
+<p><span class="math display">\[1YPR_t = \frac{Price_t}{Price_{t-365}} - 1\]</span></p>
 <p>Mathematically, this calculates the exact percentage change in Bitcoin’s price over a rolling 365-day window. It takes today’s price, divides it by the price from exactly 365 days ago, and subtracts 1 for the raw percentage difference.</p>
-<p><strong>Why 1-year?</strong>:</p>
+<p><strong>Why 1-year?</strong></p>
 <p>As shown in the graph below, historical bear markets (when Bitcoin’s price drops significantly) typically last about 1 year. Therefore, we engineered this feature to mathematically detect these prolonged crash events, allowing the algorithm to capture the exact moments when Bitcoin is extremely undervalued.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -309,41 +310,49 @@ window.Quarto = {
 </section>
 <section id="the-baseline-foundation-base-preference-rho_t" class="level2">
 <h2 class="anchored" data-anchor-id="the-baseline-foundation-base-preference-rho_t">The Baseline Foundation: Base Preference (<span class="math inline">\(\rho_t\)</span>):</h2>
-<p>The foundational target weight generated by the stacksats baseline engine. The framework calculates this preference score by analyzing the <strong>MVRV (Market-Value-to-Realized-Value) ratio</strong>, a famous on-chain metric that compares Bitcoin’s current market cap to the price at which coins last moved (<span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>).</p>
+<p>The foundational target weight generated by the StackSats baseline engine. The framework calculates this preference score by analyzing the <strong>MVRV (Market-Value-to-Realized-Value) ratio</strong>, a famous on-chain metric that compares Bitcoin’s current market cap to the price at which coins last moved (<span class="citation" data-cites="stacksats">HyperTrial (<a href="#ref-stacksats" role="doc-biblioref">2025</a>)</span>).</p>
 <ul>
-<li>When MVRV is low, the network is historically undervalued, and stacksats generates a high preference weight.</li>
-<li>When MVRV is high, the network is historically overvalued, and stacksats generates a low preference weight.</li>
+<li>When MVRV is low, the network is historically undervalued, and StackSats generates a high preference weight.</li>
+<li>When MVRV is high, the network is historically overvalued, and StackSats generates a low preference weight.</li>
 </ul>
-<p>This Tunable Macro Strategy uses Stacksat’s output as the <strong><em>preference weight</em></strong> and dynamically boosts or dampens it based on the broader global economy’s performance.</p>
+<p>This Tunable Macro Strategy uses StackSats’ output as the <strong><em>preference weight</em></strong> and dynamically boosts or dampens it based on the broader global economy’s performance.</p>
 </section>
 <section id="the-4-tier-decision-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="the-4-tier-decision-matrix">The 4-Tier Decision Matrix</h2>
-<p>The core of the strategy is a strict, priority-based decision tree. Every day, the model takes the baseline <strong><em>preference weight</em></strong> (generated by the MVRV signal) and evaluates current macroeconomic conditions from top to bottom. Once a macro condition is met, the strategy applies a multiplier to either boost or dampen that preference weight, producing the final target “Buy Weight” (<span class="math inline">\(w_t\)</span>). It then stops evaluating.</p>
-<section id="tier-1-the-value-crash-absolute-priority" class="level4">
-<h4 class="anchored" data-anchor-id="tier-1-the-value-crash-absolute-priority"><strong>Tier 1: The Value Crash (Absolute Priority)</strong></h4>
+<p>The core of the strategy is a strict, priority-based decision tree. Every day, the model takes the baseline <strong><em>preference weight</em></strong> (generated by the MVRV signal) and evaluates current macroeconomic conditions from top to bottom. Once a macro condition is met, the strategy applies a multiplier to either boost or dampen that preference weight, producing the final target “Buy Weight” (<span class="math inline">\(w_t\)</span>). Model then stops evaluating.</p>
+<section id="tier-1-the-value-crash-absolute-priority" class="level3">
+<h3 class="anchored" data-anchor-id="tier-1-the-value-crash-absolute-priority"><strong>Tier 1: The Value Crash (Absolute Priority)</strong></h3>
+<blockquote class="blockquote">
 <p><strong>Condition:</strong> If today’s Bitcoin price is <span class="math inline">\(\leq 60\%\)</span> lower than it was 1 year ago. When Bitcoin suffers a catastrophic, multi-month crash, it represents an excellent buying opportunity regardless of what the broader macro economy is doing.</p>
 <p><strong>Action:</strong> Aggressively buy the blood.</p>
 <p><strong>Math:</strong> <span class="math inline">\(w_t = \max(2.0 \cdot \rho_t, 0.6)\)</span></p>
+</blockquote>
 </section>
-<section id="tier-2-the-macro-crash-risk-off" class="level4">
-<h4 class="anchored" data-anchor-id="tier-2-the-macro-crash-risk-off"><strong>Tier 2: The Macro Crash (Risk-Off)</strong></h4>
+<section id="tier-2-the-macro-crash-risk-off" class="level3">
+<h3 class="anchored" data-anchor-id="tier-2-the-macro-crash-risk-off"><strong>Tier 2: The Macro Crash (Risk-Off)</strong></h3>
+<blockquote class="blockquote">
 <p><strong>Condition:</strong> If <code>Treasury_90d_Delta</code> <span class="math inline">\(\geq \alpha_{spike}\)</span> <strong>AND</strong> <code>MOM15</code> <span class="math inline">\(\leq \beta_{break}\)</span>.</p>
 <p>This tier detects toxic financial environments. If Treasury yields are spiking (indicating tightening global liquidity) and Bitcoin’s momentum is dying, the model recognizes a “Risk-Off” regime.</p>
 <p><strong>Action:</strong> Conserve cash. Stop aggressively buying falling knives.</p>
 <p><strong>Math:</strong> <span class="math inline">\(w_t = 0.5\)</span></p>
+</blockquote>
 </section>
-<section id="tier-3-the-golden-environment-risk-on" class="level4">
-<h4 class="anchored" data-anchor-id="tier-3-the-golden-environment-risk-on"><strong>Tier 3: The Golden Environment (Risk-On)</strong></h4>
+<section id="tier-3-the-golden-environment-risk-on" class="level3">
+<h3 class="anchored" data-anchor-id="tier-3-the-golden-environment-risk-on"><strong>Tier 3: The Golden Environment (Risk-On)</strong></h3>
+<blockquote class="blockquote">
 <p><strong>Condition:</strong> If <code>Treasury_90d_Delta</code> <span class="math inline">\(\leq 0.0\)</span> <strong>AND</strong> <code>MOM15</code> <span class="math inline">\(\geq 0.0\)</span>.</p>
 <p>If interest rates are falling, making borrowing cheap and pushing capital out of safe-haven bonds into risk assets, and Bitcoin’s momentum is already confirming the upward trend.</p>
 <p><strong>Action:</strong> Heavily boost the standard MVRV buy signal to capture the incoming liquidity wave.</p>
 <p><strong>Math:</strong> <span class="math inline">\(w_t = \max(\gamma_{boost} \cdot \rho_t, 0.4)\)</span></p>
+</blockquote>
 </section>
-<section id="tier-4-normal-market-default" class="level4">
-<h4 class="anchored" data-anchor-id="tier-4-normal-market-default"><strong>Tier 4: Normal Market (Default)</strong></h4>
+<section id="tier-4-normal-market-default" class="level3">
+<h3 class="anchored" data-anchor-id="tier-4-normal-market-default"><strong>Tier 4: Normal Market (Default)</strong></h3>
+<blockquote class="blockquote">
 <p><strong>Condition:</strong> If none of the extreme regimes above are met, then the market is considered to be in a normal, sideways, or ambiguous state.</p>
 <p><strong>Action:</strong> Dampen the base signal to save cash for future volatile opportunities.</p>
 <p><strong>Math:</strong> <span class="math inline">\(w_t = \max(\delta_{dampen} \cdot \rho_t, 0.5)\)</span></p>
+</blockquote>
 </section>
 </section>
 <section id="hyperparameter-tuning" class="level2">
@@ -371,8 +380,8 @@ window.Quarto = {
 <ul>
 <li>Optimal parameters: <strong><code>macro_spike</code></strong>: 0.2, <strong><code>mom_break</code></strong>: 0.05, <strong><code>boost</code></strong>: 1.2, <strong><code>dampen</code></strong>: 0.5</li>
 </ul>
-<p>For the <strong>training period (2018–2023)</strong>, the External Tunable approach achieved an SPD of <strong>8,210.91</strong>, compared with <strong>8,418.79</strong> for Uniform DCA, corresponding to a <strong>2.47%</strong> underperformance.</p>
-<p>For the <strong>test period (2024–2025)</strong>, the External Tunable approach achieved an SPD of <strong>1,346.27</strong>, compared with <strong>1,292.12</strong> for Uniform DCA, representing a <strong>4.19%</strong> improvement.</p>
+<p>For the <strong>training period (2018–2023)</strong>, the External Tunable approach achieved an SPD of <strong>8,211</strong>, compared with <strong>8,419</strong> for Uniform DCA, corresponding to a <strong>2.47%</strong> underperformance.</p>
+<p>For the <strong>test period (2024–2025)</strong>, the External Tunable approach achieved an SPD of <strong>1,346</strong>, compared with <strong>1,292</strong> for Uniform DCA, representing a <strong>4.19%</strong> improvement.</p>
 <p>In the final StackSats comparison, the External Tunable approach also achieved a <strong>win rate of 62.43%</strong>, a <strong>score of 63.97%</strong>, and an <strong>exponential-decay percentile of 65.52%</strong>. These results suggest that the strategy satisfies all requirements for the model to pass and also performs better during the test period than Uniform DCA.</p>
 </section>
 <section id="limitations" class="level2">

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav">
-<meta name="dcterms.date" content="2026-06-03">
-<meta name="description" content="An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.">
+<meta name="author" content="AdaptiveSats Team">
+<meta name="dcterms.date" content="2026-06-19">
+<meta name="description" content="An adaptive Bitcoin accumulation strategy that uses On-Chain Signal Blending. Inspired by the StackSats built-in strategy framework">
 
 <title>Composite Signal Index Strategy for Bitcoin Accumulation – AdaptiveSats</title>
 <style>
@@ -149,7 +149,7 @@ window.Quarto = {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Blog</span></a>
+<span class="menu-text">₿log</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
@@ -172,7 +172,23 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#composite-signal-index-strategy" id="toc-composite-signal-index-strategy" class="nav-link active" data-scroll-target="#composite-signal-index-strategy">Composite Signal Index strategy</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#the-core-idea-a-cheapness-index-for-bitcoin" id="toc-the-core-idea-a-cheapness-index-for-bitcoin" class="nav-link" data-scroll-target="#the-core-idea-a-cheapness-index-for-bitcoin">The Core Idea: A Cheapness Index for Bitcoin</a></li>
+  <li><a href="#the-eight-on-chain-signals" id="toc-the-eight-on-chain-signals" class="nav-link" data-scroll-target="#the-eight-on-chain-signals">The Eight On-Chain Signals</a></li>
+  <li><a href="#step-1-causal-rolling-z-score-standardization" id="toc-step-1-causal-rolling-z-score-standardization" class="nav-link" data-scroll-target="#step-1-causal-rolling-z-score-standardization">Step 1: Causal Rolling Z-Score Standardization</a></li>
+  <li><a href="#step-2-building-the-composite-cheapness-score" id="toc-step-2-building-the-composite-cheapness-score" class="nav-link" data-scroll-target="#step-2-building-the-composite-cheapness-score">Step 2: Building the Composite Cheapness Score</a></li>
+  <li><a href="#step-3-budget-allocation" id="toc-step-3-budget-allocation" class="nav-link" data-scroll-target="#step-3-budget-allocation">Step 3: Budget Allocation</a></li>
+  <li><a href="#step-4-nelder-mead-optimization" id="toc-step-4-nelder-mead-optimization" class="nav-link" data-scroll-target="#step-4-nelder-mead-optimization">Step 4: Nelder-Mead Optimization</a>
+  <ul class="collapse">
+  <li><a href="#parameter-space" id="toc-parameter-space" class="nav-link" data-scroll-target="#parameter-space">Parameter Space</a></li>
+  </ul></li>
+  <li><a href="#guardrails-entropy-regularization-and-a-tighter-sharpness-bound" id="toc-guardrails-entropy-regularization-and-a-tighter-sharpness-bound" class="nav-link" data-scroll-target="#guardrails-entropy-regularization-and-a-tighter-sharpness-bound">Guardrails: Entropy Regularization and a Tighter Sharpness Bound</a></li>
+  <li><a href="#backtest-design" id="toc-backtest-design" class="nav-link" data-scroll-target="#backtest-design">Backtest Design</a></li>
+  <li><a href="#performance" id="toc-performance" class="nav-link" data-scroll-target="#performance">Performance</a></li>
+  <li><a href="#connections-to-the-stacksats-framework" id="toc-connections-to-the-stacksats-framework" class="nav-link" data-scroll-target="#connections-to-the-stacksats-framework">Connections to the Stacksats Framework</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
   </ul>
 </nav>
     </div>
@@ -183,15 +199,16 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">Composite Signal Index Strategy for Bitcoin Accumulation</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">research</div>
-    <div class="quarto-category">bitcoin</div>
-    <div class="quarto-category">data-science</div>
+    <div class="quarto-category">Research</div>
+    <div class="quarto-category">Bitcoin</div>
+    <div class="quarto-category">Strategy</div>
+    <div class="quarto-category">Data-Science</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.
+    An adaptive Bitcoin accumulation strategy that uses On-Chain Signal Blending. Inspired by the StackSats built-in strategy framework
   </div>
 </div>
 
@@ -201,14 +218,14 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav </p>
+             <p>AdaptiveSats Team </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 3, 2026</p>
+      <p class="date">June 19, 2026</p>
     </div>
   </div>
   
@@ -220,8 +237,20 @@ window.Quarto = {
 </header>
 
 
-<section id="composite-signal-index-strategy" class="level3">
-<h3 class="anchored" data-anchor-id="composite-signal-index-strategy">Composite Signal Index strategy</h3>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Dollar-Cost Averaging (DCA) is the default playbook for most Bitcoin accumulators: buy a fixed dollar amount at regular intervals, ignore short-term noise, and trust the long-term trend. It’s simple, disciplined, and genuinely hard to beat on a risk-adjusted basis.</p>
+<p>But what if we could do better - not by timing the market, but by <em>reading its temperature</em>? The <strong>Composite Signal Index</strong> strategy does exactly that. It combines eight carefully chosen on-chain metrics into a single “cheapness score”, then concentrates your buying budget on the days when Bitcoin is most undervalued - all without even peeking into the future.</p>
+<p>This post walks through the full architecture of the strategy: the signals it uses, the mathematics behind the score, how the budget gets allocated within each year, and how the parameters are optimized against historical data.</p>
+</section>
+<section id="the-core-idea-a-cheapness-index-for-bitcoin" class="level2">
+<h2 class="anchored" data-anchor-id="the-core-idea-a-cheapness-index-for-bitcoin">The Core Idea: A Cheapness Index for Bitcoin</h2>
+<p>The strategy is built on a simple premise: <strong>on-chain data contains persistent signals of market undervaluation</strong>. When long-term holders are underwater, when miners are stressed, when sentiment is at rock bottom - these are historically the best moments to accumulate more sats per dollar.</p>
+<p>Rather than betting everything on a single signal, the <strong>Composite Signal Index</strong> strategy blends eight complementary dimensions of market state into one composite score. The score drives a budget allocation system that front-loads buying on cheap days and throttles back when the market looks expensive - all within a fixed annual budget, exactly like DCA.</p>
+</section>
+<section id="the-eight-on-chain-signals" class="level2">
+<h2 class="anchored" data-anchor-id="the-eight-on-chain-signals">The Eight On-Chain Signals</h2>
+<p>Each signal measures a distinct facet of market health. Together they paint a multidimensional picture of whether Bitcoin is cheap or expensive on any given day.</p>
 <div id="tbl-CSI-OnChainSignals" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[30,30,40]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CSI-OnChainSignals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -236,69 +265,249 @@ Table&nbsp;1: Composite Signal Index On-Chain Signals
 </colgroup>
 <thead>
 <tr class="header">
-<th>Signal</th>
-<th>Dimension</th>
-<th>When to buy</th>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: left;">What it measures</th>
+<th style="text-align: left;">Cheap signal when…</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>mvrv</td>
-<td>Market/realised-value ratio - valuation</td>
-<td>Low mvrv = market undervaluation</td>
+<td style="text-align: left;"><code>mvrv</code></td>
+<td style="text-align: left;">Market Value to Realized Value ratio</td>
+<td style="text-align: left;">Low = market undervaluation</td>
 </tr>
 <tr class="even">
-<td>sopr_7d_ema</td>
-<td>Realised profit/loss of spending</td>
-<td>sopr &lt; 1 = investors selling at loss</td>
+<td style="text-align: left;"><code>sopr_7d_ema</code></td>
+<td style="text-align: left;">Spent Output Profit Ratio (7-day EMA)</td>
+<td style="text-align: left;">sopr &lt; 1 = investors selling at loss</td>
 </tr>
 <tr class="odd">
-<td>reserve_risk</td>
-<td>Holder conviction vs.&nbsp;price</td>
-<td>Low reserve risk = high confidence, good buy zone</td>
+<td style="text-align: left;"><code>reserve_risk</code></td>
+<td style="text-align: left;">Holder conviction vs.&nbsp;price</td>
+<td style="text-align: left;">Low = strong conviction relative to price, good buy zone</td>
 </tr>
 <tr class="even">
-<td>greed_index</td>
-<td>Crowd sentiment</td>
-<td>0 = extreme fear, potential bottoms</td>
+<td style="text-align: left;"><code>greed_index</code></td>
+<td style="text-align: left;">Crowd sentiment</td>
+<td style="text-align: left;">0 = extreme fear, potential market bottoms</td>
 </tr>
 <tr class="odd">
-<td>puell_multiple</td>
-<td>Miner economics</td>
-<td>Low puell multiple = miner stress/capitulation</td>
+<td style="text-align: left;"><code>puell_multiple</code></td>
+<td style="text-align: left;">Miner revenue relative to annual average</td>
+<td style="text-align: left;">Low = miner stress/capitulation</td>
 </tr>
 <tr class="even">
-<td>lth_nupl</td>
-<td>Long-term holder unrealised P&amp;L</td>
-<td>Low lth nupl = capitualation/undervaluation</td>
+<td style="text-align: left;"><code>lth_nupl</code></td>
+<td style="text-align: left;">Long-Term Holder Net Unrealized P&amp;L</td>
+<td style="text-align: left;">Low = capitulation/undervaluation</td>
 </tr>
 <tr class="odd">
-<td>sell_side_risk_ratio_7d_ema</td>
-<td>Short-term selling pressure</td>
-<td>Low = market participants not eager to sell</td>
+<td style="text-align: left;"><code>sell_side_risk_ratio_7d_ema</code></td>
+<td style="text-align: left;">Short-term selling pressure</td>
+<td style="text-align: left;">Low = market participants not eager to sell</td>
 </tr>
 <tr class="even">
-<td>net_unrealized_pnl_rel_to_market_cap</td>
-<td>Aggregate unrealised P&amp;L (NUPL)</td>
-<td>Low = investors under water</td>
+<td style="text-align: left;"><code>net_unrealized_pnl_rel_to_market_cap</code></td>
+<td style="text-align: left;">Aggregate NUPL(Net Unrealized Profit/Loss)</td>
+<td style="text-align: left;">Low = widespread unrealized losses</td>
 </tr>
 </tbody>
 </table>
 </div>
 </figure>
 </div>
-<p>Each of the above <a href="#tbl-CSI-OnChainSignals"><strong>on-chain signals</strong></a> is rolling-z-scored (365-day window), inverted into a <em>cheapness score</em> (the strategy wants a high score on cheap days; but cheap days produce negative z-scores; so simply negating flips the relationship), and blended via a <strong>softmax-weighted sum</strong>:</p>
-<p><span class="math display">\[\text{cheapness}_t = \sum_{i=1}^{8} w_i \cdot \left(-z_t^{(i)}\right), \qquad w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}\]</span></p>
+<p>What makes this set powerful is its diversity. MVRV and NUPL measure valuation. SOPR measures realized behavior. Reserve Risk captures conviction dynamics. The Greed Index captures crowd psychology. Puell Multiple tracks miner economics. No single signal dominates every cycle - but their combination covers the most meaningful dimensions of market stress.</p>
+</section>
+<section id="step-1-causal-rolling-z-score-standardization" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-causal-rolling-z-score-standardization">Step 1: Causal Rolling Z-Score Standardization</h2>
+<p>Raw signal values aren’t directly comparable - MVRV lives in a different numeric range than the Greed Index. The first preprocessing step standardizes each signal using a causal rolling 365-day z-score:</p>
+<p><span class="math display">\[z_t^{(i)} = \frac{x_{t-1}^{(i)}-\mu_{t-1,365}^{(i)}}{\sigma_{t-1,365}^{(i)}+\varepsilon}\]</span></p>
+<p>where <span class="math inline">\(\mu_{t-1,365}\)</span> and <span class="math inline">\(\sigma_{t-1,365}\)</span> are the mean and standard deviation computed over the trailing 365-day window ending at day <span class="math inline">\(t-1\)</span>. A small constant <span class="math inline">\(\varepsilon = 10^{-8}\)</span> prevents division by zero.</p>
+<p><strong>Why causal?</strong> Because the strategy must be executable in real time. Using only past data ensures there’s no look-ahead bias - the z-score on any given day only reflects what was knowable up to that day.</p>
+<p><strong>Why 365 days?</strong> A one-year window captures approximately one full seasonal cycle, giving stable statistics while remaining responsive to changing market regimes. With min_periods=2, the window starts computing as soon as two data points are available.</p>
+<p>Sparse signals (like reserve_risk, which may have data gaps) are handled with <strong>forward-fill</strong> - the most recent known value is carried forward. Crucially, no backward fill is used; only past data fills gaps.</p>
+</section>
+<section id="step-2-building-the-composite-cheapness-score" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-building-the-composite-cheapness-score">Step 2: Building the Composite Cheapness Score</h2>
+<p>With all signals on a comparable z-scale, the strategy computes a single cheapness score for each day.</p>
+<p><strong>Signal Weights via Softmax</strong></p>
+<p>The eight signals are combined using a <strong>softmax-weighted</strong> blend. Instead of tuning weights directly (which would require a constrained optimization over the simplex), the model learns an unconstrained <strong>logit vector</strong> <span class="math inline">\(\boldsymbol{\ell} \in \mathbb{R}^8\)</span>, and the actual weights are:</p>
+<p><span class="math display">\[w_i = \frac{e^{\ell_i}}{\sum_j e^{\ell_j}}\]</span></p>
+<p>This parameterization is unconstrained during optimization (<strong>Nelder-Mead</strong>(<span class="citation" data-cites="baudin2010neldermead">Baudin (<a href="#ref-baudin2010neldermead" role="doc-biblioref">2010</a>)</span>) works in unconstrained space), but always produces valid weights that sum to 1 and are strictly positive.</p>
+<p><strong>Cheapness Score</strong></p>
+<p>A positive z-score means a signal is elevated - market is “hot”. Negating the z-scores flips them into cheapness contributions. The composite cheapness for day <span class="math inline">\(t\)</span> is:</p>
+<p><span class="math display">\[\text{cheapness}_t = \sum_{i=1}^{8}w_i \cdot \left(-z_t^{i}\right)\]</span></p>
+<p>When the composite of all signals points toward undervaluation, this score is high and positive. When the market is overheated across most dimensions, the score goes negative.</p>
+<p><strong>Buy Score with Sharpness Exponent</strong></p>
+<p>The raw cheapness score is transformed into a buy score via a non-negative exponentiation:</p>
 <p><span class="math display">\[\text{buy\_score}_t = \max(0,\; \text{cheapness}_t)^{\gamma}\]</span></p>
-<p>The signal logit vector <span class="math inline">\(\boldsymbol{\ell} \in \mathbb{R}^{8}\)</span> and exponent <span class="math inline">\(\gamma &gt; 0\)</span> are jointly optimised by <strong>Nelder-Mead</strong>(<span class="citation" data-cites="baudin2010neldermead">Baudin (<a href="#ref-baudin2010neldermead" role="doc-biblioref">2010</a>)</span>) on the training period to maximise sats-per-dollar (SPD) relative to uniform DCA.</p>
-<p>Each on-chain signal is standardised using a <strong>causal rolling 365-day z-score</strong>:</p>
-<p><span class="math display">\[z_t^{(i)} = \frac{x_t^{(i)} - \mu_{t,365}^{(i)}}{\sigma_{t,365}^{(i)} + \varepsilon}\]</span></p>
-<p>where <span class="math inline">\(\mu_{t,365}\)</span> and <span class="math inline">\(\sigma_{t,365}\)</span> are the mean and standard deviation computed over the trailing 365-day window ending at day <span class="math inline">\(t\)</span> (<code>min_periods=2</code> to handle the warm-up period). A small constant <span class="math inline">\(\varepsilon = 10^{-8}\)</span> prevents division by zero. Z-scores are computed on the combined dataset so that the rolling window is continuous across the train/test boundary, with each day’s z-score using only its own trailing window (no leakage).</p>
-<p><strong>Objective</strong></p>
+<ul>
+<li><strong>Clamping at zero:</strong> When the market is expensive (<span class="math inline">\(\text{cheapness}_t \leq 0\)</span>), the buy score is exactly zero. The strategy doesn’t try to avoid buying on those days - it simply falls back to minimum allocation.</li>
+<li><strong>Sharpness exponent <span class="math inline">\(\gamma\)</span>:</strong> This controls how aggressively the strategy concentrates capital on the best days.
+<ul>
+<li><span class="math inline">\(\gamma &gt; 1\)</span>: Amplifies the peaks. The strategy accumulates capital for deployment on only the cheapest periods.</li>
+<li><span class="math inline">\(\gamma &lt; 1\)</span>: Smooths contributions. Spreads buying more evenly across moderately cheap days.</li>
+<li><span class="math inline">\(\gamma = 1\)</span>: Linear relationship between cheapness and allocation weight.</li>
+</ul></li>
+</ul>
+<p>Both the logit vector <span class="math inline">\(\boldsymbol{\ell}\)</span> and exponent <span class="math inline">\(\gamma\)</span> are learned from data, giving the optimizer two degrees of freedom: which signals to trust and how sharply to act on the cheapness signal.</p>
+</section>
+<section id="step-3-budget-allocation" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-budget-allocation">Step 3: Budget Allocation</h2>
+<p>The strategy operates under a strict budget constraint: <strong>the entire annual budget must be deployed within each 365-day window</strong>, with per-day bounds of [<span class="math inline">\(10^{−5}\)</span>, 0.1].</p>
+<p>The allocator must decide, day by day, how much of the remaining budget to spend - without knowing how cheap future days will be.</p>
+<p><strong>The Algorithm</strong></p>
+<p>For each 365-day window:</p>
+<div style="border: 1px solid #ccc; border-radius: 6px; padding: 1em; background: #f8f8f8;">
+<pre><code>remaining_budget ← 1.0
+running_scores   ← []
+
+for t = 0 … 364:
+    score_t  ← buy_score[t]
+    running_scores.append(score_t)
+    remaining_days_after ← 364 − t
+
+    if t == 364:
+        w_t ← remaining_budget   # last day: spend everything left
+
+    else:
+        running_mean ← mean(running_scores)
+        estimated_remaining_sum ← score_t + running_mean × remaining_days_after
+
+        if estimated_remaining_sum &gt; 0:
+            w_t_raw ← (score_t / estimated_remaining_sum) × remaining_budget
+        else:
+            w_t_raw ← remaining_budget / (remaining_days_after + 1)  # uniform fallback
+
+        max_allowed ← min(MAX_WEIGHT, remaining_budget − remaining_days_after × MIN_WEIGHT)
+        w_t ← clamp(w_t_raw, MIN_WEIGHT, max(max_allowed, MIN_WEIGHT))
+
+    remaining_budget −= w_t</code></pre>
+</div>
+<p><strong>The Key Insight: Estimating the Remaining Score Sum</strong></p>
+<p>The denominator <code>score_t + running_mean × remaining_days_after</code> is a <strong>causal estimate</strong> of the total score left in the window. It asks: “If future days are, on average, as cheap as past days have been so far, what total score should I expect?”</p>
+<p>This is the simplest unbiased estimator available at time <span class="math inline">\(t\)</span> without look-ahead. On a very cheap day (high score), the fraction <code>score_t / estimated_remaining_sum</code> is large, so a bigger portion of the remaining budget is deployed. On an average day, allocation is proportional to budget.</p>
+<p><strong>Budget Safety Guards</strong></p>
+<p>Two guards prevent the algorithm from running out of budget or locking itself into a constraint-infeasible state:</p>
+<ul>
+<li><strong>max_allowed:</strong> Ensures that after spending <span class="math inline">\(w_t\)</span>, there is still enough budget remaining to give every future day at least <code>MIN_WEIGHT</code>. This prevents over-spending early.</li>
+<li><strong>[MIN_WEIGHT, MAX_WEIGHT] clamp:</strong> Every day gets at least a token allocation (no day is skipped), and no single day consumes more than 10% of the annual budget.</li>
+</ul>
+<p>A bounded simplex projection step is applied to enforce the constraints exactly and renormalize the window’s weights to sum precisely to 1.0.</p>
+</section>
+<section id="step-4-nelder-mead-optimization" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-nelder-mead-optimization">Step 4: Nelder-Mead Optimization</h2>
+<p>The logit vector <span class="math inline">\(\boldsymbol{\ell} \in \mathbb{R}^8\)</span> and log-exponent <span class="math inline">\(log \gamma\)</span> form a <strong>9-dimensional parameter vector</strong> that is jointly optimized on the training period (2018 - 2023).</p>
+<section id="parameter-space" class="level3">
+<h3 class="anchored" data-anchor-id="parameter-space">Parameter Space</h3>
+<div id="tbl-parameters" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[30,60,10]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Parameters
+</figcaption>
+<div aria-describedby="tbl-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 60%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Representation</th>
+<th style="text-align: left;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Signal logits <span class="math inline">\(\ell_1 \dots \ell_{8}\)</span></td>
+<td style="text-align: left;">Unconstrained reals; signal weights <span class="math inline">\(= \text{softmax}(\boldsymbol{\ell})\)</span></td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log-exponent <span class="math inline">\(\log \gamma\)</span></td>
+<td style="text-align: left;">Unconstrained real; <span class="math inline">\(\gamma = e^{\log\gamma}\)</span> clipped to <span class="math inline">\([e^{-3}, e^{3}]\)</span></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Total</strong></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><strong>9</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The starting point <span class="math inline">\(\boldsymbol{\theta}_0 = \mathbf{0}\)</span> corresponds to equal signal weights and <span class="math inline">\(\gamma\)</span> = 1 - effectively the simplest possible composite index with no learned preferences.</p>
+<p><strong>Objective: Maximize Sats Per Dollar (SPD)</strong></p>
+<p>The optimizer maximizes <strong>mean sats-per-dollar (SPD) ratio</strong> relative to uniform DCA, averaged across all complete 365-day windows in the training period:</p>
 <p><span class="math display">\[\max_{\boldsymbol{\theta}} \;\frac{1}{K}\sum_{k=1}^{K} \frac{\text{SPD}_{\text{strategy}}^{(k)}}{\text{SPD}_{\text{DCA}}^{(k)}}\]</span></p>
-<p>where <span class="math inline">\(K\)</span> is the number of complete 365-day windows in the training period, and</p>
+<p>where</p>
 <p><span class="math display">\[\text{SPD}^{(k)} = \sum_{t \in \text{window } k} \frac{w_t}{P_t}\]</span></p>
-<p>is the <strong>sats-per-dollar</strong> accumulated in window <span class="math inline">\(k\)</span> (higher = better). Implemented as minimize(objective, <span class="math inline">\(\boldsymbol{\theta}\)</span>, method=“Nelder-Mead”)(<span class="citation" data-cites="scipy_neldermead">SciPy Developers (<a href="#ref-scipy_neldermead" role="doc-biblioref">2026</a>)</span>).</p>
+<p>SPD is the natural objective for a Bitcoin accumulation strategy. Higher SPD means more BTC (or sats) acquired per dollar deployed. By expressing it as a ratio to DCA, the objective is dimensionless and comparable across different price environments.</p>
+<p><strong>Why Nelder-Mead?</strong></p>
+<p>Nelder-Mead(<span class="citation" data-cites="baudin2010neldermead">Baudin (<a href="#ref-baudin2010neldermead" role="doc-biblioref">2010</a>)</span>) is a derivative-free simplex method - suitable here because:</p>
+<ul>
+<li>The objective function (SPD ratio after budget allocation) is not analytically differentiable with respect to the parameters.</li>
+<li>The parameter space is small (9 dimensions), making gradient-free search computationally tractable.</li>
+<li>The algorithm is robust to mild non-convexity, which is expected in this type of financial optimization.</li>
+</ul>
+<p>Optimization runs for up to 5,000 function evaluations with adaptive simplex scaling. Implemented as minimize(objective, <span class="math inline">\(\boldsymbol{\theta}\)</span>, method=“Nelder-Mead”)(<span class="citation" data-cites="scipy_neldermead">SciPy Developers (<a href="#ref-scipy_neldermead" role="doc-biblioref">2026</a>)</span>).</p>
+</section>
+</section>
+<section id="guardrails-entropy-regularization-and-a-tighter-sharpness-bound" class="level2">
+<h2 class="anchored" data-anchor-id="guardrails-entropy-regularization-and-a-tighter-sharpness-bound">Guardrails: Entropy Regularization and a Tighter Sharpness Bound</h2>
+<p>Two design choices keep the optimizer from collapsing onto a degenerate, single-signal solution:</p>
+<p><strong>Entropy penalty on the logits</strong>. The objective subtracts a penalty proportional to how far the softmax weight distribution drifts from uniform:</p>
+<p><span class="math display">\[\text{penalty}(\boldsymbol{\ell}) = \lambda \left(\log n - H(\mathbf{w})\right), \quad H(\mathbf{w}) = -\sum_i w_i \log w_i\]</span></p>
+<p>with <span class="math inline">\(\lambda = 0.05\)</span>. This is zero when weights are perfectly uniform and grows as the distribution concentrates onto fewer signals, directly discouraging the optimizer from routing all its weight into one or two dominant signals purely because they happened to fit the training years best.</p>
+<p><strong>Tighter exponent bound</strong>. <span class="math inline">\(\log \gamma\)</span> is clipped to [−1.6,1.6] (i.e., <span class="math inline">\(\gamma \in [0.2, 5.0]\)</span>). This prevents the sharpness exponent from running away toward values that turn buy_score into a near-indicator function dominated by a handful of extreme-outlier days.</p>
+</section>
+<section id="backtest-design" class="level2">
+<h2 class="anchored" data-anchor-id="backtest-design">Backtest Design</h2>
+<p><strong>Train / Test Split</strong></p>
+<div id="tbl-train-test" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[20,30,50]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-train-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Train/Test details
+</figcaption>
+<div aria-describedby="tbl-train-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 30%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Period</th>
+<th style="text-align: left;">Date Range</th>
+<th style="text-align: left;">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Training</td>
+<td style="text-align: left;">2018-01-01 → 2023-12-31</td>
+<td style="text-align: left;">Parameter optimization (6 complete years)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Testing</td>
+<td style="text-align: left;">2024-01-01 → 2025-12-31</td>
+<td style="text-align: left;">Out-of-sample evaluation (2 years)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>Leap Year Handling</strong></p>
+<p>Each calendar year contributes exactly 365 rows to the evaluation window. For leap years (366 days), the first day (January 1) is dropped - the last 365 days of the year are used. This ensures the window size constraint is never violated.</p>
+<p><strong>What the Optimization Learns</strong></p>
+<p>After Nelder-Mead converges, the learned signal weights (via softmax of the optimized logits) reveal which signals were most predictive of subsequent price appreciation over the training period. Signals that receive above-equal-weight (&gt;1/8 = 0.125) are shown in blue; those below are shown in coral in the weight visualization.</p>
+<p>The learned <span class="math inline">\(\gamma\)</span> also tells a story: a value greater than 1 confirms the optimizer found it beneficial to sharply concentrate capital on the cheapest days rather than spreading it smoothly - the cheapness signal has enough predictive power to justify aggressiveness.</p>
 <div id="fig-learned-signal-weights" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-learned-signal-weights-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -309,6 +518,9 @@ Figure&nbsp;1: Optimized Signal Weights
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="performance" class="level2">
+<h2 class="anchored" data-anchor-id="performance">Performance</h2>
 <div id="fig-composite-signal-index-strategy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-composite-signal-index-strategy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -319,14 +531,47 @@ Figure&nbsp;2: Composite Signal Index strategy vs Uniform DCA
 </figcaption>
 </figure>
 </div>
+<p>For the training period (2018-2023), the Composite Signal Index strategy achieved an SPD of 8,435, compared with 8,419 for Uniform DCA, corresponding to an improvement of 0.20%.</p>
+<p>For the test period (2024-2025), the Composite Signal Index strategy achieved an SPD of 1,427, compared with 1,292 for Uniform DCA, representing an improvement of 10.44%. It also achieved a win rate of 100%, a score of 80.33%, and an exponential-decay percentile of 60.66%.</p>
+</section>
+<section id="connections-to-the-stacksats-framework" class="level2">
+<h2 class="anchored" data-anchor-id="connections-to-the-stacksats-framework">Connections to the Stacksats Framework</h2>
+<p>Composite Signal Index strategy sits squarely within the Stacksats philosophy: use on-chain metrics and engineered features to determine weight allocation for a given accumulation window (<span class="citation" data-cites="stacksats_strategies">HyperTrial (<a href="#ref-stacksats_strategies" role="doc-biblioref">2025</a>)</span>).</p>
+<p>The framework provides:</p>
+<ul>
+<li><code>StrategyRunner</code> - executes strategies day-by-day via <code>propose_weight</code>, handling all budget tracking and constraint enforcement.</li>
+<li><code>BacktestConfig</code> / <code>ComparisonConfig</code> - standardized evaluation across strategies and date ranges.</li>
+<li><code>UniformStrategy</code> - the DCA baseline for comparison.</li>
+<li><code>BaseStrategy</code> - the interface any custom strategy must implement.</li>
+</ul>
+<p>Composite Signal Index strategy extends this with its own optimization layer (Nelder-Mead over the SPD objective) that learns weights entirely from data, without hand-tuning individual signal importances.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<ul>
+<li><p><strong>Overfitting risk:</strong> The model might memorize the timing of Bitcoin’s past halving cycles. If future cycles change shape, the optimized weights might fail.</p></li>
+<li><p><strong>On-chain regime shifts:</strong> The underlying metrics assume Bitcoin behaves the same way over time. But Bitcoin’s market structure keeps changing, traditional on-chain signals may not predict market behavior reliably.</p></li>
+</ul>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>The Composite Signal Index strategy is a principled, data-driven approach to Bitcoin accumulation. By blending eight complementary on-chain metrics into a single cheapness score, optimizing signal importances and allocation sharpness jointly via Nelder-Mead, and deploying capital through a causal online budget algorithm, Composite Signal Index strategy aims to systematically accumulate more sats per dollar than uniform DCA - without ever using future information or violating budget constraints.</p>
+<p>It is not a market timing system. It doesn’t predict prices. It reads the accumulated behavioral signal of the entire Bitcoin ecosystem - holders, miners, traders, and sentiment - and leans into the moments when that signal points most clearly toward undervaluation.</p>
+<p>That’s a more principled bet than buying blindly every day at the same weight.</p>
+</section>
+<section id="further-reading" class="level2">
+
 
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Further Reading</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-baudin2010neldermead" class="csl-entry" role="listitem">
 Baudin, Michael. 2010. <em>Nelder-Mead User’s Manual</em>. Consortium Scilab – Digiteo. <a href="https://www.scilab.org/sites/default/files/neldermead.pdf">https://www.scilab.org/sites/default/files/neldermead.pdf</a>.
+</div>
+<div id="ref-stacksats_strategies" class="csl-entry" role="listitem">
+HyperTrial. 2025. <em>HyperTrial: A Research Platform for Adaptive Strategies</em>. <a href="https://hypertrial.github.io/stacksats/reference/strategies/">https://hypertrial.github.io/stacksats/reference/strategies/</a>.
 </div>
 <div id="ref-scipy_neldermead" class="csl-entry" role="listitem">
 SciPy Developers. 2026. <em>Minimize(method=’nelder-Mead’)</em>. <a href="https://docs.scipy.org/doc/scipy/reference/optimize.minimize-neldermead.html" class="uri">Https://docs.scipy.org/doc/scipy/reference/optimize.minimize-neldermead.html</a>.

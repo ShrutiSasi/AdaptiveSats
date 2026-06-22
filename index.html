@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Blog – AdaptiveSats</title>
+<title>Welcome to the AdaptiveSats ₿log space – AdaptiveSats</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -158,7 +158,7 @@ window.Quarto = {
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Blog</span></a>
+<span class="menu-text">₿log</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
@@ -176,7 +176,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Blog</h1>
+      <h1 class="title">Welcome to the AdaptiveSats ₿log space</h1>
                       </div>
   </div>
     
@@ -193,8 +193,21 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="QmFja3Rlc3Rpbmc=">Backtesting <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Yml0Y29pbg==">bitcoin <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Qml0Y29pbg==">Bitcoin <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZGF0YS1zY2llbmNl">data-science <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UmVnaW1lLUJhc2Vk">Regime-Based <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmVzZWFyY2g=">research <span class="quarto-category-count">(3)</span></div><div class="category" data-category="U3RyYXRlZ3k=">Strategy <span class="quarto-category-count">(2)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-challenge-with-uniform-dca" id="toc-the-challenge-with-uniform-dca" class="nav-link active" data-scroll-target="#the-challenge-with-uniform-dca">The Challenge with Uniform DCA</a></li>
+  <li><a href="#our-approach-adaptive-dca" id="toc-our-approach-adaptive-dca" class="nav-link" data-scroll-target="#our-approach-adaptive-dca">Our Approach: Adaptive DCA</a>
+  <ul class="collapse">
+  <li><a href="#key-data-signals" id="toc-key-data-signals" class="nav-link" data-scroll-target="#key-data-signals">Key Data &amp; Signals</a></li>
+  <li><a href="#defining-success-metrics-evaluation" id="toc-defining-success-metrics-evaluation" class="nav-link" data-scroll-target="#defining-success-metrics-evaluation">Defining Success: Metrics &amp; Evaluation</a></li>
+  <li><a href="#strategy-performance-comparison" id="toc-strategy-performance-comparison" class="nav-link" data-scroll-target="#strategy-performance-comparison">Strategy Performance Comparison</a></li>
+  </ul></li>
+  <li><a href="#continue-reading-our-strategies-results-in-the-following-posts" id="toc-continue-reading-our-strategies-results-in-the-following-posts" class="nav-link" data-scroll-target="#continue-reading-our-strategies-results-in-the-following-posts"><strong>Continue reading our strategies &amp; results in the following posts…</strong></a></li>
+  </ul>
+</nav>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="QmFja3Rlc3Rpbmc=">Backtesting <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Qml0Y29pbg==">Bitcoin <span class="quarto-category-count">(4)</span></div><div class="category" data-category="RGF0YS1TY2llbmNl">Data-Science <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UmVnaW1lLUJhc2Vk">Regime-Based <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVzZWFyY2g=">Research <span class="quarto-category-count">(4)</span></div><div class="category" data-category="U3RyYXRlZ3k=">Strategy <span class="quarto-category-count">(4)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -202,17 +215,166 @@ window.Quarto = {
 
 
 
-<p>Welcome to the <strong>AdaptiveSats</strong> blog!</p>
-<p>We are a team of 4 Master of Data Science student from The University of British Columbia who are passionate about Bitcoin and financial markets.</p>
-<p>This project, built in partnership with the <a href="https://www.trilemma.foundation/">Trilemma Foundation</a>, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a naive <strong>Dollar-Cost Averaging (DCA)</strong> approach, which serves as our primary baseline strategy.</p>
-<hr>
+<p>We are a team of 4 <strong>Master of Data Science</strong> students from the <strong>University of British Columbia</strong> who are passionate about Bitcoin and financial markets.</p>
+<p>The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?</p>
+<img src="figures/fig_bitcoin.jpeg" id="fig_bitcoin" class="img-fluid" data-fig-pos="H">
+<div style="font-size: 0.8em;">
+<p>Photo by Shruti Sasi</p>
+</div>
+<p>This project, built in partnership with the <a href="https://www.trilemma.foundation/">Trilemma Foundation</a>, aims to evaluate whether public Bitcoin market and on-chain data can be leveraged to improve long-term accumulation compared to a uniform <strong>Dollar-Cost Averaging (DCA)</strong> approach, which serves as our primary baseline strategy.</p>
+<p>The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the <a href="https://github.com/bitcoinresearchkit/brk">BRK metrics dataset</a> from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature selection, and backtest adaptive allocation strategies against uniform DCA.</p>
+<section id="the-challenge-with-uniform-dca" class="level2">
+<h2 class="anchored" data-anchor-id="the-challenge-with-uniform-dca">The Challenge with Uniform DCA</h2>
+<p>For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, uniform DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoric phase or significantly undervalued during a capitulation phase.</p>
+<p>For investors with fixed accumulation budgets, this rigidity can reduce efficiency, leading them to miss prime opportunities to acquire more Bitcoin at the same fiat cost.</p>
+</section>
+<section id="our-approach-adaptive-dca" class="level2">
+<h2 class="anchored" data-anchor-id="our-approach-adaptive-dca">Our Approach: Adaptive DCA</h2>
+<p>Our objective is to develop an <strong>adaptive daily allocation model</strong>. Instead of fixed purchases, our strategy adjusts its allocations dynamically based on public on-chain and market signals.</p>
+<p>We measure our success using <strong>Sats per Dollar (SPD)</strong>. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).</p>
+<section id="key-data-signals" class="level3">
+<h3 class="anchored" data-anchor-id="key-data-signals">Key Data &amp; Signals</h3>
+<p>We are leveraging the open-source <strong>BRK dataset</strong> from the StackSats ecosystem. This rich dataset provides over 41,000 distinct daily metrics stretching back to 2009.</p>
+<p><img src="figures/fig_data_details.png" id="fig_data_details" class="img-fluid" data-fig-pos="H"></p>
+<p>Our strategy explores key on-chain indicators known to historically signal favorable accumulation windows, such as:</p>
+<ul>
+<li><strong>MVRV (Market Value to Realized Value)</strong>: Identifies when the market price dips below the aggregate cost basis.</li>
+<li><strong>NUPL (Net Unrealized Profit/Loss)</strong>: Highlights periods when the majority of holders are underwater.</li>
+<li><strong>SOPR (Spent Output Profit Ratio)</strong>: Indicates capitulation when coins are sold at a loss on aggregate.</li>
+</ul>
+</section>
+<section id="defining-success-metrics-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="defining-success-metrics-evaluation">Defining Success: Metrics &amp; Evaluation</h3>
+<ul>
+<li><strong>Sats per Dollar - SPD:</strong><br>
+We evaluate accumulation efficiency using Sats per Dollar (SPD), defined as the total Bitcoin accumulated per unit of USD invested. A higher SPD indicates better performance, as it reflects a lower average acquisition cost.</li>
+<li><strong>Win Rate:</strong><br>
+Win rate is binary: beating uniform DCA within a window is a win, irrespective of the margin. Uses the percentage of evaluation windows where the adaptive strategy outperforms uniform DCA in terms of SPD. A win rate above 50% indicates that the adaptive strategy is more effective than uniform DCA in the majority of cases.</li>
+<li><strong>Exponential-Decay Percentile:</strong><br>
+This metric is a recency-weighted average of the strategy’s percentile scores across all windows. Each window’s percentile shows where the strategy’s SPD falls between the minimum and maximum SPD for that window. Recent windows get higher weight, so the metric tells us how well the strategy performed overall, with more focus on recent performance.</li>
+<li><strong>Score:</strong><br>
+A composite metric that combines 50% win rate and 50% exponential-decay percentile to provide an overall performance score for the adaptive strategy. This score helps to summarize the effectiveness of the strategy in a single value, facilitating easier comparison against the baseline.</li>
+</ul>
+</section>
+<section id="strategy-performance-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="strategy-performance-comparison">Strategy Performance Comparison</h3>
+<div id="tbl-strategy-comparison" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[15,15,15,15,15,15,10]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-strategy-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Strategy performance summary (test period, 2024–2025)
+</figcaption>
+<div aria-describedby="tbl-strategy-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th>Multi-Strategy Regime-Based</th>
+<th>HMM-GARCH Adaptive</th>
+<th>HMM-BAYES Adaptive</th>
+<th>Composite Signal Index</th>
+<th>External Tunable</th>
+<th>Uniform (Baseline)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Win Rate</td>
+<td>63.76%</td>
+<td>72.75%</td>
+<td>76.29%</td>
+<td>100%</td>
+<td>100%</td>
+<td>can’t beat itself</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Exponential-Decay Percentile</td>
+<td>38.72%</td>
+<td>47.35%</td>
+<td>40.63%</td>
+<td>60.66%</td>
+<td>65.5%</td>
+<td>38.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Score</td>
+<td>51.24%</td>
+<td>60.05%</td>
+<td>58.46%</td>
+<td>80.33%</td>
+<td>82.76%</td>
+<td>19.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avg SPD</td>
+<td>1369 <br><small>(+5.99%)</small></td>
+<td>1313 <br><small>(+1.60%)</small></td>
+<td>1297 <br><small>(+0.37%)</small></td>
+<td>1423 <br><small>(+10.13%)</small></td>
+<td>1346 <br><small>(+4.14%)</small></td>
+<td>1292</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+</section>
+<section id="continue-reading-our-strategies-results-in-the-following-posts" class="level2">
+<h2 class="anchored" data-anchor-id="continue-reading-our-strategies-results-in-the-following-posts"><strong>Continue reading our strategies &amp; results in the following posts…</strong></h2>
 
 
 
+</section>
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="cmVzZWFyY2glMkNiaXRjb2luJTJDZGF0YS1zY2llbmNl" data-listing-date-sort="1781740800000" data-listing-file-modified-sort="1781897769009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1286">
+<div class="quarto-post image-right" data-index="0" data-categories="UmVzZWFyY2glMkNCaXRjb2luJTJDU3RyYXRlZ3klMkNEYXRhLVNjaWVuY2U=" data-listing-date-sort="1781827200000" data-listing-file-modified-sort="1782168787257" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2253">
+<div class="thumbnail"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
+
+<p class="card-img-top"><img loading='lazy' src="figures/fig_learned_signal_weights.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">Composite Signal Index Strategy for Bitcoin Accumulation</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2g='); return false;">Research</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Qml0Y29pbg=='); return false;">Bitcoin</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RyYXRlZ3k='); return false;">Strategy</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGF0YS1TY2llbmNl'); return false;">Data-Science</div>
+
+</div>
+<div class="delink listing-description"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
+<p>An adaptive Bitcoin accumulation strategy that uses On-Chain Signal Blending. Inspired by the StackSats built-in strategy framework</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
+<div class="listing-date">
+Jun 19, 2026
+</div>
+<div class="listing-author">
+AdaptiveSats Team
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="UmVzZWFyY2glMkNCaXRjb2luJTJDU3RyYXRlZ3klMkNEYXRhLVNjaWVuY2U=" data-listing-date-sort="1781740800000" data-listing-file-modified-sort="1782168787257" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1302">
 <div class="thumbnail"><a href="./posts/garch_content/index.html" class="no-external">
 
 <p class="card-img-top"><img loading='lazy' src="figures/full_garch_hmm_plot.png"  class="thumbnail-image card-img"/></p>
@@ -224,11 +386,13 @@ window.Quarto = {
 </h3>
 <div class="listing-categories">
 
-<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
+<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2g='); return false;">Research</div>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Yml0Y29pbg=='); return false;">bitcoin</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Qml0Y29pbg=='); return false;">Bitcoin</div>
 
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1zY2llbmNl'); return false;">data-science</div>
+<div class="listing-category" onclick="window.quartoListingCategory('U3RyYXRlZ3k='); return false;">Strategy</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGF0YS1TY2llbmNl'); return false;">Data-Science</div>
 
 </div>
 <div class="delink listing-description"><a href="./posts/garch_content/index.html" class="no-external">
@@ -241,12 +405,12 @@ window.Quarto = {
 Jun 18, 2026
 </div>
 <div class="listing-author">
-Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
+AdaptiveSats Team
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="Qml0Y29pbiUyQ1N0cmF0ZWd5" data-listing-date-sort="1781740800000" data-listing-file-modified-sort="1781897769009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1588">
+<div class="quarto-post image-right" data-index="2" data-categories="UmVzZWFyY2glMkNCaXRjb2luJTJDU3RyYXRlZ3k=" data-listing-date-sort="1781740800000" data-listing-file-modified-sort="1782168787257" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1602">
 <div class="thumbnail"><a href="./posts/external-tunable-post/index.html" class="no-external">
 
 <p class="card-img-top"><img loading='lazy' src="figures/bear_bitcoin_cycle.png"  class="thumbnail-image card-img"/></p>
@@ -258,13 +422,15 @@ Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
 </h3>
 <div class="listing-categories">
 
+<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2g='); return false;">Research</div>
+
 <div class="listing-category" onclick="window.quartoListingCategory('Qml0Y29pbg=='); return false;">Bitcoin</div>
 
 <div class="listing-category" onclick="window.quartoListingCategory('U3RyYXRlZ3k='); return false;">Strategy</div>
 
 </div>
 <div class="delink listing-description"><a href="./posts/external-tunable-post/index.html" class="no-external">
-<p>An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum, it identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.</p>
+<p>An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin’s price momentum. It identifies ‘Risk-On’ and ‘Risk-Off’ market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash.</p>
 </a></div>
 </div>
 <div class="metadata">
@@ -278,7 +444,7 @@ AdaptiveSats Team
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="Qml0Y29pbiUyQ1N0cmF0ZWd5JTJDUmVnaW1lLUJhc2VkJTJDQmFja3Rlc3Rpbmc=" data-listing-date-sort="1781568000000" data-listing-file-modified-sort="1781897769009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3465">
+<div class="quarto-post image-right" data-index="3" data-categories="UmVzZWFyY2glMkNCaXRjb2luJTJDU3RyYXRlZ3klMkNSZWdpbWUtQmFzZWQlMkNCYWNrdGVzdGluZw==" data-listing-date-sort="1781568000000" data-listing-file-modified-sort="1782168787257" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3253">
 <div class="thumbnail"><a href="./posts/multi-strategy-regime-based-approach/index.html" class="no-external">
 
 <p class="card-img-top"><img loading='lazy' src="figures/multi-strategy-approach-plot.png"  class="thumbnail-image card-img"/></p>
@@ -289,6 +455,8 @@ AdaptiveSats Team
 <a href="./posts/multi-strategy-regime-based-approach/index.html" class="no-external">Multi-Strategy Regime-Based Approach for Bitcoin Accumulation</a>
 </h3>
 <div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2g='); return false;">Research</div>
 
 <div class="listing-category" onclick="window.quartoListingCategory('Qml0Y29pbg=='); return false;">Bitcoin</div>
 
@@ -310,74 +478,6 @@ Jun 16, 2026
 </div>
 <div class="listing-author">
 AdaptiveSats Team
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="cmVzZWFyY2glMkNiaXRjb2luJTJDZGF0YS1zY2llbmNl" data-listing-date-sort="1780444800000" data-listing-file-modified-sort="1781897769009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="412">
-<div class="thumbnail"><a href="./posts/introduction/index.html" class="no-external">
-
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/introduction/index.html" class="no-external">Introducing AdaptiveSats: Data-Driven Bitcoin Accumulation</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Yml0Y29pbg=='); return false;">bitcoin</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1zY2llbmNl'); return false;">data-science</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/introduction/index.html" class="no-external">
-Detail introduction of the AdaptiveSats project
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/introduction/index.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2026
-</div>
-<div class="listing-author">
-Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="cmVzZWFyY2glMkNiaXRjb2luJTJDZGF0YS1zY2llbmNl" data-listing-date-sort="1780444800000" data-listing-file-modified-sort="1781897769009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="335">
-<div class="thumbnail"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
-
-<p class="card-img-top"><img loading='lazy' src="figures/fig_learned_signal_weights.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">Composite Signal Index Strategy for Bitcoin Accumulation</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Yml0Y29pbg=='); return false;">bitcoin</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1zY2llbmNl'); return false;">data-science</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
-<p>An adaptive Bitcoin accumulation strategy that uses the Nelder-Mead algorithm to optimize signal weights and propose weight allocations.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/composite-signal-index-strategy/index.html" class="no-external">
-<div class="listing-date">
-Jun 3, 2026
-</div>
-<div class="listing-author">
-Trilemma Foundation, Shruti Sasi, Arafat Bright Bello, Nguyen Nguyen, Raghav
 </div>
 </a>
 </div>

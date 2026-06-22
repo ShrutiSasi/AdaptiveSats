@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -101,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Blog</span></a>
+<span class="menu-text">₿log</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/ShrutiSasi/AdaptiveSats"> <i class="bi bi-github" role="img">
@@ -127,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#why-this-strategy-was-needed" id="toc-why-this-strategy-was-needed" class="nav-link active" data-scroll-target="#why-this-strategy-was-needed">Why this strategy was needed</a></li>
   <li><a href="#high-level-idea" id="toc-high-level-idea" class="nav-link" data-scroll-target="#high-level-idea">High-level idea</a></li>
   <li><a href="#key-features-used" id="toc-key-features-used" class="nav-link" data-scroll-target="#key-features-used">Key features used</a></li>
-  <li><a href="#grid-search-used" id="toc-grid-search-used" class="nav-link" data-scroll-target="#grid-search-used">Grid search used</a></li>
+  <li><a href="#selecting-the-final-settings" id="toc-selecting-the-final-settings" class="nav-link" data-scroll-target="#selecting-the-final-settings">Selecting the final settings</a></li>
   <li><a href="#the-three-components-of-the-regime" id="toc-the-three-components-of-the-regime" class="nav-link" data-scroll-target="#the-three-components-of-the-regime">The three components of the regime</a>
   <ul class="collapse">
   <li><a href="#bitcoin-trend-regime" id="toc-bitcoin-trend-regime" class="nav-link" data-scroll-target="#bitcoin-trend-regime">1. Bitcoin trend regime</a></li>
@@ -137,15 +156,15 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#total-number-of-regimes" id="toc-total-number-of-regimes" class="nav-link" data-scroll-target="#total-number-of-regimes">Total number of regimes</a></li>
   <li><a href="#candidate-strategies" id="toc-candidate-strategies" class="nav-link" data-scroll-target="#candidate-strategies">Candidate strategies</a>
   <ul class="collapse">
-  <li><a href="#stacksats-mvrv-strategy" id="toc-stacksats-mvrv-strategy" class="nav-link" data-scroll-target="#stacksats-mvrv-strategy">StackSats MVRV Strategy</a></li>
   <li><a href="#stacksats-momentum-strategy" id="toc-stacksats-momentum-strategy" class="nav-link" data-scroll-target="#stacksats-momentum-strategy">StackSats Momentum Strategy</a></li>
+  <li><a href="#stacksats-mvrv-strategy" id="toc-stacksats-mvrv-strategy" class="nav-link" data-scroll-target="#stacksats-mvrv-strategy">StackSats MVRV Strategy</a></li>
   <li><a href="#custom-sma-strategy" id="toc-custom-sma-strategy" class="nav-link" data-scroll-target="#custom-sma-strategy">Custom SMA Strategy</a></li>
   </ul></li>
   <li><a href="#learning-the-best-strategy-per-regime" id="toc-learning-the-best-strategy-per-regime" class="nav-link" data-scroll-target="#learning-the-best-strategy-per-regime">Learning the best strategy per regime</a></li>
   <li><a href="#fallback-strategy" id="toc-fallback-strategy" class="nav-link" data-scroll-target="#fallback-strategy">Fallback strategy</a></li>
-  <li><a href="#model-selection-and-final-testing" id="toc-model-selection-and-final-testing" class="nav-link" data-scroll-target="#model-selection-and-final-testing">Model Selection and Final Testing</a></li>
+  <li><a href="#model-selection-and-final-testing" id="toc-model-selection-and-final-testing" class="nav-link" data-scroll-target="#model-selection-and-final-testing">Model selection and final testing</a></li>
   <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation metrics</a></li>
-  <li><a href="#final-backtest-visualization" id="toc-final-backtest-visualization" class="nav-link" data-scroll-target="#final-backtest-visualization">Final backtest visualization</a></li>
+  <li><a href="#full-period-strategy-visualization" id="toc-full-period-strategy-visualization" class="nav-link" data-scroll-target="#full-period-strategy-visualization">Full-period strategy visualization</a></li>
   <li><a href="#key-results" id="toc-key-results" class="nav-link" data-scroll-target="#key-results">Key results</a></li>
   <li><a href="#why-this-approach-is-useful" id="toc-why-this-approach-is-useful" class="nav-link" data-scroll-target="#why-this-approach-is-useful">Why this approach is useful</a></li>
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
@@ -160,6 +179,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title">
 <h1 class="title">Multi-Strategy Regime-Based Approach for Bitcoin Accumulation</h1>
   <div class="quarto-categories">
+    <div class="quarto-category">Research</div>
     <div class="quarto-category">Bitcoin</div>
     <div class="quarto-category">Strategy</div>
     <div class="quarto-category">Regime-Based</div>
@@ -221,48 +241,44 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Growth relationship</strong>: whether market-cap growth or realized-cap growth is leading</li>
 </ul>
 <p>So each day receives a combined regime label in this format:</p>
+<blockquote class="blockquote">
 <p><strong>Bitcoin trend | MVRV valuation | Growth relationship</strong></p>
+</blockquote>
 <p>For example, one day might be classified as:</p>
+<blockquote class="blockquote">
 <p><strong>BTC Bull | Normal MVRV | Market Growth Leading</strong></p>
+</blockquote>
 <p>Another day might be classified as:</p>
+<blockquote class="blockquote">
 <p><strong>BTC Bear | Low MVRV | Realized Growth Leading</strong></p>
+</blockquote>
 <p>These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.</p>
 <p>Once the best strategy is learned for each regime, the same regime-to-strategy mapping is applied to the test period. This makes the strategy more adaptive than a single fixed rule, while still keeping the logic easy to explain.</p>
 </section>
 <section id="key-features-used" class="level2">
 <h2 class="anchored" data-anchor-id="key-features-used">Key features used</h2>
-<p>The strategy used a small set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. After the initial EDA and overall dataset understanding, feature selection was guided by the goal of capturing different Bitcoin market conditions rather than using a large number of unrelated indicators.</p>
+<p>The strategy used a focused set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. Feature selection was guided by the goal of capturing different Bitcoin market conditions, rather than using a large number of unrelated indicators.</p>
+<p>We also created features based on simple moving averages in this approach. A simple moving average (SMA) is the average price of an asset over a fixed number of past days. In this strategy, SMA-based features were engineered from the Bitcoin price series and used to compare Bitcoin’s current price with its recent trend.</p>
 <p>The main raw input features were:</p>
 <ul>
-<li><p><strong>price_usd</strong>: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy’s allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-SMA ratios, and lookback returns.</p></li>
-<li><p><strong>mvrv</strong>: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. This feature was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.</p></li>
-<li><p><strong>realized_cap_growth_rate</strong>: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This feature helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.</p></li>
+<li><p><strong>price_usd</strong>: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy’s allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-simple-moving-average ratios (SMA), and lookback returns.</p></li>
+<li><p><strong>mvrv</strong>: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. It was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.</p></li>
+<li><p><strong>realized_cap_growth_rate</strong>: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.</p></li>
 <li><p><strong>market_cap_growth_rate</strong>: This measures how quickly Bitcoin’s market capitalization is changing. Since market cap is closely tied to price, this feature captures price-driven growth. Comparing market-cap growth with realized-cap growth helped distinguish whether the market was being led more by price momentum or by on-chain realized value growth.</p></li>
 </ul>
 <p>Together, these raw features allowed the strategy to capture three important dimensions of Bitcoin market behavior: price trend, valuation, and the relationship between market-driven growth and on-chain value growth.</p>
-<p>The notebook then created engineered features from the Bitcoin price series. For each selected lookback window <code>d</code>, three rolling features were created:</p>
+<p>The strategy also created engineered features from the Bitcoin price series. For each selected lookback window <code>d</code>, three rolling features were created:</p>
 <ul>
 <li><strong>price_{d}d_sma</strong>: the simple moving average of Bitcoin price over <code>d</code> days</li>
 <li><strong>price_{d}d_sma_ratio</strong>: the ratio of current Bitcoin price to its <code>d</code>-day moving average</li>
 <li><strong>btc_return_{d}d</strong>: Bitcoin return over the past <code>d</code> days</li>
 </ul>
-<p>For example, if the selected lookbacks included 30, 90, and 180 days, the engineered features would include:</p>
-<ul>
-<li><strong>price_30d_sma</strong></li>
-<li><strong>price_30d_sma_ratio</strong></li>
-<li><strong>btc_return_30d</strong></li>
-<li><strong>price_90d_sma</strong></li>
-<li><strong>price_90d_sma_ratio</strong></li>
-<li><strong>btc_return_90d</strong></li>
-<li><strong>price_180d_sma</strong></li>
-<li><strong>price_180d_sma_ratio</strong></li>
-<li><strong>btc_return_180d</strong></li>
-</ul>
-<p>Feature engineering was important because raw price alone does not fully describe the market condition. A Bitcoin price of $60,000 can mean different things depending on whether price is above or below its moving average, whether recent returns are positive or negative, and whether valuation is high or low. The engineered SMA ratios and lookback returns helped convert raw price data into trend and momentum signals that could be used for regime classification.</p>
-<p>These engineered features were then used to classify each day into one of the combined market regimes. The trend regime used the selected SMA ratio, the regime SMA ratio, the momentum return, and the SMA return. MVRV was used to classify valuation as low, normal, or high. Realized-cap growth and market-cap growth were compared to classify whether realized growth or market growth was leading.</p>
+<p>For example, a 90-day lookback would create features such as <code>price_90d_sma</code>, <code>price_90d_sma_ratio</code>, and <code>btc_return_90d</code>.</p>
+<p>These engineered features were important because raw price alone does not fully describe the market condition. A Bitcoin price of $60,000 can mean different things depending on whether price is above or below its moving average, whether recent returns are positive or negative, and whether valuation is high or low. The SMA ratios and lookback returns helped convert raw price data into trend and momentum signals for regime classification.</p>
+<p>These features were then used to classify each day into one of the combined market regimes. The trend regime used SMA ratios and recent returns. MVRV was used to classify valuation as low, normal, or high. Realized-cap growth and market-cap growth were compared to classify whether realized growth or market growth was leading.</p>
 </section>
-<section id="grid-search-used" class="level2">
-<h2 class="anchored" data-anchor-id="grid-search-used">Grid search used</h2>
+<section id="selecting-the-final-settings" class="level2">
+<h2 class="anchored" data-anchor-id="selecting-the-final-settings">Selecting the final settings</h2>
 <p>The strategy depends on several tuning settings. These settings are not regimes themselves. Instead, they control how the features and regime labels are created.</p>
 <p>The main tuning settings were:</p>
 <ul>
@@ -370,21 +386,22 @@ ul.task-list li input[type="checkbox"] {
 <p>To answer this, the approach compares multiple candidate allocation strategies.</p>
 <p>The candidate strategies used were:</p>
 <ol type="1">
-<li><strong>StackSats MVRV Strategy</strong></li>
 <li><strong>StackSats Momentum Strategy</strong></li>
+<li><strong>StackSats MVRV Strategy</strong></li>
 <li><strong>Custom SMA Strategy</strong></li>
 </ol>
 <p>Each candidate strategy produces daily allocation weights. A higher weight means the strategy allocates more of the yearly budget to that day. A lower weight means it allocates less.</p>
-<section id="stacksats-mvrv-strategy" class="level3">
-<h3 class="anchored" data-anchor-id="stacksats-mvrv-strategy">StackSats MVRV Strategy</h3>
-<p>The MVRV strategy is based on valuation. It is designed to allocate more when Bitcoin appears relatively undervalued and less when Bitcoin appears relatively expensive.</p>
-<p>This is useful for accumulation because the goal is to maximize the number of sats bought per dollar. If Bitcoin is cheaper relative to its realized value, buying more on those days may improve long-term accumulation.</p>
-</section>
 <section id="stacksats-momentum-strategy" class="level3">
 <h3 class="anchored" data-anchor-id="stacksats-momentum-strategy">StackSats Momentum Strategy</h3>
-<p>The momentum strategy uses price trend behavior. It tends to allocate based on the strength or direction of price movement.</p>
-<p>Momentum-based strategies can be useful because markets often trend for periods of time. In a strong bull market, momentum may help identify days where continued strength is present.</p>
-<p>However, momentum can also struggle during choppy or sideways markets. That is one reason it is useful to combine it with other strategies instead of relying on it alone.</p>
+<p>The StackSats Momentum strategy is a price-based strategy that looks at Bitcoin’s recent price movement. In this project, it uses a contrarian interpretation of momentum. This means that if Bitcoin has recently gone up, the strategy reduces the accumulation signal. If Bitcoin has recently gone down, the strategy increases the accumulation signal.</p>
+<p>This makes sense for an accumulation strategy because the goal is not necessarily to chase price increases, but to buy more Bitcoin when short-term weakness may create a better buying opportunity. To avoid reacting too strongly to extreme price moves, the momentum signal is bounded before it is converted into allocation weights.</p>
+<p>This strategy was included because it captures recent price behavior, which provides a different type of signal from valuation-based or moving-average-based strategies. For implementation details, see <span class="citation" data-cites="stacksats_momentum_strategy">HyperTrial (<a href="#ref-stacksats_momentum_strategy" role="doc-biblioref">2025a</a>)</span>.</p>
+</section>
+<section id="stacksats-mvrv-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="stacksats-mvrv-strategy">StackSats MVRV Strategy</h3>
+<p>The StackSats MVRV strategy is mainly a valuation-based strategy. MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain.</p>
+<p>The basic idea is that when Bitcoin looks undervalued based on MVRV, the strategy gives a higher accumulation preference. When Bitcoin looks expensive or overheated, the strategy gives a lower accumulation preference.</p>
+<p>This is useful for a Bitcoin accumulation strategy because the goal is to buy more sats per dollar. If Bitcoin is cheaper relative to its realized value, allocating more on those days may improve long-term accumulation compared with investing the same amount every day. For implementation details, see <span class="citation" data-cites="stacksats_mvrv_strategy">HyperTrial (<a href="#ref-stacksats_mvrv_strategy" role="doc-biblioref">2025b</a>)</span>.</p>
 </section>
 <section id="custom-sma-strategy" class="level3">
 <h3 class="anchored" data-anchor-id="custom-sma-strategy">Custom SMA Strategy</h3>
@@ -400,7 +417,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="learning-the-best-strategy-per-regime" class="level2">
 <h2 class="anchored" data-anchor-id="learning-the-best-strategy-per-regime">Learning the best strategy per regime</h2>
-<p>Once the candidate strategies are created, the model evaluates them inside each regime using the training period.</p>
+<p>Once the candidate strategies are created, the strategy compares them within each regime using the training period.</p>
 <p>The training period is 2018 to 2023. This period contains multiple Bitcoin market environments, including bull markets, bear markets, and recovery periods.</p>
 <p>For each regime, the strategy checks which candidate performed best during training. The best-performing candidate becomes the selected strategy for that regime.</p>
 <p>For example:</p>
@@ -417,16 +434,16 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>BTC Bull</td>
-<td>Normal MVRV</td>
+<td>BTC Bull | Normal MVRV | Market Growth Leading</td>
+<td>Momentum</td>
 </tr>
 <tr class="even">
-<td>BTC Bear</td>
-<td>Low MVRV</td>
+<td>BTC Bear | Low MVRV | Realized Growth Leading</td>
+<td>MVRV</td>
 </tr>
 <tr class="odd">
-<td>BTC Recovery</td>
-<td>Normal MVRV</td>
+<td>BTC Recovery | Normal MVRV | Market Growth Leading</td>
+<td>SMA</td>
 </tr>
 </tbody>
 </table>
@@ -447,7 +464,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The fallback choice was selected using training performance only. This avoided using the test period to decide which fallback worked best. In the final strategy, the fallback rule helped make the model more robust because it could still produce an allocation even when an unseen or rare regime appeared.</p>
 </section>
 <section id="model-selection-and-final-testing" class="level2">
-<h2 class="anchored" data-anchor-id="model-selection-and-final-testing">Model Selection and Final Testing</h2>
+<h2 class="anchored" data-anchor-id="model-selection-and-final-testing">Model selection and final testing</h2>
 <p>A key part of the design was keeping model selection separate from final testing. The grid search was performed using training data only. This means the strategy selected its lookbacks and fallback strategy based on 2018–2023 performance.</p>
 <p>Only after the final configuration was selected was the model evaluated on the 2024–2025 test period.</p>
 <p>This matters because if test performance is used during tuning, the reported test result becomes less reliable. The strategy might look good only because it was indirectly optimized for the test period.</p>
@@ -461,43 +478,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="evaluation-metrics" class="level2">
 <h2 class="anchored" data-anchor-id="evaluation-metrics">Evaluation metrics</h2>
-<p>The main metric used was <strong>sats per dollar</strong>, often shortened as SPD.</p>
-<p>This metric measures how many satoshis were accumulated for each dollar invested. Since the project is about Bitcoin accumulation, SPD is more relevant than simply measuring portfolio value in dollars. A strategy can be considered better than Uniform DCA if it accumulates more sats using the same dollar budget.</p>
-<p>For example, if two strategies both invest $1,000, the better strategy is the one that accumulates more sats.</p>
-<p>The comparison focused on several metrics:</p>
-<ul>
-<li><strong>Strategy SPD</strong></li>
-<li><strong>Percentage improvement versus DCA</strong></li>
-<li><strong>Win rate across evaluation windows</strong></li>
-<li><strong>Score</strong></li>
-<li><strong>Exponential-decay percentile</strong></li>
-</ul>
-<p>SPD and percentage improvement were the most important metrics because they directly measured whether the strategy accumulated more Bitcoin than Uniform DCA.</p>
-<p>Win rate was used to understand consistency across evaluation windows. A strategy with a high improvement but very low win rate may be less reliable, because it may depend on only a small number of strong periods.</p>
-<p>The StackSats comparison also provided additional metrics such as score and exponential-decay percentile. The score gave a broader summary of strategy performance. The exponential-decay percentile placed more emphasis on recent performance, which is useful because recent market behavior may be more relevant when deciding whether a strategy is still competitive.</p>
-<p>Together, these metrics helped evaluate both the size of the improvement and the consistency of the strategy.</p>
+<p>This strategy was evaluated using the same metrics defined on the <a href="../../index.html#evaluation-metrics">main blog page</a>: sats per dollar, percentage improvement versus Uniform DCA, win rate, score, and exponential-decay percentile.</p>
 </section>
-<section id="final-backtest-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="final-backtest-visualization">Final backtest visualization</h2>
+<section id="full-period-strategy-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="full-period-strategy-visualization">Full-period strategy visualization</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../figures/multi-strategy-approach-plot.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Final multi-strategy regime-based approach backtest. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.</figcaption>
+<figcaption>Final multi-strategy regime-based approach visualization. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.</figcaption>
 </figure>
 </div>
 </section>
 <section id="key-results" class="level2">
 <h2 class="anchored" data-anchor-id="key-results">Key results</h2>
-<p>The multi-strategy regime-based approach was evaluated against the Uniform DCA baseline using four main metrics:</p>
-<ul>
-<li><strong>Sats per dollar (SPD)</strong>: measures how many satoshis were accumulated for each dollar invested.</li>
-<li><strong>Win rate</strong>: measures how often the strategy outperformed the baseline across evaluation windows.</li>
-<li><strong>Score</strong>: provides an overall StackSats comparison metric.</li>
-<li><strong>Exponential-decay percentile</strong>: gives more weight to recent performance.</li>
-</ul>
-<p>For the <strong>training period (2018–2023)</strong>, the multi-strategy approach achieved an SPD of <strong>9,161.44</strong>, compared with <strong>8,418.79</strong> for Uniform DCA, which corresponds to an improvement of <strong>8.82%</strong>.</p>
-<p>For the <strong>test period (2024–2025)</strong>, the multi-strategy approach achieved an SPD of <strong>1,369.57</strong>, compared with <strong>1,292.12</strong> for Uniform DCA, corresponding to an improvement of <strong>5.99%</strong>.</p>
-<p>In the final StackSats comparison, the multi-strategy regime-based approach also achieved a <strong>win rate of 63.76%</strong>, a <strong>score of 51.24</strong>, and an <strong>exponential-decay percentile of 38.72</strong>. These results suggest that the strategy not only accumulated more sats per dollar than Uniform DCA in both train and test periods, but also remained competitive under the broader StackSats evaluation framework.</p>
+<p>The multi-strategy regime-based approach outperformed Uniform DCA in both the training and test periods.</p>
+<p>For the <strong>training period (2018–2023)</strong>, the strategy achieved an SPD of <strong>9,161.44</strong>, compared with <strong>8,418.79</strong> for Uniform DCA. This corresponds to an improvement of <strong>8.82%</strong>.</p>
+<p>For the <strong>test period (2024–2025)</strong>, the strategy achieved an SPD of <strong>1,369.57</strong>, compared with <strong>1,292.12</strong> for Uniform DCA. This corresponds to an improvement of <strong>5.99%</strong>.</p>
+<p>In the final StackSats comparison, the strategy achieved a <strong>win rate of 63.76%</strong>, a <strong>score of 51.24</strong>, and an <strong>exponential-decay percentile of 38.72</strong>.</p>
+<p>Overall, these results suggest that the multi-strategy regime-based approach accumulated more sats per dollar than Uniform DCA, while also remaining competitive under the broader StackSats evaluation framework.</p>
 </section>
 <section id="why-this-approach-is-useful" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-approach-is-useful">Why this approach is useful</h2>
@@ -509,24 +507,33 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="limitations" class="level2">
 <h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
-<p>The first limitation is that the regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.</p>
-<p>The second limitation is that Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.</p>
-<p>The third limitation is that some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.</p>
-<p>The fourth limitation is that annual budget normalization is useful for a clean backtest, but it is not exactly the same as live deployment. In a live system, future days in the year are unknown, so allocation would need to be handled with a real-time budget pacing rule.</p>
+<ul>
+<li><p>The regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.</p></li>
+<li><p>Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.</p></li>
+<li><p>Some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.</p></li>
+</ul>
 </section>
 <section id="final-interpretation" class="level2">
 <h2 class="anchored" data-anchor-id="final-interpretation">Final interpretation</h2>
 <p>The multi-strategy regime-based approach is an interpretable adaptive allocation strategy. It classifies Bitcoin market conditions into regimes and learns which candidate strategy worked best in each regime during training.</p>
 <p>Its main contribution is that it combines multiple signals instead of relying on a single fixed strategy. It uses MVRV, momentum, and SMA-based behavior in a structured way, allowing the allocation rule to change depending on the market environment.</p>
-<p>The strategy is especially useful as a research framework because it helps answer a practical question:</p>
-<p><strong>Are different Bitcoin accumulation signals useful in different market regimes?</strong></p>
-<p>Based on the final evaluation, the approach can be compared against Uniform DCA using sats per dollar, percentage improvement, win rate, score, and exponential-decay percentile. SPD shows whether the strategy accumulated more Bitcoin per dollar, while win rate shows how consistently it outperformed across evaluation windows. The score and exponential-decay percentile provide additional StackSats comparison measures, including a view that gives more importance to recent performance.</p>
-<p>The final result should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, improving live budget pacing, and evaluating the method over future market cycles.</p>
+<p>The strategy is useful because it helps answer a practical question:</p>
+<p><strong><em>Are different Bitcoin accumulation signals useful in different market regimes?</em></strong></p>
+<p>The results suggest that different signals can be useful in different market conditions. Instead of treating one signal as always best, this approach allows the strategy to adapt based on the current regime.</p>
+<p>These results should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, and evaluating the method over future market cycles.</p>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-stacksats_momentum_strategy" class="csl-entry" role="listitem">
+HyperTrial. 2025a. <em><span>StackSats Momentum Strategy Implementation</span></em>. GitHub source code. <a href="https://github.com/hypertrial/stacksats/blob/9ba73643c4478ddd92650557a90e91e64674f587/stacksats/strategies/stable/signals/momentum.py">https://github.com/hypertrial/stacksats/blob/9ba73643c4478ddd92650557a90e91e64674f587/stacksats/strategies/stable/signals/momentum.py</a>.
+</div>
+<div id="ref-stacksats_mvrv_strategy" class="csl-entry" role="listitem">
+HyperTrial. 2025b. <em><span>StackSats MVRV Strategy Implementation</span></em>. GitHub source code. <a href="https://github.com/hypertrial/stacksats/blob/9ba73643c4478ddd92650557a90e91e64674f587/stacksats/strategies/stable/mvrv/core.py">https://github.com/hypertrial/stacksats/blob/9ba73643c4478ddd92650557a90e91e64674f587/stacksats/strategies/stable/mvrv/core.py</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
