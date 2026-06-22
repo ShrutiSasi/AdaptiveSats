@@ -47,9 +47,9 @@ What makes this set powerful is its diversity. MVRV and NUPL measure valuation. 
 
 Raw signal values aren't directly comparable - MVRV lives in a different numeric range than the Greed Index. The first preprocessing step standardizes each signal using a causal rolling 365-day z-score:
 
-$$z_t^{(i)} = \frac{x_t^{(i)}-\mu_{t,365}^{(i)}}{\sigma_{t,365}^{(i)}+\varepsilon}$$
+$$z_t^{(i)} = \frac{x_{t-1}^{(i)}-\mu_{t-1,365}^{(i)}}{\sigma_{t-1,365}^{(i)}+\varepsilon}$$
 
-where $\mu_{t,365}$ and $\sigma_{t,365}$ are the mean and standard deviation computed over the trailing 365-day window ending at day $t$. A small constant $\varepsilon = 10^{-8}$ prevents division by zero. 
+where $\mu_{t-1,365}$ and $\sigma_{t-1,365}$ are the mean and standard deviation computed over the trailing 365-day window ending at day $t-1$. A small constant $\varepsilon = 10^{-8}$ prevents division by zero. 
 
 **Why causal?** Because the strategy must be executable in real time. Using only past data ensures there's no look-ahead bias - the z-score on any given day only reflects what was knowable up to that day.
 
