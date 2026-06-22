@@ -272,7 +272,7 @@ The following table summarises the key on-chain and market metrics and their rol
 -   **Lookback Return:** The percentage change in Bitcoin price over a fixed past window, such as 30, 90, or 180 days. It is used to measure recent price momentum.
 -   **Price-to-SMA Ratio:** A ratio comparing Bitcoin’s current price with its simple moving average. A value above 1 means price is above its moving average, while a value below 1 means price is below its moving average.
 
-# Appendix 4: Composite Signal Index Strategy Details {#sec-appendix-composite-signal-index .appendix}
+# Appendix 3: Composite Signal Index Strategy Details {#sec-appendix-composite-signal-index .appendix}
 
 ## The Eight On-Chain Signals
 
