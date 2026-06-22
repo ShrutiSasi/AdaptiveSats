@@ -614,5 +614,211 @@ Some regimes were rare or absent in the training period. To ensure that the mode
 
 This fallback logic ensured that the approach remained fully defined during the test period while still using only information available from the training period.
 
+# Appendix 6: HMM-GARCH Adaptive Strategy Details {#sec-appendix-hmm-garch .appendix}
+
+This appendix provides additional technical details for the HMM-GARCH Adaptive Strategy. The main report summarizes the overall methodology; this appendix describes the features, regime identification process, volatility estimation, valuation adjustment, and allocation logic used by the model.
+
+## Original Features
+
+The HMM-GARCH strategy uses a combination of market and on-chain features to identify latent Bitcoin market regimes and adjust accumulation weights.
+
+### Bitcoin Price
+
+The daily Bitcoin price in U.S. dollars. Price data serves as the foundation for return calculations, trend detection, and volatility estimation.
+
+### MVRV Z-Score
+
+The MVRV Z-score measures Bitcoin's market value relative to its realized value and historical distribution.
+
+Higher values indicate potentially overheated market conditions, while lower values suggest undervaluation.
+
+### Daily Returns
+
+Bitcoin daily log returns:
+
+$$
+r_t = \ln\left(\frac{P_t}{P_{t-1}}\right)
+$$
+
+Returns were used as one of the primary inputs to both the Hidden Markov Model and the GARCH volatility model.
+
+## Hidden Markov Model Regime Detection
+
+Market regimes are not directly observable. Instead, they are inferred from observable market behaviour.
+
+A Hidden Markov Model (HMM) was trained using:
+
+- Bitcoin returns
+- MVRV Z-score
+- Volatility-related features
+- Price_vs_active
+
+The model assumes that Bitcoin transitions between a finite number of hidden market states.
+
+### Regime Definitions
+
+The fitted HMM identified three latent regimes:
+
+| Regime | Interpretation |
+|----------|----------------|
+| Accumulation | Historically attractive buying periods |
+| Neutral | Mixed market conditions |
+| Euphoric | Elevated valuation and speculative activity |
+
+Unlike a hard classification model, the HMM produces probabilities for each regime:
+
+$$
+P(S_t=i)
+$$
+
+where $S_t$ denotes the hidden state at time $t$.
+
+For example:
+
+$$
+P(S_t)
+=
+[0.70,\;0.20,\;0.10]
+$$
+
+indicates a 70% probability of being in an accumulation regime.
+
+## Regime Allocation Weights
+
+Each regime probability contributes proportionally to the allocation decision.
+
+The strategy assigns regime-specific multipliers:
+
+| Regime | Multiplier |
+|----------|----------|
+| Accumulation | 1.75 |
+| Neutral | 1.0 |
+| Euphoric | 0.5 |
+
+The expected regime weight is computed as:
+
+$$
+W_{\text{regime}}
+=
+\sum_i
+P(S_t=i)
+\times
+m_i
+$$
+
+where $m_i$ represents the multiplier assigned to regime $i$.
+
+This approach allows uncertainty to be incorporated directly into the allocation process.
+
+## GARCH Volatility Estimation
+
+Bitcoin volatility exhibits clustering, meaning periods of high volatility tend to be followed by additional high volatility.
+
+To model this effect, a GARCH(1,1) process was fitted:
+
+$$
+\sigma_t^2
+=
+\omega
++
+\alpha \epsilon_{t-1}^2
++
+\beta \sigma_{t-1}^2
+$$
+
+where:
+
+- $\sigma_t^2$ is the conditional variance
+- $\epsilon_{t-1}^2$ is the previous return shock
+- $\omega$, $\alpha$, and $\beta$ are model parameters
+
+The resulting volatility estimates were converted into rolling percentiles to provide a normalized measure of market stress.
+
+## Valuation Adjustment
+
+Valuation was measured using the MVRV Z-score.
+
+The strategy increases allocations when Bitcoin appears undervalued:
+
+$$
+\text{Valuation Signal}
+=
+\max(0,-\text{MVRV Z})
+$$
+
+and
+
+$$
+W_{\text{valuation}}
+=
+1
++
+0.50
+\times
+\text{Valuation Signal}
+$$
+
+This ensures that only undervaluation increases position size.
+
+## Volatility Adjustment
+
+Volatility is interpreted differently depending on valuation conditions.
+
+When Bitcoin appears significantly undervalued, elevated volatility is treated as a potential accumulation opportunity. Otherwise, higher volatility is treated as a risk signal.
+
+$$
+W_{\text{volatility}}
+=
+\begin{cases}
+1 + 0.40 \times VolPct_t, & \text{if Valuation Signal} > 0.5 \\
+1 - 0.20 \times VolPct_t, & \text{otherwise}
+\end{cases}
+$$
+
+where $VolPct_t$ denotes the rolling volatility percentile.
+
+This allows the strategy to distinguish between attractive capitulation events and speculative volatility.
+
+## Trend Adjustment
+
+Trend direction was determined using the 200-day Simple Moving Average.
+
+| Condition | Multiplier |
+|------------|------------|
+| Price > SMA200 | 1.05 |
+| Price ≤ SMA200 | 0.95 |
+
+This allows the strategy to modestly favour bullish long-term trends while remaining primarily valuation-driven.
+
+## Final Allocation Weight
+
+The final allocation weight combines all model components:
+
+$$
+W_t
+=
+W_{\text{regime}}
+\times
+W_{\text{valuation}}
+\times
+W_{\text{volatility}}
+\times
+W_{\text{trend}}
+$$
+
+The resulting weights are clipped to:
+
+$$
+0.50
+\le
+W_t
+\le
+2.50
+$$
+
+and smoothed using a 7-day moving average before being passed to the StackSats allocation engine.
+
+This framework combines regime identification, valuation, volatility, and trend information into a single adaptive accumulation signal designed to concentrate purchases during historically favourable Bitcoin accumulation periods.
+
 
 # References
