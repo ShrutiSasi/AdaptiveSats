@@ -253,3 +253,6 @@ recordings/
 
 # Video exports
 blog/video/final/notebooks/output/
+
+notebooks/output/
+notebooks/proposed_strategies/output/
