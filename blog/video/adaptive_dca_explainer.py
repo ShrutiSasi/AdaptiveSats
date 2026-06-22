@@ -3,10 +3,10 @@ Adaptive Bitcoin Accumulation — Manim Presentation
 ===================================================
 Run all scenes as a single video (high quality):
 
-    manim -qh bitcoin_presentation.py AdaptiveBTCPresentation
+    manim -qh adaptive_dca_explainer.py AdaptiveBTCPresentation
 
 Individual scene preview:
-    manim -ql bitcoin_presentation.py OpeningScene
+    manim -ql adaptive_dca_explainer.py OpeningScene
 """
 
 from manim import *
@@ -96,9 +96,44 @@ def slide_counter(n: int, total: int = 9) -> Text:
     t.to_corner(DR, buff=0.22)
     return t
 
+
 def hold(scene: Scene, seconds: float = 4.0) -> None:
     """Longer presentation pause for presenter-led explanation."""
     scene.wait(seconds)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  SCENE TIMING HELPERS
+# ─────────────────────────────────────────────────────────────────────────────
+SCENE_TARGET_SECONDS = {
+    "OpeningScene": 53,
+    "DCABaselineScene": 24,
+    "DCAProblemVisualScene": 28,
+    "MarketRegimeScene": 25,
+    "HMMGARCHPipelineScene": 28,
+    "HMMGARCHSignalFlowScene": 28,
+    "BayesianPipelineScene": 40,
+    "BayesianEvidenceFlowScene": 20,
+    "ClosingScene": 25,
+}
+
+
+def mark_scene_start(scene: Scene) -> None:
+    """Store the current Manim timeline time at the start of a scene."""
+    scene._scene_start_time = scene.time
+
+
+def hold_until_target(scene: Scene, scene_name: str) -> None:
+    """Pause only long enough for a scene to reach its target total duration."""
+    target = SCENE_TARGET_SECONDS[scene_name]
+    start_time = getattr(scene, "_scene_start_time", 0.0)
+    elapsed = scene.time - start_time
+    remaining = target - elapsed
+
+    if remaining > 0:
+        scene.wait(remaining)
+    else:
+        print(f"{scene_name} exceeded target by {-remaining:.2f}s")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +142,7 @@ def hold(scene: Scene, seconds: float = 4.0) -> None:
 class OpeningScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         # Subtle grid lines for depth
         grid = VGroup()
@@ -177,7 +213,7 @@ class OpeningScene(Scene):
         )
         self.play(FadeIn(question, scale=0.97), run_time=0.7)
         self.add(counter)
-        hold(self, 55.0)
+        hold_until_target(self, "OpeningScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -186,6 +222,7 @@ class OpeningScene(Scene):
 class DCABaselineScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("Traditional DCA", 40).to_edge(UP, buff=0.5)
         underline = accent_underline(title)
@@ -260,7 +297,7 @@ class DCABaselineScene(Scene):
             run_time=0.8,
         )
         self.add(counter)
-        hold(self, 10.0)
+        hold_until_target(self, "DCABaselineScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -269,6 +306,7 @@ class DCABaselineScene(Scene):
 class DCAProblemVisualScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("The DCA Efficiency Gap", 38).to_edge(UP, buff=0.5)
         underline = accent_underline(title)
@@ -351,7 +389,7 @@ class DCAProblemVisualScene(Scene):
         self.play(Write(punchline), run_time=1.0)
 
         self.add(slide_counter(3))
-        hold(self, 10.0)
+        hold_until_target(self, "DCAProblemVisualScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -360,6 +398,7 @@ class DCAProblemVisualScene(Scene):
 class MarketRegimeScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("Market Regimes Are Hidden", 38).to_edge(UP, buff=0.5)
         underline = accent_underline(title)
@@ -428,7 +467,7 @@ class MarketRegimeScene(Scene):
         self.play(FadeIn(observed), run_time=0.6)
 
         self.add(slide_counter(4))
-        hold(self, 10.0)
+        hold_until_target(self, "MarketRegimeScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -437,6 +476,7 @@ class MarketRegimeScene(Scene):
 class HMMGARCHPipelineScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("Strategy 1 — HMM-GARCH Pipeline", 36).to_edge(UP, buff=0.5)
         underline = accent_underline(title, color=C_EMERALD)
@@ -526,7 +566,7 @@ class HMMGARCHPipelineScene(Scene):
         self.play(FadeIn(formula, scale=0.97), run_time=0.7)
 
         self.add(slide_counter(5))
-        hold(self, 12.0)
+        hold_until_target(self, "HMMGARCHPipelineScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -535,6 +575,7 @@ class HMMGARCHPipelineScene(Scene):
 class HMMGARCHSignalFlowScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("From Market Data → DCA Weight", 36).to_edge(UP, buff=0.48)
         underline = accent_underline(title, color=C_CYAN)
@@ -656,7 +697,7 @@ class HMMGARCHSignalFlowScene(Scene):
         self.play(Write(conclusion), run_time=1.0)
 
         self.add(slide_counter(6))
-        hold(self, 14.0)
+        hold_until_target(self, "HMMGARCHSignalFlowScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -665,6 +706,7 @@ class HMMGARCHSignalFlowScene(Scene):
 class BayesianPipelineScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("Strategy 2 — HMM-Bayesian Network", 36).to_edge(UP, buff=0.5)
         underline = accent_underline(title, color=C_VIOLET)
@@ -743,7 +785,7 @@ class BayesianPipelineScene(Scene):
         )
 
         self.add(slide_counter(7))
-        hold(self, 12.0)
+        hold_until_target(self, "BayesianPipelineScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -752,6 +794,7 @@ class BayesianPipelineScene(Scene):
 class BayesianEvidenceFlowScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         title = h1("Bayesian Inference → Allocation", 36).to_edge(UP, buff=0.48)
         underline = accent_underline(title, color=C_VIOLET)
@@ -867,7 +910,7 @@ class BayesianEvidenceFlowScene(Scene):
         self.play(Write(conclusion), run_time=1.0)
 
         self.add(slide_counter(8))
-        hold(self, 14.0)
+        hold_until_target(self, "BayesianEvidenceFlowScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -876,6 +919,7 @@ class BayesianEvidenceFlowScene(Scene):
 class ClosingScene(Scene):
     def construct(self):
         set_bg(self)
+        mark_scene_start(self)
 
         # Subtle ambient grid
         grid = VGroup()
@@ -957,7 +1001,7 @@ class ClosingScene(Scene):
             run_time=0.8, rate_func=there_and_back,
         )
         self.remove(glow_outline)
-        hold(self, 12.0)
+        hold_until_target(self, "ClosingScene")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -967,7 +1011,7 @@ class AdaptiveBTCPresentation(Scene):
     """
     Run this class to get the full presentation as a single video file:
 
-        manim -qh bitcoin_presentation.py AdaptiveBTCPresentation
+        manim -qh adaptive_dca_explainer.py AdaptiveBTCPresentation
 
     Quality flags:
         -ql   480p  (fast preview)
@@ -991,5 +1035,4 @@ class AdaptiveBTCPresentation(Scene):
             ClosingScene,
         ]:
             SceneClass.construct(self)
-            hold(self, 1.0)
             self.clear()
