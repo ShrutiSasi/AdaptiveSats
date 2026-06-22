@@ -133,7 +133,7 @@ To capture market risk, a GARCH(1,1) model was employed to estimate conditional 
 
 Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
 
-The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for the performance summary.
+The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for the performance summary and @sec-appendix-hmm-garch for a more detailed explanation.
 
 ![HMM-GARCH Adaptive Strategy vs Uniform DCA](figures/full_garch_hmm_plot.png){#full_garch_hmm_plot fig-pos="H"}
 
@@ -155,7 +155,7 @@ The final allocation signal combined HMM regime probabilities with Bayesian evid
 
 This probabilistic framework enabled the strategy to systematically concentrate purchases during historically attractive accumulation periods while maintaining compliance with the StackSats budget and allocation constraints.
 
-See @tbl-strategy-comparison for the detailed performance summary.
+See @tbl-strategy-comparison for the detailed performance summary and @sec-appendix-hmm-bayes for a more detailed explanation.
 
 ![HMM-BAYES Adaptive Strategy vs Uniform DCA](figures/full_bayes_hmm_plot.png){#full_bayes_hmm_plot fig-pos="H"}
 
