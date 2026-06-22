@@ -239,17 +239,19 @@ Each candidate strategy produces daily allocation weights. A higher weight means
 
 ### StackSats MVRV Strategy
 
-The MVRV strategy is based on valuation. It is designed to allocate more when Bitcoin appears relatively undervalued and less when Bitcoin appears relatively expensive.
+The StackSats MVRV strategy is mainly a valuation-based strategy. MVRV stands for Market Value to Realized Value. It compares Bitcoin's current market value with its realized value, which is based on the price at which coins last moved on-chain.
 
-This is useful for accumulation because the goal is to maximize the number of sats bought per dollar. If Bitcoin is cheaper relative to its realized value, buying more on those days may improve long-term accumulation.
+The basic idea is that when Bitcoin looks undervalued based on MVRV, the strategy gives a higher accumulation preference. When Bitcoin looks expensive or overheated, the strategy gives a lower accumulation preference.
+
+This is useful for a Bitcoin accumulation strategy because the goal is to buy more sats per dollar. If Bitcoin is cheaper relative to its realized value, allocating more on those days may improve long-term accumulation compared with investing the same amount every day.
 
 ### StackSats Momentum Strategy
 
-The momentum strategy uses price trend behavior. It tends to allocate based on the strength or direction of price movement.
+The StackSats Momentum strategy is a price-based strategy that looks at Bitcoin’s recent price movement. In this project, it uses a contrarian interpretation of momentum. This means that if Bitcoin has recently gone up, the strategy reduces the accumulation signal. If Bitcoin has recently gone down, the strategy increases the accumulation signal.
 
-Momentum-based strategies can be useful because markets often trend for periods of time. In a strong bull market, momentum may help identify days where continued strength is present.
+This makes sense for an accumulation strategy because the goal is not necessarily to chase price increases, but to buy more Bitcoin when short-term weakness may create a better buying opportunity. To avoid reacting too strongly to extreme price moves, the momentum signal is bounded before it is converted into allocation weights.
 
-However, momentum can also struggle during choppy or sideways markets. That is one reason it is useful to combine it with other strategies instead of relying on it alone.
+This strategy was included because it captures recent price behavior, which provides a different type of signal from valuation-based or moving-average-based strategies.
 
 ### Custom SMA Strategy
 
