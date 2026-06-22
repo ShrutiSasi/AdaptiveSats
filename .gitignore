@@ -229,3 +229,7 @@ notebooks/proposed_strategies/output/notebooks/output/
 **/.quarto/
 **/*.quarto_ipynb
 **/_site/
+
+blog/video/media/
+blog/video/renders/
+*.mp4
