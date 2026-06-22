@@ -137,6 +137,26 @@ The final allocation signal combined regime probabilities, valuation adjustments
 
 ![HMM-GARCH Adaptive Strategy vs Uniform DCA](figures/full_garch_hmm_plot.png){#full_garch_hmm_plot fig-pos="H"}
 
+### HMM-Bayesian Adaptive Strategy
+
+The HMM-Bayesian strategy is a sister strategy to the HMM-GARCH as the underlying idea is the same, but with a Bayesian layer added to it. The strategy combines three sources of information:
+
+- market regimes
+- valuation
+- probabilistic evidence
+
+Similar to HMM-GARCH, a Hidden Markov Model (HMM) was used to identify latent Bitcoin market regimes from observable market features, including returns, volatility, and valuation metrics and rather than assigning a single regime at each point in time, the model estimated probabilities of being in **accumulation**, **neutral**, or **euphoric** market states. These probabilities provided a probabilistic view of the market and formed the foundation of the allocation process.
+
+To further refine regime identification, a Bayesian Network was employed to combine multiple pieces of market evidence into a unified probability estimate. The network incorporated key signals including Bitcoin valuation, market trend, and volatility conditions. By modelling the conditional relationships between these variables, the Bayesian framework estimated the probability that current market conditions represented an attractive accumulation opportunity.
+
+Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels increased the likelihood of favorable accumulation conditions. Trend information was derived from Bitcoin's relationship to its long-term moving average, while volatility information helped distinguish between favorable market positions and periods of heightened market uncertainty.
+
+The final allocation signal combined HMM regime probabilities with Bayesian evidence probabilities to produce a single bounded portfolio weight. When both models indicated strong accumulation conditions, the strategy allocated more capital. Conversely, when evidence suggested neutral or euphoric market conditions, allocations were reduced.
+
+This probabilistic framework enabled the strategy to systematically concentrate purchases during historically attractive accumulation periods while maintaining compliance with the StackSats budget and allocation constraints.
+
+See @tbl-strategy-comparison for the detailed performance summary.
+
 ![HMM-BAYES Adaptive Strategy vs Uniform DCA](figures/full_bayes_hmm_plot.png){#full_bayes_hmm_plot fig-pos="H"}
 
 ### Multi-Strategy Regime-Based Approach
