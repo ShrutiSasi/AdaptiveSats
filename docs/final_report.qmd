@@ -820,5 +820,193 @@ and smoothed using a 7-day moving average before being passed to the StackSats a
 
 This framework combines regime identification, valuation, volatility, and trend information into a single adaptive accumulation signal designed to concentrate purchases during historically favourable Bitcoin accumulation periods.
 
+# Appendix 7: HMM-Bayesian Adaptive Strategy Details {#sec-appendix-hmm-bayes .appendix}
+
+This appendix provides additional technical details for the HMM-Bayesian Adaptive Strategy. The strategy extends the Hidden Markov Model framework by combining latent market regime estimates with a Bayesian Network that aggregates multiple pieces of market evidence into a single probability of accumulation opportunity.
+
+## Original Features
+
+The HMM-Bayesian strategy uses a combination of market and on-chain features:
+
+- Bitcoin Price
+- Daily Returns
+- MVRV Z-Score
+- Trend Indicators
+- Volatility Indicators
+
+These features are transformed into probabilistic evidence describing current Bitcoin market conditions.
+
+### Bitcoin Price
+
+The daily Bitcoin price in U.S. dollars.
+
+Price data is used to compute returns, moving averages, and trend-related evidence variables.
+
+### MVRV Z-Score
+
+The MVRV Z-score serves as the primary valuation indicator.
+
+Lower values indicate potential undervaluation, while higher values suggest overheated market conditions.
+
+### Daily Returns
+
+Bitcoin daily log returns:
+
+$$
+r_t = \ln\left(\frac{P_t}{P_{t-1}}\right)
+$$
+
+Returns provide information about market behaviour and contribute to regime identification.
+
+## Hidden Markov Model Regime Detection
+
+As in the HMM-GARCH strategy, market regimes are assumed to be hidden and must be inferred from observable data.
+
+The HMM estimates probabilities for three latent states:
+
+| Regime | Interpretation |
+|----------|----------------|
+| Accumulation | Historically attractive buying periods |
+| Neutral | Mixed market conditions |
+| Euphoric | Elevated valuation and speculative activity |
+
+Rather than selecting a single state, the model outputs a probability distribution:
+
+$$
+P(S_t=i)
+$$
+
+where $S_t$ denotes the hidden market state.
+
+## Hidden Markov Model Regime Evidence
+
+The HMM-Bayesian strategy used the Hidden Markov Model differently from the HMM-GARCH strategy. In the HMM-GARCH strategy, regime probabilities were translated directly into allocation multipliers. In the HMM-Bayesian strategy, however, the HMM output was used as **evidence** inside the Bayesian Network rather than as a separate regime multiplier.
+
+The HMM estimated latent Bitcoin market regimes from observable market features and produced regime-related information. This regime information was then discretized into categorical evidence and supplied to the Bayesian Network alongside valuation, volatility, active price, and trend variables.
+
+Therefore, the HMM component did not directly determine the allocation weight. Instead, it helped the Bayesian Network infer whether the current market environment resembled an accumulation opportunity.
+
+## Bayesian Network Overview
+
+While the HMM estimates latent market regimes, the Bayesian Network estimates the probability that current conditions represent a favourable Bitcoin accumulation opportunity.
+
+The Bayesian Network combines multiple sources of evidence:
+
+| Evidence Variable | Interpretation |
+|-------------------|---------------|
+| Valuation | Is Bitcoin cheap or expensive? |
+| Trend | Is the long-term trend bullish or bearish? |
+| Volatility | Is volatility supportive or risky? |
+
+These variables feed into a latent Opportunity node.
+
+### Bayesian Relationship
+
+The network estimates:
+
+$$
+P(\text{Opportunity} \mid \text{Valuation}, \text{Trend}, \text{Volatility})
+$$
+
+using conditional probability tables learned from historical observations.
+
+## Valuation Evidence
+
+Valuation evidence is derived from MVRV Z-score.
+
+| Condition | State |
+|------------|--------|
+| Low MVRV | Undervalued |
+| Moderate MVRV | Neutral |
+| High MVRV | Overvalued |
+
+Undervalued conditions increase the probability of an accumulation opportunity.
+
+## Trend Evidence
+
+Trend information is derived from Bitcoin's relationship to its 200-day moving average.
+
+| Condition | State |
+|------------|--------|
+| Price > SMA200 | Bullish |
+| Price ≤ SMA200 | Bearish |
+
+Bullish trend conditions increase the probability of favourable accumulation opportunities.
+
+## Volatility Evidence
+
+Volatility conditions are derived from rolling volatility percentiles.
+
+| Condition | State |
+|------------|--------|
+| Low Volatility | Stable |
+| Medium Volatility | Neutral |
+| High Volatility | Stress |
+
+These states provide additional information regarding market uncertainty and risk.
+
+## Opportunity Probability
+
+The Bayesian Network combines all evidence variables and produces:
+
+$$
+P(\text{Opportunity})
+$$
+
+representing the probability that current market conditions resemble historically favourable accumulation environments.
+
+For example:
+
+$$
+P(\text{Opportunity}) = 0.78
+$$
+
+indicates a 78% probability that the current market environment represents an attractive accumulation opportunity.
+
+## Bayesian Allocation Adjustment
+
+The opportunity probability is converted into an allocation multiplier:
+
+$$
+W_{\text{Bayes}}
+=
+1
++
+1.5
+\times
+P(\text{Opportunity})
+$$
+
+Higher conviction produces larger allocations, while weaker evidence produces more conservative allocations.
+
+## Final Allocation Weight
+
+The final allocation weight was determined directly from the Bayesian accumulation probability:
+
+$$
+W_t
+=
+1.0
++
+1.5
+\times
+P(\text{Accumulation Opportunity})
+$$
+
+where $P(\text{Accumulation Opportunity})$ is the probability inferred by the Bayesian Network from the observed evidence.
+
+The resulting weight was clipped to the StackSats allocation bounds:
+
+$$
+0.50
+\le
+W_t
+\le
+2.50
+$$
+
+and smoothed using a 7-day moving average before being passed to the StackSats allocation engine.
+
+This means that the HMM influenced allocation indirectly by acting as one of the evidence variables in the Bayesian Network, while the final buy weight was generated from the Bayesian probability of an accumulation opportunity.
 
 # References
