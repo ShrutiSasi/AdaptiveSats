@@ -1,0 +1,9 @@
+combined_regime,strategy,total_days,mean_improvement_pct,median_improvement_pct,mean_extra_spd_vs_dca,total_extra_sats_vs_dca,windows_seen,status
+BTC Bear | Low MVRV | Realized Growth Leading,sma_340d_weight,301,65.5172860104594,74.77205912230487,3296.767488248326,9890302.464744978,3,better
+BTC Bear | Normal MVRV | Realized Growth Leading,sma_340d_weight,243,33.51991930970781,41.63524750919254,331.29448652457,993883.4595737101,3,better
+BTC Bull | High MVRV | Market Growth Leading,stacksats_mvrv_weight,203,124.35073466672365,124.35073466672365,453.85690239195173,907713.8047839035,2,better
+BTC Bull | Normal MVRV | Market Growth Leading,stacksats_mvrv_weight,690,6.199865527490687,-17.553860015967956,-673.688791873443,-2694755.1674937718,4,better
+BTC Bull | Normal MVRV | Realized Growth Leading,sma_340d_weight,168,5.452775798151085,-9.405685740765657,-583.4684530875676,-1750405.3592627028,3,better
+BTC Neutral | Normal MVRV | Market Growth Leading,stacksats_mvrv_weight,87,120.90698792378105,120.90698792378105,1704.7264713252512,3409452.9426505025,2,better
+BTC Neutral | Normal MVRV | Realized Growth Leading,sma_340d_weight,272,32.28162451535298,24.054415397046935,317.61897721508956,1588094.8860754475,5,better
+BTC Recovery | Normal MVRV | Realized Growth Leading,sma_340d_weight,50,25.918946208819584,25.918946208819584,503.27455989383657,503274.55989383627,1,better

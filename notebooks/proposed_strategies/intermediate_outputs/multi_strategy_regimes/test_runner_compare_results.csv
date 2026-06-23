@@ -1,0 +1,3 @@
+selector,strategy_id,strategy_version,intent_mode,tier,promotion_stage,validation_passed,judgment_label,win_rate,score,exp_decay_percentile,multiple_vs_uniform,score_delta_vs_baseline,exp_decay_delta_vs_baseline,is_baseline
+multi-strategy-regime-based,multi-strategy-regime-based,1.0.0,propose,,,true,validation-passed,63.76021798365122,51.23999222570857,38.719766467765915,1.0183429984794272,32.228830698805616,0.6974434139600092,false
+uniform,uniform,1.0.0,propose,stable,promoted,false,validation-failed,0.0,19.011161526902953,38.022323053805906,1.0000000000000064,0.0,0.0,true

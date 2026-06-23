@@ -1,0 +1,3 @@
+split,start_date,end_date,rows_total,rows_eval,windows,calendar_window_start_dates,calendar_window_end_dates,skipped_years,budget_rule
+train,2018-01-01,2023-12-31,2191,2191,6,"2018-01-01, 2019-01-01, 2020-01-01, 2021-01-01, 2022-01-01, 2023-01-01","2018-12-31, 2019-12-31, 2020-12-31, 2021-12-31, 2022-12-31, 2023-12-31",,"$1,000 per calendar-year training window; StackSats uses latest export window per year"
+test,2024-01-01,2025-12-31,731,731,2,"2024-01-01, 2025-01-01","2024-12-31, 2025-12-31",,"$1,000 per calendar-year test window; StackSats uses latest export window per year"
