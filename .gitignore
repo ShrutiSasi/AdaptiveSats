@@ -252,6 +252,7 @@ presenter/
 recordings/
 
 # Video exports
+blog/video/final/
 blog/video/final/notebooks/output/
 
 notebooks/output/

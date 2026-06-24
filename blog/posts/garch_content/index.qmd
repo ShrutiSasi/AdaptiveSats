@@ -30,6 +30,28 @@ The objective is not to predict short-term price direction. Instead, the goal is
 
 ------------------------------------------------------------------------
 
+### High Level Video Explainer
+
+Prefer watching? A 5-minute visual walkthrough is available below.
+
+<div class="ratio ratio-16x9">
+
+<iframe
+
+  src="https://www.youtube.com/embed/znfH24iVRaM"
+
+  title="Adaptive Bitcoin Accumulation Video Explainer"
+
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+
+  allowfullscreen>
+
+</iframe>
+
+</div>
+
+------------------------------------------------------------------------
+
 ## Data and Feature Engineering
 
 The analysis combines traditional time-series techniques with Bitcoin-specific on-chain valuation metrics.
