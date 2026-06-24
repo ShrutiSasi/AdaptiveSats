@@ -203,9 +203,16 @@ AdaptiveSats/
 ├── notebooks/                                        # Jupyter notebooks for analysis
 │   ├── proposed_strategies/                          # Newly built strategies
 |   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
+│   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
 |   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
 |   │   └── external_tunable_strat.ipynb              # Macro-Economic Integration with 10-Year US Treasury Yield    
-│   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
+│   │   └── multi_strategy_regimes_approach.ipynb     # Allocation strategy based on market regime
+│   ├── stacksats_strategies/                         # Built-in stacksats strategies (Experiment based on Stacksats original models)
+│   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
+│   │   ├── momentum_vs_dca_all_years_top10.ipynb
+│   │   ├── experimental_strategies.ipynb
+│   │   └── mvrv.ipynb
+│   │   └── simple_zscore_analysis.ipynb
 │   ├── btc_stl_analysis.ipynb                        # BTC price STL decomposition - Analysis
 │   ├── dendogram.ipynb                               # 4. Metric correlation dendrogram
 │   ├── download.ipynb                                # 1. Downloads raw data from Google Drive
