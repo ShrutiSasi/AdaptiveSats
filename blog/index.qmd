@@ -28,7 +28,7 @@ The goal is to improve long-term accumulation efficiency by acquiring more Bitco
 
 For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, uniform DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoric phase or significantly undervalued during a capitulation phase.
 
-For investors with fixed accumulation budgets, this rigidity can reduce efficiency, leading them to miss prime opportunities to acquire more Bitcoin at the same fiat cost.
+For investors with fixed accumulation budgets, this rigidity can reduce efficiency, leading them to miss prime opportunities to acquire more Bitcoin at the same amount.
 
 ## Our Approach: Adaptive DCA
 
