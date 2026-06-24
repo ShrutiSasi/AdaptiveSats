@@ -26,15 +26,15 @@ The goal is to improve long-term accumulation efficiency by acquiring more Bitco
 
 ## The Challenge with Uniform DCA
 
-For institutions and foundations looking to build Bitcoin exposure, Dollar-Cost Averaging (DCA) - investing a fixed amount at regular intervals - is a very common and disciplined strategy. However, uniform DCA has a key limitation: it does not adapt to changing market conditions. It buys the same amount whether the market is heavily overvalued during a euphoric phase or significantly undervalued during a capitulation phase.
+Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. The industry standard approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use uniform DCA as our baseline because it provides significant psychological and operational benefits: it reduces emotional decision-making and minimizes the impact of poor market timing by smoothing out short-term volatility @investopedia_dca.
 
-For investors with fixed accumulation budgets, this rigidity can reduce efficiency, leading them to miss prime opportunities to acquire more Bitcoin at the same amount.
+However, a strictly passive DCA strategy lacks the capacity for dynamic portfolio management. By ignoring changing market environments, it suffers from severe capital inefficiency when applied to a highly cyclical asset like Bitcoin. Because it deploys capital evenly regardless of asset valuation, it forces an institution to allocate the same fixed dollar amount during periods of severe market overvaluation as it does during prolonged historical drawdowns. Bitcoin frequently experiences severe bear markets where prices drop by more than 70%.While uniform DCA successfully averages out daily volatility, it fails to capitalize on Bitcoin's massive market swings. An adaptive strategy that accelerates purchases during deep market crashes, and conserves cash during hype bubbles, will achieve a significantly lower average cost than uniform DCA over the long run @investopedia_dca. For institutions with strictly fixed budgets, using data-driven adaptation to beat this uniform baseline is critical to maximizing long-term accumulation.
 
 ## Our Approach: Adaptive DCA
 
 Our objective is to develop an **adaptive daily allocation model**. Instead of fixed purchases, our strategy adjusts its allocations dynamically based on public on-chain and market signals. 
 
-We measure our success using **Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
+We measure our success using **Total accumulated Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
 
 ### Strategies
 
