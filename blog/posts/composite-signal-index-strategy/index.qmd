@@ -17,6 +17,18 @@ But what if we could do better - not by timing the market, but by _reading its t
 
 This post walks through the full architecture of the strategy: the signals it uses, the mathematics behind the score, how the budget gets allocated within each year, and how the parameters are optimized against historical data.
 
+```{=html}
+<iframe
+  width="800"
+  height="450"
+  src="https://www.youtube.com/embed/exyRqs2gwck"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
+```
+
 ## The Core Idea: A Cheapness Index for Bitcoin
 
 The strategy is built on a simple premise: **on-chain data contains persistent signals of market undervaluation**. When long-term holders are underwater, when miners are stressed, when sentiment is at rock bottom - these are historically the best moments to accumulate more sats per dollar.
