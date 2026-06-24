@@ -75,7 +75,7 @@ Open terminal and run the following commands.
 
 #### Rendering reports
 
-5.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables (**optional** - since the plots have already been generated) <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
+5.  Run the jupyter notebooks either through JupyterLab interactively or using terminal commands below to generate plots and tables <br>**Note:** This step takes time as it downloads \~1GB data from google drive and splits to train & test data as the first step.
 
     ``` bash
     cd notebooks
