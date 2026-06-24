@@ -36,21 +36,21 @@ Our objective is to develop an **adaptive daily allocation model**. Instead of f
 
 We measure our success using **Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
 
-## Our Strategies
+### Strategies
 
-### 1. [Composite Signal Index Strategy](posts/composite-signal-index-strategy/index.qmd)
+#### 1. [Composite Signal Index Strategy](posts/composite-signal-index-strategy/index.qmd)
 Why rely on one signal when you can use them all? This strategy blends 8 distinct on-chain and market indicators (including MVRV, NUPL, and Miner Revenue) into a single, optimized "master signal." By using the Nelder-Mead optimization algorithm, the model learns the perfect weighting for each metric to dynamically adjust daily allocations and maximize Sats per Dollar.
 
-### 2. [External Tunable Strategy](posts/external-tunable-post/index.qmd)
+#### 2. [External Tunable Strategy](posts/external-tunable-post/index.qmd)
 Operating on the thesis that Bitcoin is a highly sensitive risk asset driven by global liquidity, this strategy steps outside the blockchain. It integrates macroeconomic indicators—specifically the 10-Year U.S. Treasury Yield—with short-term price momentum to detect "Risk-On" and "Risk-Off" environments, aggressively boosting accumulation when borrowing is cheap and conserving capital when liquidity tightens.
 
-### 3. [HMM-GARCH Adaptive Strategy](posts/garch_content/index.qmd)
+#### 3. [HMM-GARCH Adaptive Strategy](posts/garch_content/index.qmd)
 This strategy combines machine learning and volatility modeling to adapt to changing market weather. It uses a Hidden Markov Model (HMM) to estimate the probability of being in an accumulation, neutral, or euphoric state, while a GARCH(1,1) model measures market stress. By combining regime probabilities with valuation and volatility, it systematically buys the capitulations and fades the hype.
 
-### 4. [HMM-Bayesian Adaptive Strategy](posts/garch_content/index.qmd)
+#### 4. [HMM-Bayesian Adaptive Strategy](posts/garch_content/index.qmd)
 A probabilistic sister to the HMM-GARCH model. It uses the same Hidden Markov Model to identify latent market regimes, but layers on a Bayesian Network to weigh multiple pieces of evidence (trend, volatility, and valuation). This creates a unified probability estimate, concentrating purchases only when the statistical evidence points to an overwhelmingly attractive accumulation window.
 
-### 5. [Multi-Strategy Regime-Based Approach](posts/multi-strategy-regime-based-approach/index.qmd)
+#### 5. [Multi-Strategy Regime-Based Approach](posts/multi-strategy-regime-based-approach/index.qmd)
 No single indicator works perfectly in every market condition. This strategy classifies each day into one of 24 possible market regimes based on price trends, valuation, and network growth. It then dynamically swaps between three different candidate strategies (MVRV, Momentum, or a custom SMA strategy) depending on which one historically performs best in that exact environment.
 
 ### Key Data & Signals
