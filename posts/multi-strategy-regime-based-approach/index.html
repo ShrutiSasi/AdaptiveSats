@@ -143,8 +143,8 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-this-strategy-was-needed" id="toc-why-this-strategy-was-needed" class="nav-link active" data-scroll-target="#why-this-strategy-was-needed">Why this strategy was needed</a></li>
-  <li><a href="#high-level-idea" id="toc-high-level-idea" class="nav-link" data-scroll-target="#high-level-idea">High-level idea</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#high-level-idea" id="toc-high-level-idea" class="nav-link" data-scroll-target="#high-level-idea">High-Level Idea</a></li>
   <li><a href="#key-features-used" id="toc-key-features-used" class="nav-link" data-scroll-target="#key-features-used">Key features used</a></li>
   <li><a href="#selecting-the-final-settings" id="toc-selecting-the-final-settings" class="nav-link" data-scroll-target="#selecting-the-final-settings">Selecting the final settings</a></li>
   <li><a href="#the-three-components-of-the-regime" id="toc-the-three-components-of-the-regime" class="nav-link" data-scroll-target="#the-three-components-of-the-regime">The three components of the regime</a>
@@ -218,8 +218,8 @@ div.csl-indent {
 </header>
 
 
-<section id="why-this-strategy-was-needed" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-strategy-was-needed">Why this strategy was needed</h2>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>A simple dollar-cost averaging strategy invests the same amount of money at regular intervals, regardless of market conditions. This is easy to understand and is often a strong baseline for long-term Bitcoin accumulation. However, Bitcoin does not move in a straight line. It goes through very different market environments, including strong bull markets, deep bear markets, recovery periods, and sideways periods.</p>
 <p>Because of this, one fixed strategy may not always be the best choice. A momentum-based strategy might work well during strong upward trends, but it may struggle when the market is choppy. A valuation-based strategy might work better when Bitcoin appears undervalued, but it may be less effective during strong momentum-driven markets. A moving-average strategy may help identify periods where price is below a longer-term trend level, but it may not work equally well in every market phase.</p>
 <p>The idea behind the multi-strategy regime-based approach was to avoid forcing one signal to work in all market conditions.</p>
@@ -228,7 +228,7 @@ div.csl-indent {
 <p>The goal is not to predict the exact future price of Bitcoin. The goal is to improve Bitcoin accumulation compared with Uniform DCA by changing the allocation pattern based on the market environment.</p>
 </section>
 <section id="high-level-idea" class="level2">
-<h2 class="anchored" data-anchor-id="high-level-idea">High-level idea</h2>
+<h2 class="anchored" data-anchor-id="high-level-idea">High-Level Idea</h2>
 <p>The strategy has two main parts:</p>
 <ol type="1">
 <li><strong>Classify each day into a market regime.</strong></li>
@@ -254,6 +254,9 @@ div.csl-indent {
 </blockquote>
 <p>These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.</p>
 <p>Once the best strategy is learned for each regime, the same regime-to-strategy mapping is applied to the test period. This makes the strategy more adaptive than a single fixed rule, while still keeping the logic easy to explain.</p>
+<p>The short video below gives a high-level overview of the multi-strategy regime-based approach and how it is used for adaptive Bitcoin accumulation.</p>
+<iframe width="800" height="450" src="https://www.youtube.com/embed/FSLVe98qfoU" title="Multi-Strategy Regime-Based Approach Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
 </section>
 <section id="key-features-used" class="level2">
 <h2 class="anchored" data-anchor-id="key-features-used">Key features used</h2>
