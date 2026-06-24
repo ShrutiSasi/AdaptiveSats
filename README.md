@@ -137,7 +137,17 @@ Start with core pipeline notebooks, then explore strategy notebooks
 |`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|[Watch Video](https://youtu.be/znfH24iVRaM)|
 |`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|[Watch Video](https://youtu.be/exyRqs2gwck)|
 |`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|[Watch Video](https://youtu.be/krKk9pX62gQ)|
-|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|[Watch Video](https://youtu.be/FSLVe98qfoU)|
+|`multi_strategy_regimes_approach.ipynb`|Multi-strategy regime-based approach that selects the best strategy by market regime and uses saved intermediate outputs for reproducible reruns|[Watch Video](https://youtu.be/FSLVe98qfoU)|
+
+## Note on multi-strategy intermediate outputs
+
+The notebook `notebooks/proposed_strategies/multi_strategy_regimes_approach.ipynb` uses saved intermediate outputs by default so users can run the notebook without rerunning the full grid search.
+
+The intermediate outputs are stored in:
+
+```text
+notebooks/proposed_strategies/intermediate_outputs/multi_strategy_regimes/
+```
 
 ## Data
 Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
