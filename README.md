@@ -90,9 +90,20 @@ Open terminal and run the following commands.
     ./commands.txt
     ```
 
+#### Generate proposal pdf
+
+6.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the proposal:
+
+    ``` bash
+    cd .. #If still in notebooks folder
+    quarto render docs/Proposal.qmd --to pdf
+    ```
+
+    The proposal pdf gets created at `AdaptiveSats\docs`
+
 #### Generate final report pdf
 
-6.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the final report:
+7.  Ensure `AdaptiveSats` is the current/active directory in terminal. Render the final report:
 
     ``` bash
     cd .. #If still in notebooks folder
@@ -185,6 +196,9 @@ AdaptiveSats/
 │   ├── final_report.qmd                              # Quarto source for the final report
 │   ├── final_report.html                             # Rendered HTML final report
 │   ├── final_report.pdf                              # Rendered PDF final report
+│   ├── Proposal.qmd                                  # Quarto source for the project proposal
+│   ├── Proposal.html                                 # Rendered HTML proposal
+│   ├── Proposal.pdf                                  # Rendered PDF proposal                            
 │   └── references.bib                                # Bibliography
 ├── notebooks/                                        # Jupyter notebooks for analysis
 │   ├── proposed_strategies/                          # Newly built strategies
