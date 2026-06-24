@@ -18,13 +18,16 @@ bibliography: references.bib
 # Executive Summary
 
 In partnership with the Trilemma Foundation, this project evaluates whether public Bitcoin (@nakamoto2008) market and on-chain data can improve long-term Bitcoin accumulation compared with uniform Dollar-Cost Averaging (DCA), which serves as our primary baseline strategy. This supports Trilemma's goal of building an open-source framework for evaluating Bitcoin accumulation strategies. 
+
 Unlike uniform DCA, which invests a fixed amount at regular intervals, our adaptive DCA strategy adjusts allocations based on public signals and changing Bitcoin market conditions. The goal is to improve long-term accumulation efficiency by acquiring more Bitcoin with the same fixed budget. We measure this using Sats per Dollar (SPD), which represents the amount of Bitcoin or satoshis (Sats) accumulated per dollar invested. Using the BRK (@brk) metrics dataset from the StackSats ecosystem, which contains daily market and on-chain metrics from 2009 to 2026, we analyze 41,000+ metrics, apply feature selection, and backtest adaptive allocation strategies against uniform DCA.
 
 # Introduction
 
 The challenge of investing in Bitcoin is simple to describe but difficult to solve: if you have a fixed amount of money to invest over time, can you consistently buy more Bitcoin by adjusting your purchases based on market conditions, rather than investing the same amount every day?
 
-Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. One common approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use uniform DCA as the baseline, but it has limitations because it does not adjust to changing market conditions. For institutions with fixed budgets, this may reduce efficiency by missing favorable buying periods.
+Long-term Bitcoin accumulation is important for institutions and foundations building Bitcoin exposure. The industry standard approach is Dollar-Cost Averaging (DCA), where a fixed amount is invested regularly. We use uniform DCA as our baseline because it provides significant psychological and operational benefits: it reduces emotional decision-making and minimizes the impact of poor market timing by smoothing out short-term volatility @investopedia_dca.
+
+However, a strictly passive DCA strategy lacks the capacity for dynamic portfolio management. By ignoring changing market environments, it suffers from severe capital inefficiency when applied to a highly cyclical asset like Bitcoin. Because it deploys capital evenly regardless of asset valuation, it forces an institution to allocate the same fixed dollar amount during periods of severe market overvaluation as it does during prolonged historical drawdowns. Bitcoin frequently experiences severe bear markets where prices drop by more than 70%.While uniform DCA successfully averages out daily volatility, it fails to capitalize on Bitcoin's massive macroeconomic swings. An adaptive strategy that accelerates purchases during deep market crashes, and conserves cash during hype bubbles, will achieve a significantly lower average cost than uniform DCA over the long run @investopedia_dca. For institutions with strictly fixed budgets, using data-driven adaptation to beat this uniform baseline is critical to maximizing long-term accumulation.
 
 This problem is important because Bitcoin's public and auditable data allows smaller institutions to explore data-driven accumulation strategies without relying on privileged market access.
 
@@ -99,7 +102,7 @@ We developed the following adaptive strategies, each using different metrics and
 
 ### Composite Signal Index Strategy
 
-Inspired by the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints (see @sec-appendix-composite-signal-index for detailed explanation). 
+Inspired by the StackSats built-in strategies, the Composite Signal Index strategy was developed to blend multiple on-chain and market signals into a single adaptive allocation signal. The framework uses a weighted combination of 8 key signals, including MVRV, NUPL, SOPR, Crowd sentiment, Reserve risk, Miner revenue, aggregate NUPL, and Sell-Side Risk Ratio. Each signal is assigned a learnable weight that is optimized to maximize Sats per Dollar (SPD) during the training period. The final allocation signal is then transformed using a log-exponential function to ensure it remains within the StackSats constraints (see [Appendix 3](#sec-appendix-composite-signal-index) for detailed explanation). 
 
 The strategy was trained using the Nelder-Mead optimization algorithm, which iteratively adjusts the signal weights to find the combination that yields the highest SPD on the training data. The optimized weights were then applied to the test period to evaluate performance against uniform DCA. See @tbl-strategy-comparison for the performance summary.
 
@@ -111,7 +114,7 @@ The strategy was trained using the Nelder-Mead optimization algorithm, which ite
 
 The **External Tunable Strategy** was developed to address the limitations of Uniform Dollar Cost Averaging (DCA), which blindly accumulates Bitcoin regardless of market extremes. Operating on the thesis that Bitcoin is a highly sensitive risk asset driven by global liquidity, this strategy integrates external macroeconomic indicators—specifically the 10-Year U.S. Treasury Yield—with short-term price momentum to adapt to changing financial environments.
 
-Utilizing the *Stacksats* baseline MVRV (Market-Value-to-Realized-Value) preference weight as a foundation, the model dynamically modifies this signal using a 4-Tier Decision Matrix. It evaluates the macroeconomic environment daily, identifying "Risk-On" regimes (cheap borrowing) to aggressively boost accumulation, and "Risk-Off" environments (tightening liquidity) to conserve capital. The model also features an absolute priority override to buy aggressively during generational, multi-month price crashes *(For exact features definitions and the complete decision tree logic, see @sec-appendix-external-tunable).*
+Utilizing the *Stacksats* baseline MVRV (Market-Value-to-Realized-Value) preference weight as a foundation, the model dynamically modifies this signal using a 4-Tier Decision Matrix. It evaluates the macroeconomic environment daily, identifying "Risk-On" regimes (cheap borrowing) to aggressively boost accumulation, and "Risk-Off" environments (tightening liquidity) to conserve capital. The model also features an absolute priority override to buy aggressively during generational, multi-month price crashes *(For exact features definitions and the complete decision tree logic, see [Appendix 4](#sec-appendix-external-tunable)).*
 
 To prevent human bias, the strategy's thresholds were rigorously optimized via a grid-search algorithm across the 2018–2023 training period. When applied to the out-of-sample 2024–2025 test period, the External Tunable approach achieved an average Sats-Per-Dollar (SPD) of 1,346.27, representing a **4.19%** improvement over the Uniform DCA baseline (See @tbl-strategy-comparison for a performance summary). It secured a highly consistent win rate of 100% and a 65.5% exponential-decay percentile.
 
@@ -133,7 +136,7 @@ To capture market risk, a GARCH(1,1) model was employed to estimate conditional 
 
 Valuation was measured using the Bitcoin MVRV Z-score, which indicates whether Bitcoin is trading above or below its historical valuation range. Lower valuation levels resulted in larger allocation weights, reflecting stronger accumulation opportunities.
 
-The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for the performance summary and @sec-appendix-hmm-garch for a more detailed explanation.
+The final allocation signal combined regime probabilities, valuation adjustments, volatility adjustments, and trend information into a single bounded portfolio weight. This adaptive framework enabled the strategy to systematically allocate more capital during historically attractive market conditions. See @tbl-strategy-comparison for the performance summary and [Appendix 6](#sec-appendix-hmm-garch) for a more detailed explanation.
 
 ![HMM-GARCH Adaptive Strategy vs Uniform DCA](figures/full_garch_hmm_plot.png){#full_garch_hmm_plot fig-pos="H"}
 
@@ -155,7 +158,7 @@ The final allocation signal combined HMM regime probabilities with Bayesian evid
 
 This probabilistic framework enabled the strategy to systematically concentrate purchases during historically attractive accumulation periods while maintaining compliance with the StackSats budget and allocation constraints.
 
-See @tbl-strategy-comparison for the detailed performance summary and @sec-appendix-hmm-bayes for a more detailed explanation.
+See @tbl-strategy-comparison for the detailed performance summary and [Appendix 7](#sec-appendix-hmm-bayes) for a more detailed explanation.
 
 ![HMM-BAYES Adaptive Strategy vs Uniform DCA](figures/full_bayes_hmm_plot.png){#full_bayes_hmm_plot fig-pos="H"}
 
@@ -179,7 +182,7 @@ Engineered features included:
 
 These features were used to describe three dimensions of market conditions: Bitcoin trend, valuation, and whether market-cap growth or realized-cap growth was leading. Combining these components created up to 24 possible regimes.
 
-For each regime with sufficient training observations, the strategy compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom Simple Moving Average (SMA)-based strategy. The custom SMA-based strategy used the relationship between Bitcoin's current price and its simple moving average to guide allocation: when price was below its moving average, the strategy treated Bitcoin as relatively cheaper and allocated more; when price was above its moving average, it allocated less. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were also selected based only on training-period performance. The fallback strategy was selected from the same candidate strategy set and was used when a regime was rare or not observed during training, so the method could still assign an allocation during testing. For additional details on the regime construction features, candidate strategies, model selection process, and fallback strategy, see @sec-appendix-multi-strategy-regime-based.
+For each regime with sufficient training observations, the strategy compared three candidate strategies: StackSats MVRV, StackSats Momentum, and a custom Simple Moving Average (SMA)-based strategy. The custom SMA-based strategy used the relationship between Bitcoin's current price and its simple moving average to guide allocation: when price was below its moving average, the strategy treated Bitcoin as relatively cheaper and allocated more; when price was above its moving average, it allocated less. The best strategy for each regime was learned using 2018–2023 training data. Key tuning choices, including momentum lookback, SMA lookback, regime lookback, and fallback strategy, were also selected based only on training-period performance. The fallback strategy was selected from the same candidate strategy set and was used when a regime was rare or not observed during training, so the method could still assign an allocation during testing. For additional details on the regime construction features, candidate strategies, model selection process, and fallback strategy, see [Appendix 5](#sec-appendix-multi-strategy-regime-based).
 
 After the final configuration was fixed, the strategy was applied to the 2024–2025 test period. The multi-strategy regime-based approach outperformed Uniform DCA across the key evaluation metrics. See @tbl-strategy-comparison for the performance summary.
 
@@ -226,6 +229,12 @@ All data used is publicly available on-chain and market data with no personally 
 
 -  **Open-source accumulation strategy framework** github repo consisting of Python notebooks, a feature engineering pipeline, and backtesting logic built on the StackSats engine, all MIT-licensed.
 -   **Blog post** and **Video** detailing the strategies developed.
+    - Access [Blog Post](https://shrutisasi.github.io/AdaptiveSats/)
+    - Access Video:
+        - [External Tunable Strategy](https://youtu.be/krKk9pX62gQ?si=UMZBAiEI2Z7aLuLw)
+        - [Composite Signal Index Strategy](https://youtu.be/exyRqs2gwck?si=YxdCZnhRon5S_LC_)
+        - [Multi-Strategy Regime-Based Strategy](https://youtu.be/FSLVe98qfoU?si=pSCwki6ZndKubkxm)
+        - [HMM-GARCH and BAYESIAN Strategy](https://youtu.be/znfH24iVRaM?si=lCpZjtOfOAcenL32)
 
 The Trilemma Foundation and the open-source community can use these to evaluate existing strategies, develop new ones, and extend the methodology to other assets by swapping data inputs.
 
@@ -261,6 +270,17 @@ This project set out to answer whether public Bitcoin market and on-chain data c
 - The most impactful near-term improvement would be a Streamlit dashboard for signal monitoring and strategy comparison, making the product accessible to non-technical allocators. 
 - Longer-term, building automated ingestion pipelines, creating an ensemble strategy that blends all approaches based on prevailing regime.
 
+# Appendices Overview
+To help navigate the deep technical details, model architectures, and data pipelines, please refer to the following appendices:
+
+- [Appendix 1: On-Chain Metrics for Long Accumulation Identification](#sec-appendix-metrics)
+- [Appendix 2: Glossary of Terms](#sec-appendix-glossary)
+- [Appendix 3: Composite Signal Index Strategy Details](#sec-appendix-composite-signal-index)
+- [Appendix 4: External Tunable Strategy Details](#sec-appendix-external-tunable)
+- [Appendix 5: Multi-Strategy Regime-Based Approach Details](#sec-appendix-multi-strategy-regime-based)
+- [Appendix 6: HMM-GARCH Adaptive Strategy Details](#sec-appendix-hmm-garch)
+- [Appendix 7: HMM-Bayesian Adaptive Strategy Details](#sec-appendix-hmm-bayes)
+
 # Appendix 1: On-Chain Metrics for Long Accumulation Identification {#sec-appendix-metrics .appendix}
 
 The following table summarises the key on-chain and market metrics and their role in identifying favourable Bitcoin accumulation windows.
@@ -286,7 +306,6 @@ The following table summarises the key on-chain and market metrics and their rol
 -   **Halving:** A programmed event in the Bitcoin protocol that occurs approximately every four years, reducing the block reward for miners by half, which historically has had significant impacts on Bitcoin's price and market dynamics.
 -   **Backtesting:** The process of testing a trading strategy or model on historical data to evaluate its performance and robustness before deploying it in live markets. It includes validation checks to prevent look-ahead bias and ensure that the strategy is evaluated fairly against a baseline.
 -   **Hidden Markov Models (HMMs):** Hidden Markov models are probabilistic models in which observations, in this case prices or market regimes, are dependent on a latent (hidden) Markov process. They are used to represent systems that transition between hidden states over time, while producing observable outputs.
--   **Variance Inflation Factor (VIF):** A measure of multicollinearity in regression analysis, indicating how much the variance of an estimated regression coefficient increases due to collinearity among the predictors. A VIF value greater than 5 or 10 is often considered indicative of high multicollinearity.
 
 # Appendix 3: Composite Signal Index Strategy Details {#sec-appendix-composite-signal-index .appendix}
 

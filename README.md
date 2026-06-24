@@ -19,17 +19,16 @@ The framework analyzes Bitcoin network and market indicators, including on-chain
 ## Evaluation Methodology
 Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
 
-- **Baseline:** Naive uniform DCA (equal daily allocation)
-- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows
+- **Baseline:** Uniform DCA (equal daily allocation)
+- **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows (Win rate > 50%)
 - **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
-
 
 ## Key Concepts
 
 | Term | Description |
 |------|-------------|
 | **DCA (Dollar-Cost Averaging)** | Investing a fixed amount at regular intervals regardless of price - the naive baseline |
-| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100M sats) accumulated per USD invested - the primary performance metric; higher is better |
+| **Sats per Dollar (SPD)** | Satoshis (1 BTC = 100,000,000 sats) accumulated per USD invested - the primary performance metric; higher is better |
 | **stacksats** | Open-source Python framework used for implementing and backtesting Bitcoin accumulation strategies |
 | **Halving Cycle** | Every ~4 years, Bitcoin's block reward is halved (2012, 2016, 2020, 2024) - historically a key market cycle driver |
 | **MVRV** | Market Value to Realized Value - ratio of market cap to aggregate cost basis; MVRV < 1 signals undervaluation |
@@ -119,7 +118,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 
 ### Core Pipeline
 
-|#|**Notebook**|**Purpose**|
+|#|**Notebook**|**Purpose**| 
 |---|---|---|
 |1.|`download.ipynb`|Downloads ~1GB raw BRK metrics from Google Drive, creates `train.parquet` and `test.parquet`|
 |2.|`family_classification.ipynb`|Categorizes 41,407 metrics into 16 feature families (e.g., Market Valuation, Profitability & SOPR)|
@@ -129,29 +128,26 @@ Start with core pipeline notebooks, then explore strategy notebooks
 |-|`btc_stl_analysis.ipynb`|STL decomposition of BTC price and on-chain metrics (trend / seasonality / residuals)|
 
 ### Strategy Notebooks
-**Stacksats Built-in Strategies**  (stacksats_strategies) 
 
-|**Notebook**|**Strategy**|
-|---|---|
-|`simple_zscore_analysis.ipynb`|Z-score normalized signal with threshold-based allocation|
-|`mvrv.ipynb`|Allocation scaled to MVRV Ratio|
-|`momentum_vs_dca_all_years_top10.ipynb`|Momentum signal vs uniform DCA across all years|
-|`momentum_vs_dca_4_cycles_top10_yby_halving.ipynb`|Momentum vs DCA evaluated year-by-year within halving cycles|
-|`experimental_strategies.ipynb`|experimental strategies - Example MVRV and MVRV Plus|
+**Proposed Strategies** [proposed_strategies](notebooks/proposed_strategies)
 
-**Proposed Strategies** (proposed_strategies)
+|**Notebook**|**Strategy**|**Video Walkthrough**|
+|---|---|---|
+|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|[Watch Video](https://youtu.be/znfH24iVRaM)|
+|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|[Watch Video](https://youtu.be/znfH24iVRaM)|
+|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|[Watch Video](https://youtu.be/exyRqs2gwck)|
+|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|[Watch Video](https://youtu.be/krKk9pX62gQ)|
+|`multi_strategy_regimes_approach.ipynb`|Multi-strategy regime-based approach that selects the best strategy by market regime and uses saved intermediate outputs for reproducible reruns|[Watch Video](https://youtu.be/FSLVe98qfoU)|
 
-|**Notebook**|**Strategy**|
-|---|---|
-|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
-|`bayes_hmm_look_forward.ipynb`|Extended HMM with forward-looking state prediction|
-|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|
-|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|
-|`brk_include_strat.ipynb`|Strategy incorporating a wider set of BRK on-chain metrics|
-|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|
-|`value_floor_strat.ipynb`|Crash-detection strategy that sets allocation floors|
-|`weighted_external_tunable_strat.ipynb`|Linear factor-weighted strategy combining MVRV, short-term momentum, and macro indicators (e.g. Treasury yield changes) with tunable weights|
-|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
+### Note on multi-strategy intermediate outputs
+
+The notebook `notebooks/proposed_strategies/multi_strategy_regimes_approach.ipynb` uses saved intermediate outputs by default so users can run the notebook without rerunning the full grid search.
+
+The intermediate outputs are stored in:
+
+```text
+notebooks/proposed_strategies/intermediate_outputs/multi_strategy_regimes/
+```
 
 ## Data
 Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
@@ -167,6 +163,30 @@ Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain an
 
 ```
 AdaptiveSats/
+├── blog/                                             # Quarto blog source code and assets
+│   ├── figures/                                      # Shared programmatically generated figures
+│   │   ├── bear_bitcoin_cycle.png
+│   │   ├── external_tunable_approach_plot.png
+│   │   ├── fig_composite_signal_index_strategy.png
+│   │   ├── fig_learned_signal_weights.png
+│   │   ├── full_bayes_hmm_plot.png
+│   │   ├── full_garch_hmm_plot.png
+│   │   └── multi-strategy-approach-plot.png
+│   ├── images/                                       # Static images for the blog
+│   │   └── Bitcoin_logo.png
+│   ├── posts/                                        # Individual strategy blog posts
+│   │   ├── composite-signal-index-strategy/
+│   │   │   └── index.qmd
+│   │   ├── external-tunable-post/
+│   │   │   └── index.qmd
+│   │   ├── garch_content/
+│   │   │   └── index.qmd
+│   │   └── multi-strategy-regime-based-approach/
+│   │       └── index.qmd
+│   ├── about.qmd                                     # About page for the project team
+│   ├── index.qmd                                     # Main blog landing page
+│   ├── references.bib                                # Bibliography citations for the blog
+│   └── styles.css                                    # Custom CSS styling for the blog
 ├── data/                                             # Processed and reference data files
 │   ├── raw/
 │   │   └── brk_metrics.parquet                       # Raw on-chain metrics (download.ipynb)
@@ -184,22 +204,26 @@ AdaptiveSats/
 │   │   ├── fig_cycle_violin_plots.png
 │   │   ├── fig_price_history.png
 │   │   └── price_dendrogram_new.png
+│   ├── final_report.qmd                              # Quarto source for the final report
+│   ├── final_report.pdf                              # Rendered PDF final report
 │   ├── Proposal.qmd                                  # Quarto source for the project proposal
 │   ├── Proposal.html                                 # Rendered HTML proposal
-│   ├── Proposal.pdf                                  # Rendered PDF proposal
+│   ├── Proposal.pdf                                  # Rendered PDF proposal                            
 │   └── references.bib                                # Bibliography
 ├── notebooks/                                        # Jupyter notebooks for analysis
 │   ├── proposed_strategies/                          # Newly built strategies
-|   │   └── bayes_hmm_look_forward.ipynb              # HMM Bayesian Look Forward strategy prototype
 |   │   └── bayes_hmm.ipynb                           # HMM Bayesian strategy prototype
-|   │   └── brk_include_strat.ipynb                   
-│   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
-|   │   └── external_tunable_strat.ipynb 
 │   │   └── hmm-garch.ipynb                           # HMM GARCH strategy prototype
-|   │   └── regime_strategy_analysis.ipynb            # Allocation strategy based on market regime
-|   │   └── value_floor_strat.ipynb 
-|   │   └── weighted_external_tunable_strat.ipynb     # Integrating external data
-│   ├── stacksats_strategies/                         # Built-in stacksats strategies
+|   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
+|   │   └── external_tunable_strat.ipynb              # Macro-Economic Integration with 10-Year US Treasury Yield    
+│   │   └── multi_strategy_regimes_approach.ipynb     # Allocation strategy based on market regime
+│   ├── research_strategies/                          # Research work
+│   │   ├── bayes_hmm_look_forward.ipynb
+│   │   ├── brk_include_strat.ipynb
+│   │   ├── regime_strategy_analysis_initial_exploration.ipynb
+│   │   └── value_floor_strat.ipynb
+│   │   └── weighted_external_tunable_strat.ipynb
+│   ├── stacksats_strategies/                         # Built-in stacksats strategies (Experiment based on Stacksats original models)
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb
 │   │   ├── experimental_strategies.ipynb
@@ -233,4 +257,4 @@ AdaptiveSats/
 |Shruti Sasi|[@ShrutiSasi](https://github.com/ShrutiSasi)|
 
 ## License
-This project is licensed under the MIT License. Check the `LICENSE` file.
+This project is licensed under the MIT License. Check the [LICENSE](LICENSE) file.

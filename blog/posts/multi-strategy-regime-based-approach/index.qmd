@@ -5,7 +5,7 @@ author: "AdaptiveSats Team"
 date: "2026-06-16"
 bibliography: "../../references.bib"
 link-citations: true
-categories: [Research, Bitcoin, Strategy, Regime-Based, Backtesting]
+categories: [Strategy, Regime-Based Strategy]
 format:
   html:
     toc: true
