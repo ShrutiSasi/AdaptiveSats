@@ -3,7 +3,7 @@ title: "Composite Signal Index Strategy for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that uses On-Chain Signal Blending. Inspired by the StackSats built-in strategy framework"
 author: AdaptiveSats Team
 date: "2026-06-19"
-categories: [Research, Bitcoin, Strategy, Data-Science]
+categories: [Strategy, Composite Signal Index Strategy]
 bibliography: "../../references.bib"
 resources:
     - "../../figures/**"

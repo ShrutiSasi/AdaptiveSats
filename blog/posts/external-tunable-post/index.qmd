@@ -3,7 +3,7 @@ title: "External Tunable Approach for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that tracks the U.S. Treasury Yields and Bitcoin's price momentum. It identifies 'Risk-On' and 'Risk-Off' market regimes and dynamically adjusts its daily purchase weights to buy aggressively when liquidity is high, and conserve cash when markets crash."
 author: "AdaptiveSats Team"
 date: "2026-06-18"
-categories: [Research, Bitcoin, Strategy]
+categories: [Strategy, External Tunable Strategy]
 bibliography: ../../references.bib
 format:
   html:

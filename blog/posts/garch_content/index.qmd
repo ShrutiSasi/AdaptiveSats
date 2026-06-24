@@ -3,7 +3,7 @@ title: "Adaptive Bitcoin Accumulation Using Hidden Markov Models, GARCH Volatili
 description: "Adaptive DCA frameworks using HMM regimes with GARCH volatility and Bayesian inference."
 author: AdaptiveSats Team
 date: "2026-06-18"
-categories: [Research, Bitcoin, Strategy, Data-Science]
+categories: [Strategy, HMM Garch Strategy]
 bibliography: "../../references.bib"
 resources:
     - "../../figures/**"
