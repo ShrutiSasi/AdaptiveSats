@@ -1,0 +1,22 @@
+project:
+  type: website
+
+bibliography: references.bib
+website:
+  title: "AdaptiveSats"
+  description: "Exploring data-driven Bitcoin accumulation strategies."
+  site-url: "https://<USERNAME>.github.io/AdaptiveSats"
+  navbar:
+    right:
+      - text: "About"
+        href: about.qmd
+      - text: "₿log"
+        href: index.qmd      
+      - icon: github
+        href: https://github.com/ShrutiSasi/AdaptiveSats
+format:
+  html:
+    theme: united
+    css: styles.css
+    toc: true
+    toc-location: right

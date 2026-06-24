@@ -1,0 +1,25 @@
+{
+  "strategy_name": "Multi-strategy Regime-Based Approach",
+  "selection_rule": "Best lookback and fallback combination selected using training metrics only",
+  "momentum_lookback": 21,
+  "sma_lookback": 340,
+  "regime_lookback": 340,
+  "fallback_strategy": "sma_340d_weight",
+  "candidate_columns": [
+    "stacksats_mvrv_weight",
+    "stacksats_momentum_weight",
+    "sma_340d_weight"
+  ],
+  "fallback_candidate_columns": [
+    "sma_340d_weight",
+    "stacksats_mvrv_weight",
+    "stacksats_momentum_weight"
+  ],
+  "total_budget_usd": 1000.0,
+  "sats_per_btc": 100000000,
+  "train_start": "2018-01-01",
+  "train_end": "2023-12-31",
+  "test_start": "2024-01-01",
+  "test_end": "2025-12-31",
+  "output_directory": "notebooks\\proposed_strategies\\intermediate_outputs\\multi_strategy_regimes"
+}

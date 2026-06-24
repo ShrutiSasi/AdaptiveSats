@@ -1,0 +1,27 @@
+#!/bin/bash
+cd notebooks
+jupyter nbconvert --to notebook --execute --inplace download.ipynb
+jupyter nbconvert --to notebook --execute --inplace family_classification.ipynb
+jupyter nbconvert --to notebook --execute --inplace preliminary_eda_charts.ipynb
+jupyter nbconvert --to notebook --execute --inplace dendogram.ipynb
+jupyter nbconvert --to notebook --execute --inplace eda.ipynb
+jupyter nbconvert --to notebook --execute --inplace btc_stl_analysis.ipynb
+cd stacksats_strategies
+jupyter nbconvert --to notebook --execute --inplace simple_zscore_analysis.ipynb
+jupyter nbconvert --to notebook --execute --inplace mvrv.ipynb
+jupyter nbconvert --to notebook --execute --inplace momentum_vs_dca_all_years_top10.ipynb
+jupyter nbconvert --to notebook --execute --inplace momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
+jupyter nbconvert --to notebook --execute --inplace experimental_strategies.ipynb
+cd ..
+cd proposed_strategies
+jupyter nbconvert --to notebook --execute --inplace bayes_hmm.ipynb
+jupyter nbconvert --to notebook --execute --inplace composite_signal_index_strategy.ipynb
+jupyter nbconvert --to notebook --execute --inplace external_tunable_strat.ipynb
+jupyter nbconvert --to notebook --execute --inplace hmm-garch.ipynb
+jupyter nbconvert --to notebook --execute --inplace multi_strategy_regimes_approach.ipynb
+# cd..
+# cd research_strategies
+# jupyter nbconvert --to notebook --execute --inplace bayes_hmm_look_forward.ipynb
+# jupyter nbconvert --to notebook --execute --inplace brk_include_strat.ipynb
+# jupyter nbconvert --to notebook --execute --inplace value_floor_strat.ipynb
+# jupyter nbconvert --to notebook --execute --inplace weighted_external_tunable_strat.ipynb

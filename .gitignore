@@ -195,9 +195,9 @@ cython_debug/
 .abstra/
 
 # Visual Studio Code
-#   Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
+#   Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore
 #   that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#   and can be added to the global gitignore or merged into this file. However, if you prefer, 
+#   and can be added to the global gitignore or merged into this file. However, if you prefer,
 #   you could uncomment the following to ignore the entire vscode folder
 # .vscode/
 # Temporary file for partial code execution
@@ -221,3 +221,39 @@ __marimo__/
 data/raw/
 data/processed/
 experiments/
+
+notebooks/stacksats_strategies/output/
+notebooks/proposed_strategies/output/notebooks/output/
+
+/.quarto/
+**/.quarto/
+**/*.quarto_ipynb
+**/_site/
+
+blog/video/media/
+blog/video/renders/
+*.mp4
+# Video renders/assets
+media/
+blog/video/final/
+blog/video/assets/*.mp4
+blog/video/assets/*.mov
+blog/video/assets/*.mp3
+
+# Manim renders
+media/
+
+# Final rendered videos
+*.mp4
+*.mov
+
+# Presenter recordings
+presenter/
+recordings/
+
+# Video exports
+blog/video/final/
+blog/video/final/notebooks/output/
+
+notebooks/output/
+notebooks/proposed_strategies/output/
