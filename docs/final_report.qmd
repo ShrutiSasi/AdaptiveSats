@@ -226,6 +226,12 @@ All data used is publicly available on-chain and market data with no personally 
 
 -  **Open-source accumulation strategy framework** github repo consisting of Python notebooks, a feature engineering pipeline, and backtesting logic built on the StackSats engine, all MIT-licensed.
 -   **Blog post** and **Video** detailing the strategies developed.
+    - Access [Blog Post](https://shrutisasi.github.io/AdaptiveSats/)
+    - Access Video:
+        - [External Tunable Strategy](https://youtu.be/krKk9pX62gQ?si=UMZBAiEI2Z7aLuLw)
+        - [Composite Signal Index Strategye](https://youtu.be/5kC7x73eCyc?si=6O4H_G6Xm0t13b6U)
+        - [Multi-Strategy Regime-Based Strategy](https://youtu.be/FSLVe98qfoU?si=pSCwki6ZndKubkxm)
+        - [HMM-GARCH and BAYESIAN](https://youtu.be/znfH24iVRaM?si=lCpZjtOfOAcenL32)
 
 The Trilemma Foundation and the open-source community can use these to evaluate existing strategies, develop new ones, and extend the methodology to other assets by swapping data inputs.
 
