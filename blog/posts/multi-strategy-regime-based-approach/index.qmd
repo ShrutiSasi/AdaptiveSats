@@ -11,7 +11,8 @@ format:
     toc: true
     toc-depth: 3
 ---
-## Why this strategy was needed
+
+## Introduction
 
 A simple dollar-cost averaging strategy invests the same amount of money at regular intervals, regardless of market conditions. This is easy to understand and is often a strong baseline for long-term Bitcoin accumulation. However, Bitcoin does not move in a straight line. It goes through very different market environments, including strong bull markets, deep bear markets, recovery periods, and sideways periods.
 
@@ -25,7 +26,7 @@ Instead, this approach asks a more flexible question:
 
 The goal is not to predict the exact future price of Bitcoin. The goal is to improve Bitcoin accumulation compared with Uniform DCA by changing the allocation pattern based on the market environment.
 
-## High-level idea
+## High-Level Idea
 
 The strategy has two main parts:
 
@@ -53,6 +54,20 @@ Another day might be classified as:
 These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.
 
 Once the best strategy is learned for each regime, the same regime-to-strategy mapping is applied to the test period. This makes the strategy more adaptive than a single fixed rule, while still keeping the logic easy to explain.
+
+The short video below gives a high-level overview of the multi-strategy regime-based approach and how it is used for adaptive Bitcoin accumulation.
+
+```{=html}
+<iframe
+  width="800"
+  height="450"
+  src="https://www.youtube.com/embed/FSLVe98qfoU"
+  title="Multi-Strategy Regime-Based Approach Video"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
+```
 
 ## Key features used
 
