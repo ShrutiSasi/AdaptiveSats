@@ -118,7 +118,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 
 ### Strategy Notebooks
 
-**Proposed Strategies** (proposed_strategies)
+**Proposed Strategies** [proposed_strategies](notebooks/proposed_strategies)
 
 |**Notebook**|**Strategy**|
 |---|---|
