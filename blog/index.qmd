@@ -34,7 +34,7 @@ However, a strictly passive DCA strategy lacks the capacity for dynamic portfoli
 
 Our objective is to develop an **adaptive daily allocation model**. Instead of fixed purchases, our strategy adjusts its allocations dynamically based on public on-chain and market signals. 
 
-We measure our success using **Total accumulated Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
+We measure our success using **Average accumulated Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
 
 ### Strategies
 
