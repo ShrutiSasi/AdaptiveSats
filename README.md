@@ -168,6 +168,7 @@ AdaptiveSats/
 │   │   ├── bear_bitcoin_cycle.png
 │   │   ├── external_tunable_approach_plot.png
 │   │   ├── fig_composite_signal_index_strategy.png
+│   │   ├── fig_learned_signal_weights.png
 │   │   ├── full_bayes_hmm_plot.png
 │   │   ├── full_garch_hmm_plot.png
 │   │   └── multi-strategy-approach-plot.png
@@ -204,7 +205,6 @@ AdaptiveSats/
 │   │   ├── fig_price_history.png
 │   │   └── price_dendrogram_new.png
 │   ├── final_report.qmd                              # Quarto source for the final report
-│   ├── final_report.html                             # Rendered HTML final report
 │   ├── final_report.pdf                              # Rendered PDF final report
 │   ├── Proposal.qmd                                  # Quarto source for the project proposal
 │   ├── Proposal.html                                 # Rendered HTML proposal
