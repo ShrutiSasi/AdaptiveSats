@@ -3,7 +3,9 @@ title: "Multi-Strategy Regime-Based Approach for Bitcoin Accumulation"
 description: "An adaptive Bitcoin accumulation strategy that classifies market regimes and selects the best strategy for each regime."
 author: "AdaptiveSats Team"
 date: "2026-06-16"
-categories: [Bitcoin, Strategy, Regime-Based, Backtesting]
+bibliography: "../../references.bib"
+link-citations: true
+categories: [Research, Bitcoin, Strategy, Regime-Based, Backtesting]
 format:
   html:
     toc: true
@@ -38,15 +40,15 @@ A regime is a label that describes the type of Bitcoin market environment on a g
 
 So each day receives a combined regime label in this format:
 
-**Bitcoin trend | MVRV valuation | Growth relationship**
+> **Bitcoin trend | MVRV valuation | Growth relationship**
 
 For example, one day might be classified as:
 
-**BTC Bull | Normal MVRV | Market Growth Leading**
+> **BTC Bull | Normal MVRV | Market Growth Leading**
 
 Another day might be classified as:
 
-**BTC Bear | Low MVRV | Realized Growth Leading**
+> **BTC Bear | Low MVRV | Realized Growth Leading**
 
 These examples may look detailed at first, but each part of the regime is explained in the sections below. The key idea is that the model first identifies the market environment, then uses training data to learn which candidate allocation strategy worked best in that type of environment.
 
@@ -54,44 +56,35 @@ Once the best strategy is learned for each regime, the same regime-to-strategy m
 
 ## Key features used
 
-The strategy used a small set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. After the initial EDA and overall dataset understanding, feature selection was guided by the goal of capturing different Bitcoin market conditions rather than using a large number of unrelated indicators.
+The strategy used a focused set of raw Bitcoin market and on-chain features, then created engineered rolling features from them. Feature selection was guided by the goal of capturing different Bitcoin market conditions, rather than using a large number of unrelated indicators.
+
+We also created features based on simple moving averages in this approach. A simple moving average (SMA) is the average price of an asset over a fixed number of past days. In this strategy, SMA-based features were engineered from the Bitcoin price series and used to compare Bitcoin's current price with its recent trend.
 
 The main raw input features were:
 
-* **price_usd**: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy’s allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-SMA ratios, and lookback returns.
+* **price_usd**: This represents the daily Bitcoin price in USD. It was the core market feature because the strategy's allocation decisions depend on whether Bitcoin is relatively strong, weak, expensive, or cheap compared with recent price history. The price series was also used to create engineered trend features such as moving averages, price-to-simple-moving-average ratios (SMA), and lookback returns.
 
-* **mvrv**: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. This feature was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.
+* **mvrv**: MVRV stands for Market Value to Realized Value. It compares Bitcoin’s current market value with its realized value, which is based on the price at which coins last moved on-chain. It was used as a valuation signal. A lower MVRV can suggest that Bitcoin is relatively undervalued, while a higher MVRV can suggest that Bitcoin is relatively expensive.
 
-* **realized_cap_growth_rate**: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This feature helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.
+* **realized_cap_growth_rate**: This measures how quickly realized capitalization is changing. Realized cap is connected to on-chain investor behavior because it reflects the value of coins based on when they last moved. This helped capture whether on-chain value was growing, which can indicate stronger underlying accumulation or network-level value movement.
 
 * **market_cap_growth_rate**: This measures how quickly Bitcoin’s market capitalization is changing. Since market cap is closely tied to price, this feature captures price-driven growth. Comparing market-cap growth with realized-cap growth helped distinguish whether the market was being led more by price momentum or by on-chain realized value growth.
 
 Together, these raw features allowed the strategy to capture three important dimensions of Bitcoin market behavior: price trend, valuation, and the relationship between market-driven growth and on-chain value growth.
 
-The notebook then created engineered features from the Bitcoin price series. For each selected lookback window `d`, three rolling features were created:
+The strategy also created engineered features from the Bitcoin price series. For each selected lookback window `d`, three rolling features were created:
 
 * **price_{d}d_sma**: the simple moving average of Bitcoin price over `d` days
 * **price_{d}d_sma_ratio**: the ratio of current Bitcoin price to its `d`-day moving average
 * **btc_return_{d}d**: Bitcoin return over the past `d` days
 
+For example, a 90-day lookback would create features such as `price_90d_sma`, `price_90d_sma_ratio`, and `btc_return_90d`.
 
-For example, if the selected lookbacks included 30, 90, and 180 days, the engineered features would include:
+These engineered features were important because raw price alone does not fully describe the market condition. A Bitcoin price of $60,000 can mean different things depending on whether price is above or below its moving average, whether recent returns are positive or negative, and whether valuation is high or low. The SMA ratios and lookback returns helped convert raw price data into trend and momentum signals for regime classification.
 
-* **price_30d_sma**
-* **price_30d_sma_ratio**
-* **btc_return_30d**
-* **price_90d_sma**
-* **price_90d_sma_ratio**
-* **btc_return_90d**
-* **price_180d_sma**
-* **price_180d_sma_ratio**
-* **btc_return_180d**
+These features were then used to classify each day into one of the combined market regimes. The trend regime used SMA ratios and recent returns. MVRV was used to classify valuation as low, normal, or high. Realized-cap growth and market-cap growth were compared to classify whether realized growth or market growth was leading.
 
-Feature engineering was important because raw price alone does not fully describe the market condition. A Bitcoin price of $60,000 can mean different things depending on whether price is above or below its moving average, whether recent returns are positive or negative, and whether valuation is high or low. The engineered SMA ratios and lookback returns helped convert raw price data into trend and momentum signals that could be used for regime classification.
-
-These engineered features were then used to classify each day into one of the combined market regimes. The trend regime used the selected SMA ratio, the regime SMA ratio, the momentum return, and the SMA return. MVRV was used to classify valuation as low, normal, or high. Realized-cap growth and market-cap growth were compared to classify whether realized growth or market growth was leading.
-
-## Grid search used
+## Selecting the final settings
 
 The strategy depends on several tuning settings. These settings are not regimes themselves. Instead, they control how the features and regime labels are created.
 
@@ -240,25 +233,27 @@ To answer this, the approach compares multiple candidate allocation strategies.
 
 The candidate strategies used were:
 
-1. **StackSats MVRV Strategy**
-2. **StackSats Momentum Strategy**
+1. **StackSats Momentum Strategy**
+2. **StackSats MVRV Strategy**
 3. **Custom SMA Strategy**
 
 Each candidate strategy produces daily allocation weights. A higher weight means the strategy allocates more of the yearly budget to that day. A lower weight means it allocates less.
 
-### StackSats MVRV Strategy
-
-The MVRV strategy is based on valuation. It is designed to allocate more when Bitcoin appears relatively undervalued and less when Bitcoin appears relatively expensive.
-
-This is useful for accumulation because the goal is to maximize the number of sats bought per dollar. If Bitcoin is cheaper relative to its realized value, buying more on those days may improve long-term accumulation.
-
 ### StackSats Momentum Strategy
 
-The momentum strategy uses price trend behavior. It tends to allocate based on the strength or direction of price movement.
+The StackSats Momentum strategy is a price-based strategy that looks at Bitcoin’s recent price movement. In this project, it uses a contrarian interpretation of momentum. This means that if Bitcoin has recently gone up, the strategy reduces the accumulation signal. If Bitcoin has recently gone down, the strategy increases the accumulation signal.
 
-Momentum-based strategies can be useful because markets often trend for periods of time. In a strong bull market, momentum may help identify days where continued strength is present.
+This makes sense for an accumulation strategy because the goal is not necessarily to chase price increases, but to buy more Bitcoin when short-term weakness may create a better buying opportunity. To avoid reacting too strongly to extreme price moves, the momentum signal is bounded before it is converted into allocation weights.
 
-However, momentum can also struggle during choppy or sideways markets. That is one reason it is useful to combine it with other strategies instead of relying on it alone.
+This strategy was included because it captures recent price behavior, which provides a different type of signal from valuation-based or moving-average-based strategies. For implementation details, see @stacksats_momentum_strategy.
+
+### StackSats MVRV Strategy
+
+The StackSats MVRV strategy is mainly a valuation-based strategy. MVRV stands for Market Value to Realized Value. It compares Bitcoin's current market value with its realized value, which is based on the price at which coins last moved on-chain.
+
+The basic idea is that when Bitcoin looks undervalued based on MVRV, the strategy gives a higher accumulation preference. When Bitcoin looks expensive or overheated, the strategy gives a lower accumulation preference.
+
+This is useful for a Bitcoin accumulation strategy because the goal is to buy more sats per dollar. If Bitcoin is cheaper relative to its realized value, allocating more on those days may improve long-term accumulation compared with investing the same amount every day. For implementation details, see @stacksats_mvrv_strategy.
 
 ### Custom SMA Strategy
 
@@ -275,7 +270,7 @@ This strategy is easy to interpret and provides a useful contrast to MVRV and mo
 
 ## Learning the best strategy per regime
 
-Once the candidate strategies are created, the model evaluates them inside each regime using the training period.
+Once the candidate strategies are created, the strategy compares them within each regime using the training period.
 
 The training period is 2018 to 2023. This period contains multiple Bitcoin market environments, including bull markets, bear markets, and recovery periods.
 
@@ -285,9 +280,9 @@ For example:
 
 | Regime                                             | Best strategy learned from training |
 | -------------------------------------------------- | ----------------------------------- |
-| BTC Bull | Normal MVRV | Market Growth Leading     | Momentum                            |
-| BTC Bear | Low MVRV | Realized Growth Leading      | MVRV                                |
-| BTC Recovery | Normal MVRV | Market Growth Leading | SMA                                 |
+| BTC Bull \| Normal MVRV \| Market Growth Leading     | Momentum                            |
+| BTC Bear \| Low MVRV \| Realized Growth Leading      | MVRV                                |
+| BTC Recovery \| Normal MVRV \| Market Growth Leading | SMA                                 |
 
 This table is only an example. The actual learned mapping depends on the data.
 
@@ -309,7 +304,7 @@ The fallback options tested were:
 
 The fallback choice was selected using training performance only. This avoided using the test period to decide which fallback worked best. In the final strategy, the fallback rule helped make the model more robust because it could still produce an allocation even when an unseen or rare regime appeared.
 
-## Model Selection and Final Testing
+## Model selection and final testing
 
 A key part of the design was keeping model selection separate from final testing. The grid search was performed using training data only. This means the strategy selected its lookbacks and fallback strategy based on 2018–2023 performance.
 
@@ -326,46 +321,23 @@ The final workflow was:
 
 ## Evaluation metrics
 
-The main metric used was **sats per dollar**, often shortened as SPD.
+This strategy was evaluated using the same metrics defined on the [main blog page](../../index.qmd#evaluation-metrics): sats per dollar, percentage improvement versus Uniform DCA, win rate, score, and exponential-decay percentile.
 
-This metric measures how many satoshis were accumulated for each dollar invested. Since the project is about Bitcoin accumulation, SPD is more relevant than simply measuring portfolio value in dollars. A strategy can be considered better than Uniform DCA if it accumulates more sats using the same dollar budget.
+## Full-period strategy visualization
 
-For example, if two strategies both invest $1,000, the better strategy is the one that accumulates more sats.
-
-The comparison focused on several metrics:
-
-* **Strategy SPD**
-* **Percentage improvement versus DCA**
-* **Win rate across evaluation windows**
-* **Score**
-* **Exponential-decay percentile**
-
-SPD and percentage improvement were the most important metrics because they directly measured whether the strategy accumulated more Bitcoin than Uniform DCA.
-
-Win rate was used to understand consistency across evaluation windows. A strategy with a high improvement but very low win rate may be less reliable, because it may depend on only a small number of strong periods.
-
-The StackSats comparison also provided additional metrics such as score and exponential-decay percentile. The score gave a broader summary of strategy performance. The exponential-decay percentile placed more emphasis on recent performance, which is useful because recent market behavior may be more relevant when deciding whether a strategy is still competitive.
-
-Together, these metrics helped evaluate both the size of the improvement and the consistency of the strategy.
-
-## Final backtest visualization
-
-![Final multi-strategy regime-based approach backtest. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.](../../figures/multi-strategy-approach-plot.png){fig-align="center" width="100%"}
+![Final multi-strategy regime-based approach visualization. The chart compares the adaptive strategy allocation against Uniform DCA across the full evaluation period.](../../figures/multi-strategy-approach-plot.png){fig-align="center" width="100%"}
 
 ## Key results
 
-The multi-strategy regime-based approach was evaluated against the Uniform DCA baseline using four main metrics:
+The multi-strategy regime-based approach outperformed Uniform DCA in both the training and test periods.
 
-* **Sats per dollar (SPD)**: measures how many satoshis were accumulated for each dollar invested.
-* **Win rate**: measures how often the strategy outperformed the baseline across evaluation windows.
-* **Score**: provides an overall StackSats comparison metric.
-* **Exponential-decay percentile**: gives more weight to recent performance.
+For the **training period (2018–2023)**, the strategy achieved an SPD of **9,161.44**, compared with **8,418.79** for Uniform DCA. This corresponds to an improvement of **8.82%**.
 
-For the **training period (2018–2023)**, the multi-strategy approach achieved an SPD of **9,161.44**, compared with **8,418.79** for Uniform DCA, which corresponds to an improvement of **8.82%**.
+For the **test period (2024–2025)**, the strategy achieved an SPD of **1,369.57**, compared with **1,292.12** for Uniform DCA. This corresponds to an improvement of **5.99%**.
 
-For the **test period (2024–2025)**, the multi-strategy approach achieved an SPD of **1,369.57**, compared with **1,292.12** for Uniform DCA, corresponding to an improvement of **5.99%**.
+In the final StackSats comparison, the strategy achieved a **win rate of 63.76%**, a **score of 51.24**, and an **exponential-decay percentile of 38.72**.
 
-In the final StackSats comparison, the multi-strategy regime-based approach also achieved a **win rate of 63.76%**, a **score of 51.24**, and an **exponential-decay percentile of 38.72**. These results suggest that the strategy not only accumulated more sats per dollar than Uniform DCA in both train and test periods, but also remained competitive under the broader StackSats evaluation framework.
+Overall, these results suggest that the multi-strategy regime-based approach accumulated more sats per dollar than Uniform DCA, while also remaining competitive under the broader StackSats evaluation framework.
 
 ## Why this approach is useful
 
@@ -381,13 +353,11 @@ For example, we can explain that the strategy selected MVRV in a low-valuation r
 
 ## Limitations
 
-The first limitation is that the regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.
+- The regimes are rule-based. The model depends on thresholds such as MVRV cutoffs and moving-average conditions. These thresholds may not perfectly capture future market behavior.
 
-The second limitation is that Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.
+- Bitcoin cycles are limited in number. Even though the training period includes several market environments, it still represents a small number of full Bitcoin cycles. This makes it difficult to know whether the learned regime mapping will generalize to future cycles.
 
-The third limitation is that some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.
-
-The fourth limitation is that annual budget normalization is useful for a clean backtest, but it is not exactly the same as live deployment. In a live system, future days in the year are unknown, so allocation would need to be handled with a real-time budget pacing rule.
+- Some regimes may appear rarely. If a regime has only a small number of days, the learned best strategy for that regime may not be reliable. To reduce this issue, the model requires a minimum number of days before evaluating a regime.
 
 ## Final interpretation
 
@@ -395,10 +365,10 @@ The multi-strategy regime-based approach is an interpretable adaptive allocation
 
 Its main contribution is that it combines multiple signals instead of relying on a single fixed strategy. It uses MVRV, momentum, and SMA-based behavior in a structured way, allowing the allocation rule to change depending on the market environment.
 
-The strategy is especially useful as a research framework because it helps answer a practical question:
+The strategy is useful because it helps answer a practical question:
 
-**Are different Bitcoin accumulation signals useful in different market regimes?**
+***Are different Bitcoin accumulation signals useful in different market regimes?***
 
-Based on the final evaluation, the approach can be compared against Uniform DCA using sats per dollar, percentage improvement, win rate, score, and exponential-decay percentile. SPD shows whether the strategy accumulated more Bitcoin per dollar, while win rate shows how consistently it outperformed across evaluation windows. The score and exponential-decay percentile provide additional StackSats comparison measures, including a view that gives more importance to recent performance.
+The results suggest that different signals can be useful in different market conditions. Instead of treating one signal as always best, this approach allows the strategy to adapt based on the current regime.
 
-The final result should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, improving live budget pacing, and evaluating the method over future market cycles.
+These results should be interpreted carefully. The strategy is not a guarantee of future performance, and Bitcoin market behavior may change. However, it provides a strong foundation for future work, such as adding more robust regime definitions, testing more candidate strategies, and evaluating the method over future market cycles.

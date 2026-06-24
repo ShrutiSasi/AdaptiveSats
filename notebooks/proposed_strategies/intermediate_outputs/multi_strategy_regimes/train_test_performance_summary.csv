@@ -1,0 +1,3 @@
+period,start_year,end_year,dynamic_spd,baseline_spd,pct_diff_vs_baseline,performance_label
+train,2018,2023,9161.4351222295,8418.792360956691,8.821250476694477,better
+test,2024,2025,1369.5732977356222,1292.122198655723,5.994100183440587,better
