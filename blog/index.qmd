@@ -51,7 +51,7 @@ This strategy combines machine learning and volatility modeling to adapt to chan
 A probabilistic sister to the HMM-GARCH model. It uses the same Hidden Markov Model to identify latent market regimes, but layers on a Bayesian Network to weigh multiple pieces of evidence (trend, volatility, and valuation). This creates a unified probability estimate, concentrating purchases only when the statistical evidence points to an overwhelmingly attractive accumulation window.
 
 #### 5. [Multi-Strategy Regime-Based Approach](posts/multi-strategy-regime-based-approach/index.qmd)
-No single indicator works perfectly in every market condition. This strategy classifies each day into one of 24 possible market regimes based on price trends, valuation, and network growth. It then dynamically swaps between three different candidate strategies (MVRV, Momentum, or a custom SMA strategy) depending on which one historically performs best in that exact environment.
+The multi-strategy regime-based approach was designed because no single Bitcoin accumulation signal is likely to work best in every market environment. The strategy first classifies each day into a market regime using Bitcoin trend, MVRV valuation, and the relationship between market-cap growth and realized-cap growth. These components create up to 24 possible regimes, each representing a different combination of trend, valuation, and growth conditions. For each regime, the strategy compares StackSats MVRV, StackSats Momentum, and a custom SMA-based strategy, then selects the candidate that historically performed best under similar market conditions.
 
 ### Key Data & Signals
 
