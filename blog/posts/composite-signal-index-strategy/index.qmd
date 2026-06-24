@@ -9,6 +9,18 @@ resources:
     - "../../figures/**"
 ---
 
+```{=html}
+<iframe
+  width="800"
+  height="450"
+  src="https://www.youtube.com/embed/exyRqs2gwck"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
+```
+
 ## Introduction
 
 Dollar-Cost Averaging (DCA) is the default playbook for most Bitcoin accumulators: buy a fixed dollar amount at regular intervals, ignore short-term noise, and trust the long-term trend. It's simple, disciplined, and genuinely hard to beat on a risk-adjusted basis.
