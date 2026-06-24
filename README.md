@@ -139,7 +139,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 |`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|[Watch Video](https://youtu.be/krKk9pX62gQ)|
 |`multi_strategy_regimes_approach.ipynb`|Multi-strategy regime-based approach that selects the best strategy by market regime and uses saved intermediate outputs for reproducible reruns|[Watch Video](https://youtu.be/FSLVe98qfoU)|
 
-## Note on multi-strategy intermediate outputs
+### Note on multi-strategy intermediate outputs
 
 The notebook `notebooks/proposed_strategies/multi_strategy_regimes_approach.ipynb` uses saved intermediate outputs by default so users can run the notebook without rerunning the full grid search.
 
