@@ -131,13 +131,13 @@ Start with core pipeline notebooks, then explore strategy notebooks
 
 **Proposed Strategies** [proposed_strategies](notebooks/proposed_strategies)
 
-|**Notebook**|**Strategy**|
-|---|---|
-|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|
-|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|
-|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|
-|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|
-|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|
+|**Notebook**|**Strategy**|**Video Walkthrough**|
+|---|---|---|
+|`bayes_hmm.ipynb`|Hidden Markov Model with Bayesian inference for regime-aware allocation|[Watch Video](https://youtu.be/znfH24iVRaM)|
+|`hmm-garch.ipynb`|HMM combined with GARCH volatility modelling|[Watch Video](https://youtu.be/znfH24iVRaM)|
+|`composite_signal_index_strategy.ipynb`|Combines MVRV, NUPL, and SOPR into a single composite score for allocation|[Watch Video](https://youtu.be/exyRqs2gwck)|
+|`external_tunable_strat.ipynb`|Integration of external macro/sentiment features|[Watch Video](https://youtu.be/krKk9pX62gQ)|
+|`regime_strategy_analysis.ipynb`|Market regime detection (bull/bear/consolidation) with adaptive allocation weights|[Watch Video](https://youtu.be/FSLVe98qfoU)|
 
 ## Data
 Raw data comes from the Bitcoin Research Kit (BRK) - a comprehensive on-chain and market dataset covering Bitcoin's full history (~2009–2026):
