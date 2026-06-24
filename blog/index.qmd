@@ -36,6 +36,51 @@ Our objective is to develop an **adaptive daily allocation model**. Instead of f
 
 We measure our success using **Average accumulated Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
 
+### Approach Framework and Constraints
+
+Every strategy we developed operates under a strict budget constraint enforced by the StackSats framework: **the entire annual budget must be deployed within each 365-day window**, with strict per-day minimum ($10^{-5}$) and maximum (10%) bounds.
+
+Because the models operate sequentially without looking into the future, the algorithm must decide day-by-day how much of the remaining budget to spend without knowing if tomorrow will bring a massive market crash.
+
+**The Budget Allocation Algorithm**
+
+For each 365-day window, the framework dynamically maps each strategy's daily "Buy Score" into a concrete dollar allocation using this logic:
+
+::: {style="border: 1px solid #ccc; border-radius: 6px; padding: 1em; background: #f8f8f8;"}
+```text
+remaining_budget = 1.00  # Start the year with 100% of the budget
+past_scores = []
+
+for day = 1 to 365:
+    todays_score = strategy_score[day]
+    past_scores.append(todays_score)
+    days_left = 365 - day
+
+    if day == 365:
+        daily_spend = remaining_budget   # Last day: empty the remaining budget (must use all)!
+
+    else:
+        # Step 1: Estimate the total "points" left in the rest of the year
+        average_past_score = mean(past_scores)
+        estimated_future_points = todays_score + (average_past_score × days_left)
+
+        # Step 2: Decide how much to spend based on today's share of the total points
+        if estimated_future_points > 0:
+            daily_spend = (todays_score / estimated_future_points) × remaining_budget
+        else:
+            daily_spend = remaining_budget / (days_left + 1)  # Normal average buy
+
+        # Step 3: Enforce strict limits (Max 10% a day, always save enough for future days)
+        max_allowed = min(MAX_WEIGHT, remaining_budget - (days_left × MIN_WEIGHT))
+        daily_spend = clamp(daily_spend, min=MIN_WEIGHT, max=max_allowed)
+
+    remaining_budget = remaining_budget - daily_spend
+```
+:::
+
+
+For more details on these strict non-negotiable rules, please see the official [StackSats Framework documentation](https://hypertrial.github.io/stacksats/framework/#framework-non-negotiable).
+
 ### Strategies
 
 #### 1. [Composite Signal Index Strategy](posts/composite-signal-index-strategy/index.qmd)
