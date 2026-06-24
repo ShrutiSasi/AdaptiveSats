@@ -19,7 +19,7 @@ The framework analyzes Bitcoin network and market indicators, including on-chain
 ## Evaluation Methodology
 Strategies are evaluated using Sats per Dollar (SPD) accumulated over rolling one-year windows:
 
-- **Baseline:** Naive Uniform DCA (equal daily allocation)
+- **Baseline:** Uniform DCA (equal daily allocation)
 - **Pass criteria:** Strategy must outperform DCA in >50% of rolling one-year windows (Win rate > 50%)
 - **No look-ahead bias:** Strict chronological train (2010–2023) / test (2024–2025) split; all signals use only past data
 
@@ -118,7 +118,7 @@ Start with core pipeline notebooks, then explore strategy notebooks
 
 ### Core Pipeline
 
-|#|**Notebook**|**Purpose**|
+|#|**Notebook**|**Purpose**| 
 |---|---|---|
 |1.|`download.ipynb`|Downloads ~1GB raw BRK metrics from Google Drive, creates `train.parquet` and `test.parquet`|
 |2.|`family_classification.ipynb`|Categorizes 41,407 metrics into 16 feature families (e.g., Market Valuation, Profitability & SOPR)|
@@ -207,6 +207,12 @@ AdaptiveSats/
 |   │   └── composite_signal_index_strategy.ipynb     # Composite signal index strategy prototype
 |   │   └── external_tunable_strat.ipynb              # Macro-Economic Integration with 10-Year US Treasury Yield    
 │   │   └── multi_strategy_regimes_approach.ipynb     # Allocation strategy based on market regime
+│   ├── research_strategies/                          # Research work
+│   │   ├── bayes_hmm_look_forward.ipynb
+│   │   ├── brk_include_strat.ipynb
+│   │   ├── regime_strategy_analysis_initial_exploration.ipynb
+│   │   └── value_floor_strat.ipynb
+│   │   └── weighted_external_tunable_strat.ipynb
 │   ├── stacksats_strategies/                         # Built-in stacksats strategies (Experiment based on Stacksats original models)
 │   │   ├── momentum_vs_dca_4_cycles_top10_yby_halving.ipynb
 │   │   ├── momentum_vs_dca_all_years_top10.ipynb
