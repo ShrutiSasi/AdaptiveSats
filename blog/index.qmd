@@ -96,7 +96,7 @@ For more details on these strict non-negotiable rules, please see the official [
 ### Strategies
 
 #### 1. [Composite Signal Index Strategy](posts/composite-signal-index-strategy/index.qmd)
-Why rely on one signal when you can use them all? This strategy blends 8 distinct on-chain and market indicators (including MVRV, NUPL, and Miner Revenue) into a single, optimized "master signal." By using the Nelder-Mead optimization algorithm, the model learns the perfect weighting for each metric to dynamically adjust daily allocations and maximize Sats per Dollar.
+Why rely on one signal when you can use more? This strategy blends 8 distinct on-chain and market indicators (including MVRV, NUPL, and Miner Revenue) into a single, optimized "master signal." By using the Nelder-Mead optimization algorithm, the model learns the perfect weighting for each metric to dynamically adjust daily allocations and maximize Sats per Dollar.
 
 #### 2. [External Tunable Strategy](posts/external-tunable-post/index.qmd)
 Operating on the thesis that Bitcoin is a highly sensitive risk asset driven by global liquidity, this strategy steps outside the blockchain. It integrates macroeconomic indicators—specifically the 10-Year U.S. Treasury Yield—with short-term price momentum to detect "Risk-On" and "Risk-Off" environments, aggressively boosting accumulation when borrowing is cheap and conserving capital when liquidity tightens.
