@@ -36,6 +36,18 @@ Our objective is to develop an **adaptive daily allocation model**. Instead of f
 
 We measure our success using **Average accumulated Sats per Dollar (SPD)**. Our goal is to systematically maximize the amount of Bitcoin (or satoshis) we accumulate per dollar invested while adhering to strict validation checks (to prevent look-ahead bias and floating-point drift).
 
+### Key Data & Signals
+
+We are leveraging the open-source **BRK dataset** from the StackSats ecosystem. This rich dataset provides over 41,000 distinct daily metrics stretching back to 2009.
+
+![](figures/fig_data_details.png){#fig_data_details fig-pos="H"}
+
+Our strategy explores key on-chain indicators known to historically signal favorable accumulation windows, such as:
+
+- **MVRV (Market Value to Realized Value)**: Identifies when the market price dips below the aggregate cost basis.
+- **NUPL (Net Unrealized Profit/Loss)**: Highlights periods when the majority of holders are underwater.
+- **SOPR (Spent Output Profit Ratio)**: Indicates capitulation when coins are sold at a loss on aggregate.
+
 ### Approach Framework and Constraints
 
 Every strategy we developed operates under a strict budget constraint enforced by the StackSats framework: **the entire annual budget must be deployed within each 365-day window**, with strict per-day minimum ($10^{-5}$) and maximum (10%) bounds.
@@ -97,18 +109,6 @@ A probabilistic sister to the HMM-GARCH model. It uses the same Hidden Markov Mo
 
 #### 5. [Multi-Strategy Regime-Based Approach](posts/multi-strategy-regime-based-approach/index.qmd)
 The multi-strategy regime-based approach was designed because no single Bitcoin accumulation signal is likely to work best in every market environment. The strategy first classifies each day into a market regime using Bitcoin trend, MVRV valuation, and the relationship between market-cap growth and realized-cap growth. These components create up to 24 possible regimes, each representing a different combination of trend, valuation, and growth conditions. For each regime, the strategy compares StackSats MVRV, StackSats Momentum, and a custom SMA-based strategy, then selects the candidate that historically performed best under similar market conditions.
-
-### Key Data & Signals
-
-We are leveraging the open-source **BRK dataset** from the StackSats ecosystem. This rich dataset provides over 41,000 distinct daily metrics stretching back to 2009.
-
-![](figures/fig_data_details.png){#fig_data_details fig-pos="H"}
-
-Our strategy explores key on-chain indicators known to historically signal favorable accumulation windows, such as:
-
-- **MVRV (Market Value to Realized Value)**: Identifies when the market price dips below the aggregate cost basis.
-- **NUPL (Net Unrealized Profit/Loss)**: Highlights periods when the majority of holders are underwater.
-- **SOPR (Spent Output Profit Ratio)**: Indicates capitulation when coins are sold at a loss on aggregate.
 
 ### Defining Success: Metrics & Evaluation
 
