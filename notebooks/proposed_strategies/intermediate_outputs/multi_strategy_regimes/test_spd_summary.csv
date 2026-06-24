@@ -1,0 +1,2 @@
+n_windows,wins,losses,ties,win_rate_pct,strategy_sats,dca_sats,extra_sats_vs_dca,strategy_spd_sum,dca_spd_sum,extra_spd_sum_vs_dca,strategy_spd_avg,dca_spd_avg,extra_spd_avg_vs_dca,spd_ratio,improvement_pct
+2,2,0,0,100.0,2739160.297567199,2584244.3973114463,154915.90025575273,2739.1602975671994,2584.2443973114464,154.91590025575306,1369.5801487835997,1292.1221986557232,77.45795012787653,1.0599463040016346,5.994630400163459
