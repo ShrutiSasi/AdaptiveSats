@@ -87,16 +87,16 @@ Open terminal and run the following commands.
 
     **Alternatively**, open commands.txt. Check the change directory command and jupyter commands to run. Use "#" in front of a command to comment it and exclude from running. Run the below command with `AdaptiveSats` as the current/active directory in terminal (Git Bash).
 
-    For window user:
+    For Windows users:
     
     ```bash
     ./commands.txt
     ```
 
-    For macos user:
+    For macOS users:
 
     ```bash
-    bash ./commands.txt
+    bash commands.txt
     ```
 
 
